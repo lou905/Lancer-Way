@@ -164,7 +164,7 @@ const LANDMARKS = [
     look:"Friday night lights. The band is playing and the concession stand smells like popcorn.",
     people:[
       ["A Lancers football player","You can sneak under the bleachers to save time. The seagulls live under there, though."],
-      ["The band director","You're past winter now. Keep moving. Graduation won't wait."],
+      ["Mr. T, music teacher","(lowers his trumpet) The pep band is fired up tonight! Carry that energy all the way to graduation.","heal"],
       ["A cheerleader","L-A-N-C-E-R-S! Okay, you can keep walking now."]
     ]},
   { mile:880, name:"the Upper School", short:"Upper School", kind:"school", size:"large", label:"UPPER SCHOOL",
@@ -254,16 +254,16 @@ const ILLS = ["has a cold","has the flu","sprained an ankle","has a stomach bug"
    Look options: skin, hair, shirt, pants, beard (color), gray (true = salt-and-pepper),
    bald, curly, long, glasses, tie (color), clip (clipboard), cardigan (color). */
 const CHARACTERS = [
-  { id:"drt", name:"Dr. T", blurb:"Salt-and-pepper hair and a legendary beard.",
+  { id:"drt", name:"Dr. T", blurb:"Black hair, a legendary black beard, and a big brain.",
     perk:"Scholar: pop quizzes use only 2 pencils and boost GPA more.", money:650, mult:1.5,
-    look:{ skin:"#c68a5e", hair:"#2a2a2a", gray:true, beard:"#333333", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", book:"#7a1f2b" } },
+    look:{ skin:"#f1c9a5", hair:"#1a1a1a", beard:"#1a1a1a", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", book:"#7a1f2b" } },
   { id:"mrg", name:"Mr. G", blurb:"Young, dark hair, full of energy.",
     perk:"Energetic: hustle pace barely wears your group down.", money:550, mult:2,
     look:{ skin:"#e9b98f", hair:"#1a1a1a", shirt:"#2e6db4", pants:"#c9b48a" } },
-  { id:"ritchie", name:"Mr. Ritchie", blurb:"The veteran. Bald, wise, and has seen it all.",
+  { id:"ritchie", name:"Mr. Richie", blurb:"The veteran. Bald, wise, and has seen it all.",
     perk:"Been there: crossings are twice as safe.", money:500, mult:2,
     look:{ skin:"#f1c9a5", hair:"#c9c9c9", bald:true, shirt:"#ffffff", cardigan:"#6b4f33", pants:"#3a3a3a", book:"#2e6db4" } },
-  { id:"rich", name:"Miss Rich", blurb:"Young, glasses, sharp eyes.",
+  { id:"rich", name:"Miss Ritch", blurb:"Young, glasses, sharp eyes.",
     perk:"Sharp-eyed: Snack Runs last longer and you carry more back.", money:500, mult:2,
     look:{ skin:"#f1c9a5", hair:"#6b4a2b", long:true, glasses:true, shirt:"#7a1f2b", pants:"#1d2b4f" } },
   { id:"melissa", name:"Melissa", blurb:"Curly hair, clipboard, and the most organized person on campus.",
@@ -274,7 +274,10 @@ const CHARACTERS = [
     look:{ skin:"#b07a52", hair:"#1a1a1a", shirt:"#f2c230", pants:"#1d2b4f" } },
   { id:"mrk", name:"Mr. K", blurb:"Forty, wise, and wealthy. Always wears the suit.",
     perk:"Deep pockets: starts with the most money.", money:900, mult:1,
-    look:{ skin:"#e9b98f", hair:"#3b2414", shirt:"#1d2b4f", tie:"#f2c230", pants:"#1d2b4f" } }
+    look:{ skin:"#e9b98f", hair:"#3b2414", shirt:"#1d2b4f", tie:"#f2c230", pants:"#1d2b4f" } },
+  { id:"msm", name:"Ms. M", blurb:"Spunky, creative, and friendly to all. New to the party!",
+    perk:"Friend to all: people share twice as much, and BP and Mr. C go easier on you.", money:500, mult:2,
+    look:{ skin:"#f0c8a0", hair:"#1a1a1a", long:true, streak:"#b05ad6", shirt:"#e8467c", pants:"#1d2b4f", palette:true } }
 ];
 const charOf = () => CHARACTERS.find(c => c.id === G.char);
 const perk = id => G.char === id;
@@ -285,11 +288,17 @@ const SPECIALS = {
   mrc:   { name:"Mr. C", look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, shirt:"#2e6db4", polo:true, collar:"#f2c230", pants:"#c9b48a", big:true, point:true, teacher:true } },
   eddy:  { name:"Eddy", look:{ skin:"#f1c9a5", hair:"#7a5a3a", shirt:"#2b2e36", polo:true, collar:"#f2c230", badge:true, pants:"#2b2e36", cap:"#111111", teacher:true } },
   mrss:  { name:"Mrs. S", look:{ skin:"#f1c9a5", hair:"#7a4a2a", curly:true, shirt:"#5b7fb8", cardigan:"#f3ead2", pants:"#1d2b4f", clip:true, teacher:true } },
+  carlos:{ name:"Carlos", look:{ skin:"#d9a679", hair:"#2a2a2a", gray:true, mustache:"#2a2a2a", glasses:true, shirt:"#d6e4f0", polo:true, collar:"#ffffff", pants:"#3a3a3a", teacher:true } },
+  coachw:{ name:"Coach W", look:{ skin:"#5e3b26", hair:"#111111", cap:"#1d2b4f", shirt:"#1d2b4f", polo:true, collar:"#f2c230", whistle:true, pants:"#c9b48a", big:true, teacher:true } },
+  mrt:   { name:"Mr. T", look:{ skin:"#6b4226", hair:"#1a1a1a", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", trumpet:true, teacher:true } },
   karen: { name:"Chef", look:{ skin:"#93603f", hair:"#1a1a1a", gray:true, thin:true, chef:true, glasses:true, apron:"#1d2b4f", pants:"#2a2a2a", teacher:true } }
 };
-const BP_MILES = [140, 330, 520, 720, 940];   // where BP checks hall passes
-const MRC_MILES = [230, 430, 610, 830];       // where Mr. C patrols for runners
-const MRSS_MILES = [320, 700];                // where Mrs. S checks in on your group
+const BP_MILES = [220, 510, 840];        // where BP checks hall passes
+const MRC_MILES = [410, 690, 910];       // where Mr. C patrols for runners
+const MRSS_MILES = [120, 600, 950];      // where Mrs. S checks in on your group
+const CARLOS_MILE = 330;                 // Carlos's computer checkpoint
+const COACHW_MILE = 730;                 // Coach W and the laundry
+const MRT_MILE = 800;                    // Mr. T playing trumpet by the stadium
 const KAREN_LINES = ["Grab 'em while they're hot!","Watch those seagulls!","Chef's special coming up!","No running in my cafeteria!","Eat something green!"];
 
 const ITEMS = [
@@ -303,9 +312,9 @@ const ITEMS = [
 ];
 
 const PACE = {
-  stroll:{ name:"Stroll", miles:14, h:2, desc:"Slow, easy on everyone." },
-  walk:{ name:"Steady walk", miles:19, h:0, desc:"A normal pace." },
-  hustle:{ name:"Hustle", miles:25, h:-3, desc:"Fast, but wears people down." }
+  stroll:{ name:"Stroll", miles:25, h:2, desc:"Slow, easy on everyone." },
+  walk:{ name:"Steady walk", miles:33, h:0, desc:"A normal pace." },
+  hustle:{ name:"Hustle", miles:43, h:-3, desc:"Fast, but wears people down." }
 };
 const RATIONS = {
   light:{ name:"Light", eat:1, h:-3, desc:"1 snack per person per stop" },
@@ -313,7 +322,9 @@ const RATIONS = {
   big:{ name:"Big", eat:3, h:3, desc:"3 snacks per person per stop" }
 };
 const SNEAKER_F = [0.35, 0.65, 0.85, 1, 1.05];
-const DAYS_PER_STOP = 4;
+const DAYS_PER_STOP = 7;
+const K = DAYS_PER_STOP / 4;   // scales health, snacks and sickness to the length of a stop
+const scaleP = p => 1 - Math.pow(1 - p, K);
 
 const PARTY_LOOKS = [
   { shirt:"#1d2b4f", pants:"#c9b48a", skin:"#e9b98f", hair:"#3b2414", backpack:"#f2c230" },
@@ -427,7 +438,7 @@ function learn(){
     `<h2>How to play</h2><p>You are a teacher leading four 8th graders from ${CONFIG.town} to Graduation, 1,000 miles down ${CONFIG.road}. Each stop on the trail takes ${DAYS_PER_STOP} days. Graduation is May 21. Arrive late and you'll be walking at the summer ceremony.</p>`,
     `<h2>Supplies</h2><p><b>Sneakers</b> are your oxen: fewer pairs means slower walking. <b>Snacks</b> keep everyone going. <b>Hoodies</b> protect you in the cold months. <b>Pencils</b> get you through pop quizzes. <b>Laptop chargers</b> save time when a Chromebook dies.</p>`,
     `<h2>On the trail</h2><p>Stop any time to change your pace or rations, rest, talk to people, or go on a Snack Run in the cafeteria. People you meet give tips, and some will share supplies. At many stops the path splits: shortcuts save miles but can go wrong, and detours cost days but usually pay off. Click the snacks to grab them, but don't click the seagulls.</p><p>Stores along the way sell supplies, but prices go up the farther you go. You'll have to cross the Carpool Lane and the flooded Courtyard Fountain.</p>`,
-    `<h2>People to watch for</h2><p><b>BP</b> patrols ${CONFIG.road} and asks for a hall pass. <b>Mr. C</b> hands out demerits and yells at anyone running. Three demerits means detention. <b>Eddy</b> from security rolls up in his golf cart and asks for ID. If everyone has one, he might give you a ride. <b>Chef</b> runs the cafeteria and sometimes brings a hot lunch cart out on the trail. <b>Mrs. S</b>, the guidance counselor, checks in on how your group is doing.</p>`,
+    `<h2>People to watch for</h2><p><b>BP</b> patrols ${CONFIG.road} and asks for a hall pass. <b>Mr. C</b> hands out demerits and yells at anyone running. Three demerits means detention. <b>Eddy</b> from security rolls up in his golf cart and asks for ID. If everyone has one, he might give you a ride. <b>Chef</b> runs the cafeteria and sometimes brings a hot lunch cart out on the trail. <b>Mrs. S</b>, the guidance counselor, checks in on how your group is doing. <b>Carlos</b> guards the computer checkpoint and won't let you pass without the admin password. <b>Coach W</b> always needs help with the laundry, and he pays well. <b>Mr. T</b>, the music teacher, plays his trumpet by the stadium.</p>`,
     `<h2>Scoring</h2><p>When you reach Graduation, you score points for each Lancer who made it, their health, your GPA, and leftover supplies. Teachers who start with less money get a bigger score multiplier.</p>`
   ];
   let i = 0;
@@ -514,7 +525,7 @@ function landmarkMenu(){
   ];
   if(at && L.store) opts.push({label:`Buy supplies at ${L.store}`, fn:()=>store(false)});
   if(at && L.church) opts.push({label:"Go to worship at the church", fn:attendChapel});
-  menu(null, `<p>${where}${at && L.look ? " " + L.look : ""}</p><p>What would you like to do?</p>`, opts);
+  menu(at ? L.short : null, `<p>${where}${at && L.look ? " " + L.look : ""}</p><p>What would you like to do?</p>`, opts);
 }
 
 function supplies(){
@@ -569,7 +580,7 @@ function attendChapel(){
 function talk(){
   const L = curLM();
   let pool;
-  if(G.atLandmark && L.people && L.people.length){ pool = L.people.slice(); if(FORKS[G.lmIndex] && !G.forkDone[G.lmIndex]) pool.push(["Mr. C","Thinking about which way to go? Hit Continue and ask me when you get to the split. I know every inch of this campus."]); }
+  if(G.atLandmark && L.people && L.people.length){ pool = L.people.filter(pp => !(G.char && pp[0].startsWith(charOf().name + ","))); if(FORKS[G.lmIndex] && !G.forkDone[G.lmIndex]) pool.push(["Mr. C","Thinking about which way to go? Hit Continue and ask me when you get to the split. I know every inch of this campus."]); }
   else {
     if(!G.crowd){ const sh = TRAIL_PEOPLE.slice().sort(()=>Math.random()-0.5); G.crowd = sh.slice(0,3); }
     pool = G.crowd;
@@ -581,7 +592,7 @@ function talkTo(pp, back){
   const [who, line, gift] = pp;
   let extra = "";
   const key = who + "|" + line;
-  if(gift && GIFTS[gift] && !G.gifted[key]){ G.gifted[key] = true; extra = `<p class="ok">${GIFTS[gift]()}</p>`; updateStatus(); }
+  if(gift && GIFTS[gift] && !G.gifted[key]){ G.gifted[key] = true; extra = `<p class="ok">${GIFTS[gift]()}${perk("msm") ? " Ms. M made a new friend, so they gave a second helping! " + GIFTS[gift]() : ""}</p>`; updateStatus(); }
   message(`<p class="quote"><span class="who">${who}:</span><br>"${line}"</p>${extra}`, back);
 }
 
@@ -637,7 +648,7 @@ function advance({move=false, rest=false}={}){
   G.day += DAYS_PER_STOP;
   G.weather = rollWeather();
   const a = alive();
-  const need = a.length * RATIONS[G.rations].eat;
+  const need = Math.round(a.length * RATIONS[G.rations].eat * K);
   let hungry = false;
   if(G.snacks >= need) G.snacks -= need; else { G.snacks = 0; hungry = true; }
   if(hungry && !G.hungryWarned){ msgs.push("You're out of snacks! Everyone is getting hungry and slowing down."); G.hungryWarned = true; }
@@ -663,10 +674,10 @@ function advance({move=false, rest=false}={}){
     if(move && G.weather==="Hot" && G.pace==="hustle") d -= 2;
     if(move && G.pace==="hustle" && perk("mrg")) d += 2;
     if(move && G.sneakers===0) d -= 3;
-    d += rint(-1,1);
+    d = Math.round(d * K) + rint(-1,1);
     p.health = Math.max(0, Math.min(100, p.health + d));
-    if(p.sick && chance(rest ? 0.4 : 0.12)){ msgs.push(`${p.name} is feeling better.`); p.sick = null; }
-    else if(!p.sick && chance(0.015 + (100-p.health)/100*0.07 + (needHoodies?0.04:0))){
+    if(p.sick && chance(scaleP(rest ? 0.4 : 0.12))){ msgs.push(`${p.name} is feeling better.`); p.sick = null; }
+    else if(!p.sick && chance(scaleP(0.015 + (100-p.health)/100*0.07 + (needHoodies?0.04:0)))){
       p.sick = needHoodies && chance(.5) ? "has a cold" : pick(ILLS);
       msgs.push(`${p.name} ${p.sick}.`);
     }
@@ -700,7 +711,7 @@ function startTravel(){
   G.atLandmark = false; G.traveling = true; G.crowd = null;
   setPanel(`<p>Your group is walking down ${CONFIG.road}...</p><button class="cont" data-continue>Stop and look around <span class="hint">(Space)</span></button>`);
   panel.querySelector(".cont").onclick = () => act(stopTravel);
-  clearTimeout(tickTimer); tickTimer = setTimeout(doTick, 1000);
+  clearTimeout(tickTimer); tickTimer = setTimeout(doTick, 800);
 }
 function giveDemerit(why){
   G.demerits++; G.demTotal++;
@@ -711,10 +722,10 @@ function giveDemerit(why){
 function bpEncounter(){
   G.enc = "bp";
   const done = m => { G.enc = null; afterMessages(m, startTravel); };
-  menu("Hall pass check", `<p class="quote"><span class="who">BP</span> steps out in full uniform, sunglasses on, radio on his shoulder.<br>"Hold it right there, Lancers. Where are you headed? Let me see a hall pass."</p><p>Hall passes: ${G.passes}</p>`,
+  menu("Hall pass check", `<p class="quote"><span class="who">BP</span> steps out in full uniform, sunglasses on, radio on his shoulder.<br>"${pick(["Hold it right there, Lancers. Where are you headed? Let me see a hall pass.","You again? Hall pass. Let's see it.","Nobody walks this hallway without a pass. Not on my watch.","Afternoon. Routine check. I'm going to need a hall pass."])}"</p><p>Hall passes: ${G.passes}</p>`,
     [ { label:`Show him a hall pass`, disabled:G.passes<1, fn:()=>{ G.passes--; done(['BP checks the pass, hands it back, and nods. "You\'re good. Carry on, Lancers." You used 1 hall pass.']); } },
       { label:"Explain that you're headed to graduation", fn:()=>{
-          if(chance(perk("ritchie") ? 0.75 : 0.45)) done(['BP thinks about it for a long second. "Alright. I\'ll let it slide this time. Get a pass next time."']);
+          if(chance(perk("ritchie") || perk("msm") ? 0.75 : 0.45)) done(['BP thinks about it for a long second. "Alright. I\'ll let it slide this time. Get a pass next time."']);
           else { G.day += 4; done(['"Nice try." BP walks your whole group back to the front office to get passes. You lose 4 days.']); } } },
       { label:"Make a run for it", fn:()=>{
           G.day += 4;
@@ -730,7 +741,7 @@ function mrcEncounter(){
       { label:"\"Yes, Mr. C!\" Slow down to a steady walk", fn:()=>{ G.pace = "walk"; done(['Mr. C crosses his arms and nods. "That\'s better." Your pace is now a steady walk. No demerit.']); } },
       { label:"Keep hustling", fn:()=>{ done(giveDemerit('Mr. C yells after you: "I SAW THAT!"')); } }
     ] : [
-      { label:"\"Yes, Mr. C!\"", fn:()=>{ if(chance(0.3)) done(giveDemerit("Mr. C spots an untucked shirt on one of your 8th graders.")); else done(['Mr. C looks everyone over. "Hmm. Fine. Move along."']); } },
+      { label:"\"Yes, Mr. C!\"", fn:()=>{ if(chance(perk("msm") ? 0.12 : 0.3)) done(giveDemerit("Mr. C spots an untucked shirt on one of your 8th graders.")); else done(['Mr. C looks everyone over. "Hmm. Fine. Move along."']); } },
       { label:"Argue with Mr. C", fn:()=>{ G.day += 2; done(['Mr. C gives your group a two-day lecture about respect.', ...giveDemerit("")]); } }
     ];
   menu("Mr. C", `<p class="quote"><span class="who">Mr. C</span> comes around the corner, big brown hair first, demerit pad in hand.<br>"${line}"</p><p>Demerits so far: ${G.demerits} of 3.</p>`, opts);
@@ -756,14 +767,14 @@ function eddyEncounter(){
           } } },
       { label:"Say you left your IDs in your lockers", fn:()=>{
           leave();
-          if(perk("ritchie")) afterMessages(['Eddy squints, then grins. "Mr. Ritchie! I\'ve known you twenty years. Go ahead."'], startTravel);
+          if(perk("ritchie")) afterMessages(['Eddy squints, then grins. "Mr. Richie! I\'ve known you twenty years. Go ahead."'], startTravel);
           else { G.day += 4; afterMessages(['"Then let\'s go get them." You lose 4 days walking back to the lockers.'], startTravel); } } } ]);
 }
 function mrssEncounter(){
   G.enc = "mrss";
   const done = m => { G.enc = null; afterMessages(m, startTravel); };
   const sick = alive().filter(p => p.sick);
-  menu("Mrs. S, guidance counselor", `<p class="quote"><span class="who">Mrs. S</span> catches up with your group, curls bouncing, clipboard of sticky notes in hand.<br>"Hi friends! Quick check-in. How is everybody really doing?"</p>`,
+  menu("Mrs. S, guidance counselor", `<p class="quote"><span class="who">Mrs. S</span> catches up with your group, curls bouncing, clipboard of sticky notes in hand.<br>"${pick(["Hi friends! Quick check-in. How is everybody really doing?","There you are! I've been looking for you. How is everyone holding up?","My door is always open, but today I brought the door to you. How are you all doing?"])}"</p>`,
     [ { label:"Talk about how everyone is feeling", fn:()=>{
           const m = ["Everyone takes a few minutes to talk things through. Mrs. S listens, hands out mints, and reminds the 8th graders that they matter. Everyone feels lighter."];
           alive().forEach(p => { p.health = Math.min(100, p.health + 10); if(p.sick && chance(.5)){ m.push(`${p.name} is feeling better.`); p.sick = null; } });
@@ -777,6 +788,60 @@ function mrssEncounter(){
           G.gpa = Math.min(4.5, G.gpa + 0.05);
           done([`Mrs. S does the math on a sticky note. "You have ${left} miles left. At your pace that's about ${days} days, and graduation is ${daysToGrad} days away. ${verdict}" GPA +0.05 for good planning.`]); } },
       { label:"\"We're doing great, thanks Mrs. S!\"", fn:()=>done([sick.length ? `"Are you sure? ${sick[0].name} doesn't look so good. My door is always open."` : '"Love to hear it! My door is always open."']) } ]);
+}
+function carlosEncounter(){
+  G.enc = "carlos"; G.pwTries = G.pwTries || 0;
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  const show = (note="") => {
+    setPanel(`<h2>Computer checkpoint</h2>
+      <p class="quote"><span class="who">Carlos</span> looks up from behind his desk and his computer.<br>"¡Alto! Stop right there. This is a secure checkpoint. Nobody gets past without the <b>admin password</b>."</p>
+      ${note}
+      <div class="names"><label for="pw">Password</label><input type="text" id="pw" maxlength="20" autocomplete="off" inputmode="numeric"></div>
+      <div class="menu">
+        <button class="opt" id="pwGo"><span class="num">1.</span>Enter the password</button>
+        <button class="opt" id="pwHint"><span class="num">2.</span>Ask Carlos for a hint</button>
+        <button class="opt" id="pwQuit"><span class="num">3.</span>Give up and take the long way around <span class="hint">(${DAYS_PER_STOP} days)</span></button>
+      </div>`);
+    const box = $("#pw"); box.focus();
+    const go = () => {
+      const v = box.value.replace(/[\s,.-]/g,"");
+      if(!v) return box.focus();
+      if(v === "1234"){
+        G.gpa = Math.min(4.5, G.gpa + 0.1);
+        done([`<b>ACCESS GRANTED.</b><br><br>Carlos sighs. "Yes... the admin password is 1234. I know. I KNOW. I'll change it on Monday."<br><br>Lesson learned: a password you can count on your fingers is a password anyone can guess. GPA +0.1 for your hacker skills.`]);
+        return;
+      }
+      G.pwTries++;
+      if(G.pwTries >= 3){
+        G.day += DAYS_PER_STOP;
+        done([`<b>ACCOUNT LOCKED.</b> Too many wrong tries. Carlos has to call the help desk to reset it. You lose ${DAYS_PER_STOP} days.<br><br>"See? That's why we lock accounts. It stops hackers from guessing forever."`]);
+        return;
+      }
+      show(`<p class="bad"><b>ACCESS DENIED.</b> "${esc(v)}" is not it. ${3 - G.pwTries} ${3 - G.pwTries === 1 ? "try" : "tries"} left before the account locks.</p>`);
+    };
+    $("#pwGo").onclick = () => act(go);
+    box.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); go(); } });
+    $("#pwHint").onclick = () => act(() => show(`<p class="quote"><span class="who">Carlos</span> leans in and whispers:<br>"Okay, one hint. You have <b>4</b> of these with you." He nods toward your 8th graders. Then he holds up his hand and counts on his fingers, slowly... <b>1... 2... 3... 4...</b>"</p>`));
+    $("#pwQuit").onclick = () => act(() => { G.day += DAYS_PER_STOP; done([`You walk all the way around the computer lab. It takes ${DAYS_PER_STOP} days.`]); });
+  };
+  show();
+}
+function coachEncounter(){
+  G.enc = "coachw";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  menu("Coach W", `<p class="quote"><span class="who">Coach W</span> is standing next to a mountain of sweaty football uniforms, whistle around his neck.<br>"Hey! You all look like hard workers. If you do the laundry, I will give you <b>5 hall passes</b> and <b>2 sneakers</b>."</p>`,
+    [ { label:`Do the laundry <span class="hint">(takes ${DAYS_PER_STOP} days)</span>`, fn:()=>{
+          const r = advance(); G.passes += 5; G.sneakers += 2;
+          done([`Your group washes, dries and folds 53 jerseys. It smells terrible. Coach W hands over <b>5 hall passes</b> and <b>2 pairs of sneakers</b>. "Pleasure doing business. Go Lancers!"`].concat(r.msgs)); } },
+      { label:"\"Sorry Coach, we have to keep moving.\"", fn:()=>done(['"Your loss! These socks aren\'t gonna wash themselves."']) } ]);
+}
+function mrtEncounter(){
+  G.enc = "mrt";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  menu("Mr. T", `<p class="quote"><span class="who">Mr. T</span>, the music teacher, is warming up by the stadium, trumpet shining in the sun.<br>"Hey, Lancers! You look like you could use a song for the road."</p>`,
+    [ { label:"Sing along to the Lancers fight song", fn:()=>{ alive().forEach(p=>p.health=Math.min(100,p.health+10)); done(["Mr. T plays the fight song and your whole group sings along, loud and a little off key. Everyone's energy is way up."]); } },
+      { label:"Ask him to play \"Amazing Grace\"", fn:()=>{ const m=["Mr. T plays \"Amazing Grace\" slow and beautiful. A few people stop to listen. Your group walks on with peace in their hearts."]; alive().forEach(p=>{ p.health=Math.min(100,p.health+6); if(p.sick && chance(.4)){ m.push(`${p.name} is feeling better.`); p.sick=null; } }); done(m); } },
+      { label:"Wave and keep walking", fn:()=>done(['Mr. T plays a little "see you later" riff as you go.']) } ]);
 }
 function karenEncounter(){
   G.enc = "karen";
@@ -808,7 +873,13 @@ function doTick(){
   if(mrcHit && !r.arrive) G.mrcSeen[mrcHit] = true;
   const mrssHit = MRSS_MILES.find(m => before < m && G.miles >= m && !G.mrssSeen[m]);
   if(mrssHit && !r.arrive) G.mrssSeen[mrssHit] = true;
-  if(!r.arrive && chance(0.4)){ const m = randomEvent(); if(m) r.msgs.push(m); }
+  const carlosHit = !r.arrive && !G.carlosDone && before < CARLOS_MILE && G.miles >= CARLOS_MILE;
+  const coachHit = !r.arrive && !G.coachDone && before < COACHW_MILE && G.miles >= COACHW_MILE;
+  if(carlosHit) G.carlosDone = true;
+  if(coachHit) G.coachDone = true;
+  const mrtHit = !r.arrive && !G.mrtDone && before < MRT_MILE && G.miles >= MRT_MILE;
+  if(mrtHit) G.mrtDone = true;
+  if(!r.arrive && chance(0.15)){ const m = randomEvent(); if(m) r.msgs.push(m); }
   checkLate(r.msgs);
   updateStatus();
   if(isOver()){ G.traveling = false; return showMessages(r.msgs, gameOver); }
@@ -818,14 +889,14 @@ function doTick(){
     setTimeout(() => showMessages(r.msgs, arrive), 900);
     return;
   }
-  const enc = r.arrive ? null : bpHit ? bpEncounter : mrcHit ? mrcEncounter : mrssHit ? mrssEncounter : (G.pace==="hustle" && chance(0.08)) ? mrcEncounter : chance(0.06) ? eddyEncounter : chance(0.05) ? karenEncounter : chance(0.12) ? roadsideEncounter : null;
+  const enc = r.arrive ? null : carlosHit ? carlosEncounter : coachHit ? coachEncounter : mrtHit ? mrtEncounter : bpHit ? bpEncounter : mrcHit ? mrcEncounter : mrssHit ? mrssEncounter : (G.pace==="hustle" && chance(0.06)) ? mrcEncounter : chance(0.03) ? eddyEncounter : chance(0.03) ? karenEncounter : chance(0.03) ? roadsideEncounter : null;
   if(r.msgs.length){
     G.traveling = false;
     showMessages(r.msgs, () => { if(isOver()) return gameOver(); enc ? enc() : startTravel(); });
     return;
   }
   if(enc){ G.traveling = false; return enc(); }
-  tickTimer = setTimeout(doTick, 1000);
+  tickTimer = setTimeout(doTick, 800);
 }
 
 function arrive(){
@@ -835,7 +906,7 @@ function arrive(){
   if(L.final) return graduation();
   if(L.crossing==="carpool") return carpoolCrossing();
   if(L.crossing==="fountain") return fountainCrossing();
-  message(`<h2>${L.short}</h2><p>You have arrived at ${L.name}. It is ${fmtDate(curDate())}.</p>`, landmarkMenu);
+  landmarkMenu();
 }
 
 /* =========================================================
@@ -1112,7 +1183,10 @@ function figure(o,fr){
     else { R(sl,L+Wd,top+1+walk,1,5); R(o.skin,L+Wd,top+6+walk,1,1); }
     // things they carry
     if(o.backpack){ R(o.backpack,L-3,top+1,3,6); R(shade(o.backpack),L-3,top+1,1,6); R(shade(o.backpack,.55),L-3,top+3,3,1); R(shade(o.backpack,.6),L,top,1,2); }
-    if(o.clip){ R("#8a6a43",L+Wd+1,top+3,4,6); R("#fff",L+Wd+2,top+4,2,4); R("#9a9a9a",L+Wd+2,top+2,2,1); }
+    if(o.whistle){ R("#d0d0d0",0,top+3,2,2); R("#f2c230",-1,top,1,3); R("#f2c230",2,top,1,3); }
+    if(o.palette){ R("#c8a26b",L+Wd+1,top+3,5,4); R("#e53935",L+Wd+2,top+3,1,1); R("#1e88e5",L+Wd+4,top+4,1,1); R("#43a047",L+Wd+2,top+5,1,1); R("#fdd835",L+Wd+4,top+6,1,1); }
+    else if(o.trumpet){ }
+    else if(o.clip){ R("#8a6a43",L+Wd+1,top+3,4,6); R("#fff",L+Wd+2,top+4,2,4); R("#9a9a9a",L+Wd+2,top+2,2,1); }
     else if(o.radio){ R("#111",L+Wd-2,top,2,3); R("#555",L+Wd-1,top-2,1,2); }
     else if(o.slip){ R("#ff8fb3",L+Wd+1,top+4,3,4); R("#c2185b",L+Wd+1,top+5,3,1); }
     else if(o.book && !o.point){ R(o.book,L+Wd+1,top+4,3,4); R("#fff",L+Wd+1,top+4,1,4); }
@@ -1120,7 +1194,7 @@ function figure(o,fr){
   }
   // head
   const hy = top - 7;
-  if(o.long){ R(o.hair,-4,hy,3,9); R(shade(o.hair,.75),-4,hy+3,1,6); }
+  if(o.long){ R(o.hair,-4,hy,3,9); R(shade(o.hair,.75),-4,hy+3,1,6); if(o.streak){ R(o.streak,-4,hy+2,1,6); R(o.streak,-3,hy,1,2); } }
   if(o.curly && !o.chef){ R(o.hair,-4,hy-3,10,4); R(o.hair,-5,hy-1,3,7); R(o.hair,3,hy-2,2,3); }
   if(o.bighair){ R(o.hair,-4,hy-5,10,6); R(o.hair,-5,hy-3,2,7); R(o.hair,4,hy-3,2,3); R(shade(o.hair,1.25),-2,hy-5,6,1); R(shade(o.hair,.75),-4,hy,2,1); }
   R(o.skin,-1,top-1,3,1);
@@ -1144,6 +1218,9 @@ function figure(o,fr){
   if(o.cop){ R("#1d2b4f",-3,hy-3,7,3); R("#2a3d6e",-3,hy-3,7,1); R("#111",1,hy,5,1); R("#f2c230",0,hy-2,1,1); }
   if(o.chef){ R("#fbfbf8",-4,hy-8,9,5); R("#fbfbf8",-3,hy-3,7,3); R("#e3e3dc",-3,hy-1,7,1); R("#e3e3dc",-4,hy-8,1,5); R(o.hair,-3,hy+1,1,2); }
   if(o.cap){ R(o.cap,-3,hy-2,7,2); R(o.cap,3,hy-1,3,1); R(shade(o.cap,.7),-3,hy-1,7,1); }
+  if(o.streak) R(o.streak,0,hy-1,2,1);
+  if(o.mustache){ R(o.mustache,1,hy+3,4,1); R(o.mustache,1,hy+4,1,1); }
+  if(o.trumpet){ R(o.skin,3,hy+4,2,2); R("#f2c230",4,hy+4,6,1); R("#d4a017",5,hy+3,1,1); R("#d4a017",7,hy+3,1,1); R("#f2c230",9,hy+2,2,5); R("#fff3b0",10,hy+3,1,3); }
   if(o.grad){ R("#111",-4,hy-3,10,1); R("#111",-2,hy-2,6,1); R("#f2c230",5,hy-3,1,4); }
 }
 function drawCart(x,y,dir,riders){
@@ -1173,8 +1250,25 @@ function drawLineup(tm){
     person(0,0,{ ...c.look, teacher:true },0);
     ctx.restore();
     R(sel?"#f2c230":"#1d2b4f",cx-gap/2+4,176,gap-8,16);
-    T(`${i+1}. ${c.name}`,cx,184,sel?"#1d2b4f":"#f2c230",6);
+    T(`${i+1}. ${c.name}`,cx,184,sel?"#1d2b4f":"#f2c230",n>7?4.6:6);
   });
+}
+function drawCarlosDesk(x,y){
+  person(x-2, y-2, SPECIALS.carlos.look, 0);
+  R("#141a2c",x-16,y-15,34,2); R("#8a6a43",x-15,y-14,32,3); R("#6b5233",x-15,y-11,32,10); R("#5a4429",x-13,y-9,10,6); R("#c9a000",x-9,y-7,2,1);
+  R("#141a2c",x+6,y-29,15,12); R("#1d2b4f",x+7,y-28,13,10); R("#3cff7a",x+8,y-27,7,1); R("#3cff7a",x+8,y-25,10,1); R("#3cff7a",x+8,y-23,5,1); R("#3cff7a",x+8,y-21,8,1);
+  R("#333",x+12,y-17,3,2); R("#2a2a2a",x-14,y-17,10,2);
+  R("#f2c230",x+3,y-9,10,5); T("IT", x+8, y-6.4, "#1d2b4f", 4);
+}
+function drawLaundry(x,y){
+  R("#c9b48a",x-2,y-8,22,8); R("#a8935f",x-2,y-8,22,1);
+  for(let i=0;i<9;i++) R(i%3===0?"#1d2b4f":i%3===1?"#f4f4f4":"#f2c230", x+(i*5)%20, y-12-Math.floor(i/4)*3, 6, 4);
+  R("#f4f4f4",x+4,y-19,7,4); R("#1d2b4f",x+10,y-18,6,3);
+}
+function drawNotes(x,y){
+  const tm = performance.now()/600;
+  for(let i=0;i<3;i++){ const ph = (tm + i/3) % 1; const nx = x + ph*14 + i*3, ny = y - ph*14;
+    ctx.globalAlpha = 1 - ph; R("#1d2b4f", nx, ny, 2, 2); R("#1d2b4f", nx+1, ny-4, 1, 4); R("#1d2b4f", nx+2, ny-4, 2, 1); ctx.globalAlpha = 1; }
 }
 function bubble(x,y,txt){
   ctx.font = `bold 6px "Courier New",Courier,monospace`;
@@ -1362,6 +1456,9 @@ function drawScene(tm){
   // people who stop your group on the road
   if(G.enc==="bp"){ person(PARTY_X+34, PARTY_Y, SPECIALS.bp.look, 0); bubble(PARTY_X+34, PARTY_Y-34, "Hall pass?"); }
   if(G.enc==="mrc"){ person(PARTY_X+34, PARTY_Y, { ...SPECIALS.mrc.look, point:true }, 0); bubble(PARTY_X+30, PARTY_Y-38, G.pace==="hustle" ? "STOP RUNNING!" : "Demerit!"); }
+  if(G.enc==="carlos"){ drawCarlosDesk(PARTY_X+44, PARTY_Y); bubble(PARTY_X+42, PARTY_Y-40, "Password?"); }
+  if(G.enc==="mrt"){ person(PARTY_X+34, PARTY_Y, SPECIALS.mrt.look, 0); drawNotes(PARTY_X+48, PARTY_Y-32); bubble(PARTY_X+34, PARTY_Y-40, "Song for the road?"); }
+  if(G.enc==="coachw"){ drawLaundry(PARTY_X+46, PARTY_Y); person(PARTY_X+34, PARTY_Y, SPECIALS.coachw.look, 0); bubble(PARTY_X+34, PARTY_Y-40, "Do the laundry?"); }
   if(G.enc==="mrss"){ person(PARTY_X+34, PARTY_Y, SPECIALS.mrss.look, 0); bubble(PARTY_X+34, PARTY_Y-38, "How is everyone?"); }
   if(G.enc==="karen"){ person(PARTY_X+30, PARTY_Y, SPECIALS.karen.look, 0); R("#9aa0a8",PARTY_X+38,PARTY_Y-14,18,2); R("#c9ced6",PARTY_X+38,PARTY_Y-12,18,8); R("#f2c230",PARTY_X+41,PARTY_Y-17,5,3); R("#c0392b",PARTY_X+48,PARTY_Y-17,5,3); R("#111",PARTY_X+39,PARTY_Y-3,3,3); R("#111",PARTY_X+51,PARTY_Y-3,3,3); bubble(PARTY_X+30, PARTY_Y-40, "Hot lunch!"); }
   if(G.cart && G.cart.state==="here") bubble(PARTY_X+30, PARTY_Y-44, "ID please!");
@@ -1419,6 +1516,9 @@ function drawPeople(m, front){
       person(x, y, SPECIALS.bp.look, fr);
       if(Math.abs(x - PARTY_X) < 50 && G.party.length) bubble(x, y-35, "Hall pass?");
     });
+    { const x = wx(CARLOS_MILE); if(x > -40 && x < W+40 && G.enc !== "carlos") drawCarlosDesk(x, y); }
+    { const x = wx(COACHW_MILE); if(x > -40 && x < W+40 && !G.coachDone && G.enc !== "coachw"){ drawLaundry(x+10, y); person(x, y, SPECIALS.coachw.look, 0); if(Math.abs(x - PARTY_X) < 60 && G.party.length) bubble(x, y-38, "Laundry, anyone?"); } }
+    { const x = wx(MRT_MILE); if(x > -40 && x < W+40 && G.enc !== "mrt"){ person(x, y, SPECIALS.mrt.look, 0); drawNotes(x+14, y-30); if(Math.abs(x - PARTY_X) < 60 && G.party.length && !G.mrtDone) bubble(x, y-40, "Go Lancers!"); } }
     MRC_MILES.forEach(mi => {
       const x = wx(mi) + Math.sin(performance.now()/1100 + mi)*10; if(x<-20||x>W+20) return;
       person(x, y, { ...SPECIALS.mrc.look, point:false, slip:true }, Math.floor(performance.now()/260)%2);
