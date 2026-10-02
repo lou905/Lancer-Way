@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Lancer Way</title>
+<style>
+  :root{
+    --navy:#14213f; --navy2:#1d2b4f; --line:#2c3d68;
+    --gold:#f2c230; --cream:#f3ead2; --ink:#e8e2cf; --dim:#9fb0d4;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:#0a1226;color:var(--ink);
+    font-family:"Courier New",Courier,ui-monospace,Menlo,Consolas,monospace;}
+  #app{max-width:900px;margin:0 auto;padding:14px 12px 30px;}
+  header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
+  h1{margin:0;color:var(--gold);font-size:clamp(28px,6vw,44px);letter-spacing:6px;line-height:1;
+     text-shadow:3px 3px 0 #000, 6px 6px 0 var(--navy2);}
+  .sub{color:var(--dim);font-size:15px}
+  .frame{border:4px solid var(--gold);background:#000;box-shadow:0 0 0 4px var(--navy2),0 14px 40px rgba(0,0,0,.6)}
+  canvas{display:block;width:100%;height:auto;aspect-ratio:2/1;background:#3e8fd8;touch-action:manipulation}
+  .status{display:grid;grid-template-columns:repeat(6,1fr);background:var(--navy2);border-top:3px solid var(--gold)}
+  .status:empty{display:none}
+  .status div{padding:6px 9px;border-right:1px solid var(--line);min-width:0}
+  .status div:last-child{border-right:none}
+  .status span{display:block;font-size:12px;color:var(--dim)}
+  .status b{display:block;color:#fff;font-size:14px;line-height:1.25}
+  @media (max-width:640px){.status{grid-template-columns:repeat(3,1fr)} .status div:nth-child(3){border-right:none}}
+  .panel{background:#050505;min-height:230px;padding:16px 18px 20px;font-size:17px;line-height:1.5}
+  .panel h2{color:var(--gold);margin:0 0 8px;font-size:21px;letter-spacing:1px}
+  .panel p{margin:0 0 10px;max-width:72ch}
+  .panel .quote{border-left:4px solid var(--gold);padding-left:12px;color:#fff}
+  .panel .who{color:var(--gold)}
+  .menu{display:grid;gap:6px;margin-top:12px;max-width:560px}
+  .opt{all:unset;cursor:pointer;padding:8px 12px;border:2px solid var(--line);background:#0f1730;color:#fff;font:inherit;font-size:16px}
+  .opt:hover,.opt:focus-visible{border-color:var(--gold);background:#1a2648}
+  .opt .num{color:var(--gold);font-weight:bold;margin-right:6px}
+  .opt[disabled]{opacity:.35;cursor:not-allowed}
+  .cont{all:unset;cursor:pointer;margin-top:10px;display:inline-block;padding:9px 18px;background:var(--gold);color:#14213f;font:inherit;font-weight:bold;font-size:16px}
+  .cont:focus-visible,.cont:hover{outline:3px solid #fff;outline-offset:2px}
+  .hint{font-weight:normal;opacity:.7;font-size:13px}
+  .tip-line{display:block;color:#9fb0d4;font-size:13px;margin-top:2px}
+  .grid2{display:grid;grid-template-columns:auto auto;gap:4px 24px;max-width:460px}
+  .grid2 span:nth-child(odd){color:var(--dim)}
+  input[type=text]{font:inherit;font-size:16px;background:#0f1730;color:#fff;border:2px solid var(--line);padding:6px 8px;width:100%;max-width:260px}
+  input[type=text]:focus{outline:none;border-color:var(--gold)}
+  .names{display:grid;grid-template-columns:auto 1fr;gap:8px 12px;align-items:center;max-width:460px;margin:8px 0 4px}
+  .names label{color:var(--dim)}
+  table.store{border-collapse:collapse;width:100%;max-width:700px;font-size:15px}
+  table.store td,table.store th{padding:6px 6px;border-bottom:1px solid #1e2a4a;text-align:left;vertical-align:middle}
+  table.store th{color:var(--dim);font-weight:normal}
+  table.store .tip{display:block;color:#8d98b3;font-size:13px}
+  .qty{display:flex;align-items:center;gap:4px}
+  .qty button{all:unset;cursor:pointer;width:28px;height:28px;text-align:center;line-height:28px;background:#1a2648;color:var(--gold);font-weight:bold;border:1px solid var(--line)}
+  .qty button:focus-visible{outline:2px solid var(--gold)}
+  .qty b{min-width:40px;text-align:center}
+  .bill{margin-top:10px;font-size:17px}
+  .bill .bad{color:#ff7a6a}
+  .map{position:relative;margin:34px 6px 40px;height:8px;background:#26365f}
+  .map .fill{position:absolute;left:0;top:0;bottom:0;background:var(--gold)}
+  .map .dot{position:absolute;top:-4px;width:16px;height:16px;margin-left:-8px;background:#0f1730;border:3px solid #6f80aa}
+  .map .dot.done{border-color:var(--gold);background:var(--gold)}
+  .map .dot span{position:absolute;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:11px;color:var(--dim)}
+  .map .dot span.hi{bottom:18px}
+  .map .dot span.lo{top:18px}
+  .map .you{position:absolute;top:-26px;margin-left:-7px;color:#fff;font-size:14px}
+  .party li{margin:2px 0}
+  .ok{color:#8fe08f}.warn{color:#ffd166}.bad{color:#ff7a6a}
+  ol.honor{margin:6px 0 0;padding-left:28px}
+  ol.honor li{margin:2px 0}
+  footer{margin-top:12px;color:#7083ad;font-size:13px}
+</style>
+</head>
+<body>
+<div id="app">
+  <header>
+    <h1>LANCER WAY</h1>
+    <div class="sub">From Lancerville to Graduation</div>
+  </header>
+  <div class="frame">
+    <canvas id="scene" aria-label="The trail scene"></canvas>
+    <div id="status" class="status"></div>
+    <div id="panel" class="panel" aria-live="polite"></div>
+  </div>
+  <footer>Press 1–9 to choose an option. Press Space or Enter to continue. Go Lancers!</footer>
+</div>
+
+<script>
+"use strict";
+/* =========================================================
+   EASY-TO-EDIT SETTINGS
+   Change names, quotes, and places here.
+   ========================================================= */
+const CONFIG = {
+  town: "Lancerville",
+  road: "Lancer Way",
+  storeOwner: "Coach Matt",
+  classOf: "2027",
+  startDate: new Date(2026, 7, 12),   // Aug 12, 2026
+  graduation: new Date(2027, 4, 21),  // May 21, 2027
+  totalMiles: 1000
+};
+
+const LANDMARKS = [
+  { mile:0, name:"Lancerville", short:"Lancerville", kind:"gate", store:"the Campus Store", priceMult:1,
+    look:"The front gate of Lancerville. Backpacks are zipped, lunches are packed, and Lancer Way stretches all the way to the Upper School.",
+    people:[
+      ["Coach Matt, campus store","Most folks buy at least 3 pairs of sneakers. Lancer Way is longer than it looks."],
+      ["A nervous kindergartner","Is it true the high school is at the END of the road? Like the very end?"],
+      ["Mrs. Harper, front office","Sign in, grab a visitor badge, and pack a hoodie. Florida gets cold in January. Well, Florida cold."]
+    ]},
+  { mile:90, name:"the Lower School", short:"Lower School", kind:"school", size:"small", label:"LOWER SCHOOL",
+    look:"Finger paintings in the windows and a playground full of kids who move faster than you ever will.",
+    people:[
+      ["Ms. Rivera, 2nd grade teacher","Pack extra snacks. Growing Lancers get hungry every single stop. Here, take some goldfish crackers.","snacks"],
+      ["A 3rd grader","I traded my pudding cup for a pencil. Best trade ever. Pop quizzes are everywhere out there."],
+      ["The recess monitor","Thinking about cutting across my playground? I see EVERYTHING. Just so you know."]
+    ]},
+  { mile:190, name:"the Library", short:"Library", kind:"library", store:"the Book Fair", priceMult:1.2,
+    look:"Quiet, cool, and full of air conditioning. The Book Fair is set up by the front desk.",
+    people:[
+      ["Mr. Okafor, librarian","Shhh. Also: the Carpool Lane is next. If the line is long, wait for the crossing guard."],
+      ["A 5th grader","The Book Fair sells supplies, but everything gets pricier the farther you go. Want my extra pencils?","pencils"],
+      ["A 4th grader","I checked out a book about the Oregon Trail. Everyone in it got dysentery. I'm nervous."]
+    ]},
+  { mile:285, name:"the Carpool Lane", short:"Carpool", kind:"crossing", crossing:"carpool",
+    look:"A line of minivans that stretches back to the parking lot. Somewhere, a horn honks.",
+    people:[
+      ["Officer Dan, crossing guard","I've watched a lot of kids dash across. The smart ones wait for my whistle."],
+      ["A parent in a minivan","I've been in this line since 2:15. What year is it?"],
+      ["A 6th grader","If you have ten bucks, a senior will drive you around. That's the VIP route."]
+    ]},
+  { mile:380, name:"the Middle School", short:"Middle School", kind:"school", size:"medium", label:"MIDDLE SCHOOL",
+    store:"the Middle School Store", priceMult:1.35,
+    look:"Lockers slamming, a smell of body spray, and a hallway that is somehow always crowded.",
+    people:[
+      ["Mr. Patel, science teacher","Chromebooks crash at the worst times. Here, take my spare charger. I have a drawer full.","charger"],
+      ["An 8th grader","The portables are a shortcut, but half my class got lost back there in September. Like, LOST lost."],
+      ["Coach Reyes","Keep rations normal. Light rations always catch up with you."]
+    ]},
+  { mile:480, name:"the Church", short:"Church", kind:"church", church:true,
+    look:"The bell is ringing, sunlight pours through the stained glass, and the worship team is warming up. Everyone is welcome here.",
+    people:[
+      ["The pastor","Take a moment to rest. You don't have to walk Lancer Way in your own strength."],
+      ["A worship team student","Chapel day is the best day of the week. I will not be taking questions."],
+      ["A greeter at the door","Come on in! There's coffee for the teachers and donuts for the 8th graders.","donuts"],
+      ["A senior","Isaiah 40:31. They shall run and not be weary. Just maybe not at hustle pace."]
+    ]},
+  { mile:575, name:"the Gymnasium", short:"Gym", kind:"gym",
+    look:"Squeaking sneakers, a buzzer going off, and banners from championships long ago.",
+    people:[
+      ["Coach Thompson, PE","Your sneakers are your oxen. Lose them all and you'll be crawling to graduation."],
+      ["A volleyball player","Hurricane days wreck the schedule, but everybody comes back rested."],
+      ["A basketball player","Don't cut through the locker room. The floor is ALWAYS wet."]
+    ]},
+  { mile:665, name:"the Courtyard Fountain", short:"Fountain", kind:"crossing", crossing:"fountain",
+    look:"The fountain's pipe broke again, and the whole courtyard is underwater.",
+    people:[
+      ["Mr. Gomez, custodian","If it's over two feet deep, don't wade through with your laptops."],
+      ["A 9th grader","I hopped the stepping stones once. Once."],
+      ["A 10th grader","The long way through the halls is safe. Slow, but safe."]
+    ]},
+  { mile:770, name:"Lancer Stadium", short:"Stadium", kind:"stadium", store:"the Concession Stand", priceMult:1.6,
+    look:"Friday night lights. The band is playing and the concession stand smells like popcorn.",
+    people:[
+      ["A Lancers football player","You can sneak under the bleachers to save time. The seagulls live under there, though."],
+      ["The band director","You're past winter now. Keep moving. Graduation won't wait."],
+      ["A cheerleader","L-A-N-C-E-R-S! Okay, you can keep walking now."]
+    ]},
+  { mile:880, name:"the Upper School", short:"Upper School", kind:"school", size:"large", label:"UPPER SCHOOL",
+    store:"the Senior Lounge", priceMult:1.8,
+    look:"The home stretch. College banners on the walls and seniors who are very, very ready.",
+    people:[
+      ["Mrs. Brooks, AP teacher","Almost there. Your GPA counts toward your final score, so don't slack now."],
+      ["A senior","Senioritis is real. If you catch it, rest up and push through."],
+      ["Mrs. S, guidance counselor","Graduation is May 21. Don't be late. And here, a little scholarship money for the road.","money"]
+    ]},
+  { mile:1000, name:"Graduation", short:"Graduation", kind:"stage", final:true, people:[] }
+];
+
+const TRAIL_PEOPLE = [
+  ["A 6th grader","Have you seen my water bottle? It's blue. It has stickers on it."],
+  ["A teacher on hall duty","Walk, don't run. Unless you picked hustle. Then I guess run."],
+  ["A 10th grader","The seagulls by the cafeteria are organized. They have a leader."],
+  ["A math teacher","At your pace, how many days until graduation? Show your work."],
+  ["A tech teacher","Did you try turning it off and on again?"],
+  ["A sophomore","I heard a freshman caught senioritis. Scary stuff."],
+  ["A choir student","Go Lancers! That's it. That's the message."],
+  ["A coach","Hydrate! This is Florida!"],
+  ["A 7th grader","Pop quizzes eat pencils. Bring a lot of pencils."],
+  ["A history teacher","The real Oregon Trail was 2,000 miles. You've got it easy."],
+  ["A lunch lady","Snack runs at the cafeteria are free, but they take time. And watch the seagulls."],
+  ["An 11th grader","Resting heals people faster than walking. Just saying."],
+  ["A lunch lady on break","You all look hungry. Take these, I made too many.","snacks"],
+  ["A substitute teacher","I have no idea where I am. But I do have extra pencils.","pencils"],
+  ["A senior with a car","Found five bucks in my cupholder. Take it, I'm feeling generous.","money"],
+  ["The school nurse","Everybody drink some water and sit for a second. There. Better?","heal"],
+  ["A 9th grader","Shortcuts save days, but every one of them has a catch. Every. One."],
+  ["A science teacher","Detours aren't wasted time. Some of the best stuff on campus is off the main road."]
+];
+
+/* Gifts people can give when you talk to them (once each). */
+const GIFTS = {
+  snacks:  () => { const n = rint(15,30); G.snacks += n; return `Your group got ${n} snacks.`; },
+  donuts:  () => { G.snacks += 24; return "Your group got a dozen donuts. Well, 24 snacks' worth."; },
+  pencils: () => { G.pencils += 10; return "Your group got 10 pencils."; },
+  money:   () => { const n = rint(5,15); G.money += n; return `Your group got $${n}.`; },
+  charger: () => { G.chargers += 1; return "Your group got a laptop charger."; },
+  heal:    () => { alive().forEach(p => p.health = Math.min(100, p.health + 8)); return "Everyone feels a little better."; }
+};
+
+/* Shortcuts and detours. The number is the landmark you choose them at
+   (1 = Lower School, 2 = Library, 4 = Middle School, 5 = Church, 6 = Gym, 8 = Stadium, 9 = Upper School). */
+const FORKS = {
+  1: { shortcut:{ name:"Cut across the playground", save:30, risk:0.3,
+         good:"Your group cut straight across the playground. Fast!",
+         bad:()=>{ G.day += 4; return "The recess monitor blew her whistle and made everyone walk back to the sidewalk. You lost 4 days and saved nothing."; } },
+       detour:{ name:"Visit the Lower School art room", stops:1,
+         reward:()=>{ alive().forEach(p=>p.health=Math.min(100,p.health+10)); return "The 2nd graders made everyone friendship bracelets. Spirits are way up."; } } },
+  2: { shortcut:{ name:"Take the back hallway by the book drop", save:25, risk:0.25,
+         good:"The back hallway was empty. Your group zipped right through.",
+         bad:()=>{ const l = Math.round(G.snacks*0.15); G.snacks -= l; return `A librarian caught you eating in the hallway and confiscated ${l} snacks.`; } },
+       detour:{ name:"Explore the Media Center", stops:1,
+         reward:()=>{ G.chargers += 1; G.pencils += 10; G.gpa = Math.min(4.5, G.gpa+0.1); return "The media specialist gave you a charger and 10 pencils, and everyone finished a research project. GPA +0.1."; } } },
+  4: { shortcut:{ name:"Cut through the portables", save:45, risk:0.35,
+         good:"Left, right, left, behind the portable with the broken AC... and you're out! That saved a lot of time.",
+         bad:()=>{ G.day += 8; return "Every portable looks the same. Your group got completely lost and lost 8 days finding the way out."; } },
+       detour:{ name:"Stop by the science lab", stops:2,
+         reward:()=>{ G.gpa = Math.min(4.5, G.gpa+0.2); G.chargers += 1; return "Mr. Patel let everyone build a working circuit. GPA +0.2, and he sent you off with a spare charger."; } } },
+  5: { detour:{ name:"Help with the church's service project", stops:1,
+         reward:()=>{ G.snacks += 40; alive().forEach(p=>{ p.health=Math.min(100,p.health+8); }); return "Your group helped pack meals for families in need. On the way out, the church family sent you off with 40 snacks and a prayer for the road."; } } },
+  6: { shortcut:{ name:"Run through the locker room", save:30, risk:0.3,
+         good:"Through the locker room and out the back door. Smelly, but fast.",
+         bad:()=>{ const p = pick(alive().filter(x=>!x.sick)); if(!p) return "The floor was wet, but everyone made it."; p.sick="sprained an ankle"; p.health=Math.max(1,p.health-15); return `The floor was wet. ${p.name} slipped and sprained an ankle.`; } },
+       detour:{ name:"Shoot some hoops in the gym", stops:1,
+         reward:()=>{ alive().forEach(p=>p.health=Math.min(100,p.health+12)); return "A quick game of knockout. The 8th graders won. Everyone is pumped up."; } } },
+  8: { shortcut:{ name:"Sneak under the bleachers", save:35, risk:0.35,
+         good:"Under the bleachers and out the other side. Nobody even noticed.",
+         bad:()=>{ const l = Math.round(G.snacks*0.3); G.snacks -= l; return `Bad idea. The seagulls live under there. They took ${l} snacks.`; } },
+       detour:{ name:"Stay for the Friday night game", stops:1,
+         reward:()=>{ alive().forEach(p=>p.health=Math.min(100,p.health+10)); let m = "The Lancers won! Everyone is fired up."; if(chance(.5)){ G.money += 25; m += " You also won $25 in the 50/50 raffle!"; } return m; } } },
+  9: { shortcut:{ name:"Cut through the senior parking lot", save:40, risk:0.3,
+         good:"Your group weaved through the senior lot. Almost there!",
+         bad:()=>{ G.day += 4; G.money = Math.max(0, G.money-10); return "Campus security stopped you and wrote a $10 \"parking ticket\"... for walking. You lost 4 days arguing about it."; } },
+       detour:{ name:"Visit Mrs. S in the guidance office", stops:1,
+         reward:()=>{ G.gpa = Math.min(4.5, G.gpa+0.15); return "Mrs. S helped everyone plan their high school classes. GPA +0.15."; } } }
+};
+
+const SHOUTS = ["Go Lancers!","Keep going!","Hydrate!","Nice pace!","Pop quiz?!","Good morning!","You got this!","Walk, don't run!","Hi!","Lancer pride!"];
+const TEACHERS = ["Mrs. Lin","Mr. Patel","Ms. Rivera","Mr. Okafor","Mrs. Brooks","Coach Reyes"];
+const ILLS = ["has a cold","has the flu","sprained an ankle","has a stomach bug","has a migraine","got a bad sunburn","caught an early case of senioritis"];
+
+/* Playable teachers. Change names, looks, money, and score multipliers here.
+   Look options: skin, hair, shirt, pants, beard (color), gray (true = salt-and-pepper),
+   bald, curly, long, glasses, tie (color), clip (clipboard), cardigan (color). */
+const CHARACTERS = [
+  { id:"drt", name:"Dr. T", blurb:"Salt-and-pepper hair and a legendary beard.",
+    perk:"Scholar: pop quizzes use only 2 pencils and boost GPA more.", money:650, mult:1.5,
+    look:{ skin:"#c68a5e", hair:"#2a2a2a", gray:true, beard:"#333333", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", book:"#7a1f2b" } },
+  { id:"mrg", name:"Mr. G", blurb:"Young, dark hair, full of energy.",
+    perk:"Energetic: hustle pace barely wears your group down.", money:550, mult:2,
+    look:{ skin:"#e9b98f", hair:"#1a1a1a", shirt:"#2e6db4", pants:"#c9b48a" } },
+  { id:"ritchie", name:"Mr. Ritchie", blurb:"The veteran. Bald, wise, and has seen it all.",
+    perk:"Been there: crossings are twice as safe.", money:500, mult:2,
+    look:{ skin:"#f1c9a5", hair:"#c9c9c9", bald:true, shirt:"#ffffff", cardigan:"#6b4f33", pants:"#3a3a3a", book:"#2e6db4" } },
+  { id:"rich", name:"Miss Rich", blurb:"Young, glasses, sharp eyes.",
+    perk:"Sharp-eyed: Snack Runs last longer and you carry more back.", money:500, mult:2,
+    look:{ skin:"#f1c9a5", hair:"#6b4a2b", long:true, glasses:true, shirt:"#7a1f2b", pants:"#1d2b4f" } },
+  { id:"melissa", name:"Melissa", blurb:"Curly hair, clipboard, and the most organized person on campus.",
+    perk:"Organized: seagulls and spills rarely cost you anything.", money:450, mult:2.5,
+    look:{ skin:"#e9b98f", hair:"#8a5a2b", curly:true, shirt:"#2f7d32", pants:"#c9b48a", clip:true } },
+  { id:"sosa", name:"Mr. Sousa", blurb:"In his twenties, from Brazil, never slows down.",
+    perk:"Quick feet: your group walks 10% faster.", money:400, mult:3,
+    look:{ skin:"#b07a52", hair:"#1a1a1a", shirt:"#f2c230", pants:"#1d2b4f" } },
+  { id:"mrk", name:"Mr. K", blurb:"Forty, wise, and wealthy. Always wears the suit.",
+    perk:"Deep pockets: starts with the most money.", money:900, mult:1,
+    look:{ skin:"#e9b98f", hair:"#3b2414", shirt:"#1d2b4f", tie:"#f2c230", pants:"#1d2b4f" } }
+];
+const charOf = () => CHARACTERS.find(c => c.id === G.char);
+const perk = id => G.char === id;
+
+/* Special campus characters you meet on the trail. Change looks or names here. */
+const SPECIALS = {
+  bp:    { name:"BP", look:{ skin:"#c68a5e", hair:"#1a1a1a", cop:true, sunglasses:true, radio:true, pants:"#1d2b4f", shirt:"#1f3a68", teacher:true } },
+  mrc:   { name:"Mr. C", look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, shirt:"#2e6db4", polo:true, collar:"#f2c230", pants:"#c9b48a", big:true, point:true, teacher:true } },
+  eddy:  { name:"Eddy", look:{ skin:"#f1c9a5", hair:"#7a5a3a", shirt:"#2b2e36", polo:true, collar:"#f2c230", badge:true, pants:"#2b2e36", cap:"#111111", teacher:true } },
+  mrss:  { name:"Mrs. S", look:{ skin:"#f1c9a5", hair:"#7a4a2a", curly:true, shirt:"#5b7fb8", cardigan:"#f3ead2", pants:"#1d2b4f", clip:true, teacher:true } },
+  karen: { name:"Chef", look:{ skin:"#93603f", hair:"#1a1a1a", gray:true, thin:true, chef:true, glasses:true, apron:"#1d2b4f", pants:"#2a2a2a", teacher:true } }
+};
+const BP_MILES = [140, 330, 520, 720, 940];   // where BP checks hall passes
+const MRC_MILES = [230, 430, 610, 830];       // where Mr. C patrols for runners
+const MRSS_MILES = [320, 700];                // where Mrs. S checks in on your group
+const KAREN_LINES = ["Grab 'em while they're hot!","Watch those seagulls!","Chef's special coming up!","No running in my cafeteria!","Eat something green!"];
+
+const ITEMS = [
+  { key:"sneakers", name:"Sneakers", price:50, step:1, tip:"Like oxen: more pairs means faster walking. Get at least 3." },
+  { key:"snacks", name:"Snacks", price:0.25, step:20, tip:"Each person eats 2 every stop on normal rations." },
+  { key:"hoodies", name:"Lancer hoodies", price:15, step:1, tip:"For the cold months. One per person." },
+  { key:"pencils", name:"Pencils", price:0.3, step:10, tip:"Pop quizzes use 3 at a time." },
+  { key:"chargers", name:"Laptop chargers", price:15, step:1, tip:"Fixes a dead Chromebook without losing days." },
+  { key:"passes", name:"Hall passes", price:1, step:1, tip:"BP stops groups and asks for one. Each check uses a pass." },
+  { key:"ids", name:"ID badges", price:3, step:1, tip:"Eddy from security checks IDs. One per person." }
+];
+
+const PACE = {
+  stroll:{ name:"Stroll", miles:14, h:2, desc:"Slow, easy on everyone." },
+  walk:{ name:"Steady walk", miles:19, h:0, desc:"A normal pace." },
+  hustle:{ name:"Hustle", miles:25, h:-3, desc:"Fast, but wears people down." }
+};
+const RATIONS = {
+  light:{ name:"Light", eat:1, h:-3, desc:"1 snack per person per stop" },
+  normal:{ name:"Normal", eat:2, h:1, desc:"2 snacks per person per stop" },
+  big:{ name:"Big", eat:3, h:3, desc:"3 snacks per person per stop" }
+};
+const SNEAKER_F = [0.35, 0.65, 0.85, 1, 1.05];
+const DAYS_PER_STOP = 4;
+
+const PARTY_LOOKS = [
+  { shirt:"#1d2b4f", pants:"#c9b48a", skin:"#e9b98f", hair:"#3b2414", backpack:"#f2c230" },
+  { shirt:"#f2c230", pants:"#1d2b4f", skin:"#8d5a3b", hair:"#1a1a1a", backpack:"#c0392b" },
+  { shirt:"#ffffff", pants:"#1d2b4f", skin:"#f1c9a5", hair:"#c98b3b", backpack:"#2e6db4" },
+  { shirt:"#7a1f2b", pants:"#c9b48a", skin:"#c68a5e", hair:"#2a1a10", backpack:"#2f7d32" },
+  { shirt:"#2e6db4", pants:"#c9b48a", skin:"#5e3b26", hair:"#111", backpack:"#f2c230" }
+];
+
+/* =========================================================
+   UTILITIES
+   ========================================================= */
+const $ = s => document.querySelector(s);
+const panel = $("#panel"), statusEl = $("#status");
+const rnd = (a=0,b=1) => a + Math.random()*(b-a);
+const rint = (a,b) => Math.floor(rnd(a,b+1));
+const pick = a => a[Math.floor(Math.random()*a.length)];
+const chance = p => Math.random() < p;
+const hr = n => { const x = Math.sin(n*127.1 + 311.7)*43758.5453; return x - Math.floor(x); };
+const esc = s => String(s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const money = n => "$" + n.toFixed(2);
+function listJoin(a){ if(a.length<=1) return a.join(""); return a.slice(0,-1).join(", ") + " and " + a[a.length-1]; }
+
+let G;
+function newGame(){
+  G = { mode:"trail", party:[], role:null, mult:1,
+    money:0, snacks:0, sneakers:0, hoodies:0, pencils:0, chargers:0, passes:0, ids:0, mrcSeen:{}, mrssSeen:{},
+    miles:0, displayMiles:0, day:0, pace:"walk", rations:"normal", gpa:3.0, weather:"Sunny",
+    lmIndex:0, atLandmark:true, traveling:false, lateNoted:false, hungryWarned:false, talk:{}, gifted:{}, crowd:null, forkDone:{}, forkRoll:{}, demerits:0, demTotal:0, bpSeen:{}, cart:null };
+}
+newGame();
+
+const curDate = () => { const d = new Date(CONFIG.startDate); d.setDate(d.getDate() + G.day); return d; };
+const fmtDate = d => d.toLocaleDateString("en-US",{ month:"long", day:"numeric", year:"numeric" });
+const alive = () => G.party.filter(p => !p.gone);
+const avgHealth = () => { const a = alive(); return a.length ? a.reduce((s,p)=>s+p.health,0)/a.length : 0; };
+const healthLabel = h => h>=70 ? "Good" : h>=45 ? "Fair" : h>=20 ? "Poor" : "Very poor";
+const nextLM = () => LANDMARKS[G.lmIndex+1];
+const curLM = () => LANDMARKS[G.lmIndex];
+const month = () => curDate().getMonth();
+const isCold = () => G.weather==="Chilly" || G.weather==="Cold";
+const isStorm = () => G.weather==="Thunderstorms" || G.weather==="Rainy";
+
+function rollWeather(){
+  const m = month();
+  if([7,8,9].includes(m)) return pick(["Hot","Hot","Sunny","Humid","Thunderstorms"]);
+  if(m===10) return pick(["Warm","Sunny","Cool"]);
+  if([11,0,1].includes(m)) return pick(["Cool","Chilly","Cold","Sunny","Chilly"]);
+  return pick(["Warm","Sunny","Sunny","Hot","Rainy"]);
+}
+
+/* =========================================================
+   PANEL HELPERS
+   ========================================================= */
+let lastAct = 0;
+function setPanel(html){ panel.innerHTML = html; }
+function menu(title, intro, opts){
+  setPanel(`${title?`<h2>${title}</h2>`:""}${intro||""}<div class="menu">${
+    opts.map((o,i)=>`<button class="opt" data-key="${i+1}" ${o.disabled?"disabled":""}><span class="num">${i+1}.</span>${o.label}</button>`).join("")
+  }</div>`);
+  panel.querySelectorAll(".opt").forEach((b,i)=>{ b.onclick = () => { if(!opts[i].disabled) act(opts[i].fn); }; });
+}
+function message(html, then, btn="Continue"){
+  setPanel(`<div class="msg">${html}</div><button class="cont" data-continue>${btn} <span class="hint">(Space)</span></button>`);
+  panel.querySelector(".cont").onclick = () => act(then);
+}
+function showMessages(list, then){
+  let i = 0;
+  const next = () => { if(i >= list.length) return then(); message(`<p>${list[i++]}</p>`, next); };
+  next();
+}
+function act(fn){ const now = performance.now(); if(now - lastAct < 120) return; lastAct = now; fn(); }
+
+document.addEventListener("keydown", e => {
+  if(e.target.tagName === "INPUT") return;
+  if(/^[1-9]$/.test(e.key)){
+    const b = panel.querySelector(`.opt[data-key="${e.key}"]`);
+    if(b && !b.disabled){ e.preventDefault(); b.click(); }
+  } else if(e.key===" " || e.key==="Enter"){
+    const b = panel.querySelector("[data-continue]");
+    if(b){ e.preventDefault(); b.click(); }
+  }
+});
+
+function updateStatus(){
+  if(!G.party.length){ statusEl.innerHTML = ""; return; }
+  const nx = nextLM();
+  statusEl.innerHTML =
+    `<div><span>Date</span><b>${fmtDate(curDate())}</b></div>`+
+    `<div><span>Weather</span><b>${G.weather}</b></div>`+
+    `<div><span>Health</span><b>${healthLabel(avgHealth())}</b></div>`+
+    `<div><span>Snacks</span><b>${G.snacks}</b></div>`+
+    `<div><span>Next stop</span><b>${nx ? `${nx.short}, ${nx.mile-G.miles} mi` : "Done!"}</b></div>`+
+    `<div><span>Traveled</span><b>${G.miles} of ${CONFIG.totalMiles} mi</b></div>`;
+}
+
+/* =========================================================
+   TITLE, SETUP, STORE
+   ========================================================= */
+function titleScreen(){
+  newGame(); updateStatus();
+  menu("Welcome to Lancerville",
+    `<p>The road from the front gate to graduation is called ${CONFIG.road}. It is 1,000 miles of classrooms, carpool lines, pop quizzes and seagulls. Pick a teacher, gather four 8th graders, and see if you can make it all the way to the end of the Upper School.</p>`,
+    [ {label:`Travel ${CONFIG.road}`, fn:chooseCharacter},
+      {label:"Learn how to play", fn:learn},
+      {label:"See the Lancer Honor Roll", fn:()=>showHonor(titleScreen)} ]);
+}
+
+function learn(){
+  const pages = [
+    `<h2>How to play</h2><p>You are a teacher leading four 8th graders from ${CONFIG.town} to Graduation, 1,000 miles down ${CONFIG.road}. Each stop on the trail takes ${DAYS_PER_STOP} days. Graduation is May 21. Arrive late and you'll be walking at the summer ceremony.</p>`,
+    `<h2>Supplies</h2><p><b>Sneakers</b> are your oxen: fewer pairs means slower walking. <b>Snacks</b> keep everyone going. <b>Hoodies</b> protect you in the cold months. <b>Pencils</b> get you through pop quizzes. <b>Laptop chargers</b> save time when a Chromebook dies.</p>`,
+    `<h2>On the trail</h2><p>Stop any time to change your pace or rations, rest, talk to people, or go on a Snack Run in the cafeteria. People you meet give tips, and some will share supplies. At many stops the path splits: shortcuts save miles but can go wrong, and detours cost days but usually pay off. Click the snacks to grab them, but don't click the seagulls.</p><p>Stores along the way sell supplies, but prices go up the farther you go. You'll have to cross the Carpool Lane and the flooded Courtyard Fountain.</p>`,
+    `<h2>People to watch for</h2><p><b>BP</b> patrols ${CONFIG.road} and asks for a hall pass. <b>Mr. C</b> hands out demerits and yells at anyone running. Three demerits means detention. <b>Eddy</b> from security rolls up in his golf cart and asks for ID. If everyone has one, he might give you a ride. <b>Chef</b> runs the cafeteria and sometimes brings a hot lunch cart out on the trail. <b>Mrs. S</b>, the guidance counselor, checks in on how your group is doing.</p>`,
+    `<h2>Scoring</h2><p>When you reach Graduation, you score points for each Lancer who made it, their health, your GPA, and leftover supplies. Teachers who start with less money get a bigger score multiplier.</p>`
+  ];
+  let i = 0;
+  const show = () => { if(i>=pages.length) return titleScreen(); setPanel(pages[i++] + `<button class="cont" data-continue>Continue <span class="hint">(Space)</span></button>`); panel.querySelector(".cont").onclick = ()=>act(show); };
+  show();
+}
+
+function chooseCharacter(){
+  G.mode = "pick"; G.pickHover = 0;
+  menu("Choose your teacher", `<p>You'll lead four 8th graders down ${CONFIG.road}. Which teacher are you? Teachers with less money earn a bigger score multiplier.</p>`,
+    CHARACTERS.map((c,i) => ({ label:`${c.name}: ${money(c.money)}, score x${c.mult}<span class="tip-line">${c.blurb} ${c.perk}</span>`,
+      fn:()=>{ G.char=c.id; G.mult=c.mult; G.money=c.money; G.mode="trail"; nameParty(); } })));
+  panel.querySelectorAll(".opt").forEach((b,i) => { b.onmouseenter = b.onfocus = () => { G.pickHover = i; }; });
+}
+
+function nameParty(){
+  const defs = ["Ava","Noah","Eli","Grace"];
+  setPanel(`<h2>Name your 8th graders</h2><p>${charOf().name} is leading the trip. Who are the four 8th graders walking ${CONFIG.road} with you?</p>
+    <div class="names">${defs.map((d,i)=>`<label for="n${i}">8th grader ${i+1}</label><input type="text" id="n${i}" maxlength="14" value="${d}" autocomplete="off">`).join("")}</div>
+    <button class="cont" id="goNames">Start shopping</button>`);
+  const first = $("#n0"); first.focus(); first.select();
+  const go = () => {
+    const names = [charOf().name].concat([0,1,2,3].map(i => $("#n"+i).value.trim() || defs[i]));
+    G.party = names.map((n,i)=>({ name:n, idx:i, health:94, sick:null, gone:false }));
+    store(true);
+  };
+  $("#goNames").onclick = go;
+  panel.querySelectorAll("input").forEach(inp => inp.addEventListener("keydown", e => { if(e.key==="Enter"){ e.preventDefault(); go(); }}));
+}
+
+function store(isStart){
+  const L = curLM(), mult = L.priceMult || 1;
+  const cart = {}; ITEMS.forEach(it => cart[it.key] = 0);
+  const price = it => Math.round(it.price*mult*100)/100;
+  const total = () => ITEMS.reduce((s,it)=>s + cart[it.key]*price(it), 0);
+  const render = () => {
+    const t = total();
+    setPanel(`<h2>${isStart ? `${CONFIG.storeOwner}'s Campus Store` : "Welcome to " + L.store}</h2>
+      ${isStart ? `<p class="quote"><span class="who">${CONFIG.storeOwner}:</span> "Heading down ${CONFIG.road}? You'll want sneakers, snacks, hoodies, pencils and a charger or two. Prices only go up from here."</p>` : ""}
+      <table class="store"><thead><tr><th>Item</th><th>Price</th><th>You have</th><th>Buy</th></tr></thead><tbody>
+      ${ITEMS.map(it=>`<tr><td>${it.name}<span class="tip">${it.tip}</span></td><td>${money(price(it))}${it.step>1?` each`:""}</td><td>${G[it.key]}</td>
+        <td><div class="qty"><button data-k="${it.key}" data-d="-1" aria-label="Less ${it.name}">−</button><b>${cart[it.key]}</b><button data-k="${it.key}" data-d="1" aria-label="More ${it.name}">+</button></div></td></tr>`).join("")}
+      </tbody></table>
+      <div class="bill">Total: <b class="${t>G.money?"bad":""}">${money(t)}</b> &nbsp; Money: <b>${money(G.money)}</b> &nbsp; Left after: <b class="${t>G.money?"bad":""}">${money(G.money-t)}</b></div>
+      <div class="menu"><button class="opt" data-key="1" id="buy"${t>G.money?" disabled":""}><span class="num">1.</span>${t>0?"Buy and leave the store":"Leave the store"}</button></div>`);
+    panel.querySelectorAll(".qty button").forEach(b => b.onclick = () => {
+      const it = ITEMS.find(x=>x.key===b.dataset.k);
+      cart[it.key] = Math.max(0, cart[it.key] + Number(b.dataset.d)*it.step);
+      render();
+      const again = panel.querySelector(`.qty button[data-k="${b.dataset.k}"][data-d="${b.dataset.d}"]`); if(again) again.focus();
+    });
+    $("#buy").onclick = () => act(() => {
+      if(total() > G.money) return;
+      if(isStart && G.sneakers + cart.sneakers === 0){
+        message(`<p class="quote"><span class="who">${CONFIG.storeOwner}:</span> "Whoa. You can't start ${CONFIG.road} without at least one pair of sneakers."</p>`, render, "Back to the store");
+        return;
+      }
+      G.money -= total(); ITEMS.forEach(it => G[it.key] += cart[it.key]);
+      updateStatus();
+      if(isStart){
+        showMessages([`It is ${fmtDate(curDate())}. Your group stands at the front gate of ${CONFIG.town}. Graduation is ${fmtDate(CONFIG.graduation)}, 1,000 miles down ${CONFIG.road}.`], landmarkMenu);
+      } else landmarkMenu();
+    });
+  };
+  render();
+}
+
+/* =========================================================
+   MENUS ON THE TRAIL
+   ========================================================= */
+function landmarkMenu(){
+  updateStatus();
+  const L = curLM(), at = G.atLandmark;
+  const where = at ? `You are at ${L.name}.` : `You are on ${CONFIG.road}, ${G.miles} miles from ${CONFIG.town}.`;
+  const opts = [
+    {label:`Continue on ${CONFIG.road}`, fn:continueOn},
+    {label:"Check supplies", fn:supplies},
+    {label:"Look at the map", fn:showMap},
+    {label:`Change pace <span class="hint">(${PACE[G.pace].name})</span>`, fn:changePace},
+    {label:`Change snack rations <span class="hint">(${RATIONS[G.rations].name})</span>`, fn:changeRations},
+    {label:"Stop to rest", fn:restMenu},
+    {label:"Go on a Snack Run", fn:startSnackRun},
+    {label:"Talk to people", fn:talk}
+  ];
+  if(at && L.store) opts.push({label:`Buy supplies at ${L.store}`, fn:()=>store(false)});
+  if(at && L.church) opts.push({label:"Go to worship at the church", fn:attendChapel});
+  menu(null, `<p>${where}${at && L.look ? " " + L.look : ""}</p><p>What would you like to do?</p>`, opts);
+}
+
+function supplies(){
+  const a = alive();
+  message(`<h2>Your supplies</h2>
+    <div class="grid2"><span>Money</span><span>${money(G.money)}</span><span>Sneakers</span><span>${G.sneakers} pairs</span>
+    <span>Snacks</span><span>${G.snacks}</span><span>Hoodies</span><span>${G.hoodies}</span>
+    <span>Pencils</span><span>${G.pencils}</span><span>Laptop chargers</span><span>${G.chargers}</span><span>Hall passes</span><span>${G.passes}</span><span>ID badges</span><span>${G.ids}</span>
+    <span>GPA</span><span>${G.gpa.toFixed(2)}</span><span>Demerits</span><span>${G.demerits} of 3 (3 = detention)</span></div>
+    <h2 style="margin-top:14px">Your group</h2><ul class="party">${G.party.map(p=>{
+      if(p.gone) return `<li class="bad">${esc(p.name)}: went home</li>`;
+      const h = healthLabel(p.health), c = p.health>=70?"ok":p.health>=45?"warn":"bad";
+      return `<li>${esc(p.name)}: <span class="${c}">${h}</span>${p.sick?` <span class="warn">(${p.sick})</span>`:""}</li>`;
+    }).join("")}</ul>
+    <p>${a.length} Lancers eat ${a.length*RATIONS[G.rations].eat} snacks every stop, so your snacks will last about ${Math.floor(G.snacks/Math.max(1,a.length*RATIONS[G.rations].eat))} more stops.</p>`, landmarkMenu);
+}
+
+function showMap(){
+  const pct = m => m/CONFIG.totalMiles*100;
+  message(`<h2>Map of ${CONFIG.road}</h2>
+    <div class="map"><div class="fill" style="width:${pct(G.miles)}%"></div>
+    ${LANDMARKS.map((l,i)=>`<div class="dot ${l.mile<=G.miles?"done":""}" style="left:${pct(l.mile)}%"><span class="${i%2?"lo":"hi"}">${l.short}</span></div>`).join("")}
+    <div class="you" style="left:${pct(G.miles)}%" aria-label="You are here">▼</div></div>
+    <p>You have traveled ${G.miles} miles. ${nextLM() ? `Next stop: ${nextLM().short}, ${nextLM().mile-G.miles} miles away.` : ""}</p>`, landmarkMenu);
+}
+
+function changePace(){
+  menu("Change pace", `<p>How fast should your group move? Right now: ${PACE[G.pace].name}.</p>`,
+    Object.keys(PACE).map(k=>({label:`${PACE[k].name} <span class="hint">${PACE[k].desc}</span>`, fn:()=>{ G.pace=k; landmarkMenu(); }})));
+}
+function changeRations(){
+  menu("Change snack rations", `<p>How much should everyone eat? Right now: ${RATIONS[G.rations].name}.</p>`,
+    Object.keys(RATIONS).map(k=>({label:`${RATIONS[k].name} <span class="hint">${RATIONS[k].desc}</span>`, fn:()=>{ G.rations=k; landmarkMenu(); }})));
+}
+
+function restMenu(){
+  menu("Stop to rest", `<p>Resting helps sick and tired Lancers recover, but it uses time and snacks. How long?</p>`,
+    [1,2,3].map(n=>({label:`${n*DAYS_PER_STOP} days`, fn:()=>{
+      let msgs = [];
+      for(let i=0;i<n;i++){ msgs = msgs.concat(advance({rest:true}).msgs); }
+      msgs.unshift(`Your group rested for ${n*DAYS_PER_STOP} days.`);
+      afterMessages(msgs, landmarkMenu);
+    }})).concat([{label:"Never mind", fn:landmarkMenu}]));
+}
+
+function attendChapel(){
+  const r = advance({rest:true});
+  alive().forEach(p => { p.health = Math.min(100, p.health + 12); if(p.sick && chance(.5)){ r.msgs.push(`${p.name} is feeling better.`); p.sick = null; } });
+  afterMessages([`Your group worshiped at the church. The singing was loud, the 8th graders actually paid attention to the sermon, and everyone left encouraged.<br><br><i>"They shall run, and not be weary; and they shall walk, and not faint." Isaiah 40:31</i>`].concat(r.msgs), landmarkMenu);
+}
+
+function talk(){
+  const L = curLM();
+  let pool;
+  if(G.atLandmark && L.people && L.people.length){ pool = L.people.slice(); if(FORKS[G.lmIndex] && !G.forkDone[G.lmIndex]) pool.push(["Mr. C","Thinking about which way to go? Hit Continue and ask me when you get to the split. I know every inch of this campus."]); }
+  else {
+    if(!G.crowd){ const sh = TRAIL_PEOPLE.slice().sort(()=>Math.random()-0.5); G.crowd = sh.slice(0,3); }
+    pool = G.crowd;
+  }
+  menu("Who do you want to talk to?", `<p>${G.atLandmark ? `People hanging around ${L.name}:` : "People walking by on " + CONFIG.road + ":"}</p>`,
+    pool.map(pp => ({ label:pp[0], fn:()=>talkTo(pp, talk) })).concat([{ label:"Done talking", fn:landmarkMenu }]));
+}
+function talkTo(pp, back){
+  const [who, line, gift] = pp;
+  let extra = "";
+  const key = who + "|" + line;
+  if(gift && GIFTS[gift] && !G.gifted[key]){ G.gifted[key] = true; extra = `<p class="ok">${GIFTS[gift]()}</p>`; updateStatus(); }
+  message(`<p class="quote"><span class="who">${who}:</span><br>"${line}"</p>${extra}`, back);
+}
+
+function continueOn(){
+  const f = FORKS[G.lmIndex];
+  if(!G.atLandmark || !f || G.forkDone[G.lmIndex]) return startTravel();
+  const opts = [{ label:`Stay on ${CONFIG.road}`, fn:()=>{ G.forkDone[G.lmIndex]=true; startTravel(); } }];
+  if(f.shortcut) opts.push({ label:`Shortcut: ${f.shortcut.name} <span class="tip-line">Saves about ${f.shortcut.save} miles. Might go wrong.</span>`, fn:()=>takeShortcut(f.shortcut) });
+  if(f.detour) opts.push({ label:`Detour: ${f.detour.name} <span class="tip-line">Takes ${f.detour.stops*DAYS_PER_STOP} extra days. Something good might be waiting.</span>`, fn:()=>takeDetour(f.detour) });
+  if(G.forkRoll[G.lmIndex] === undefined) G.forkRoll[G.lmIndex] = Math.random();
+  opts.push({ label:"Ask Mr. C which way to go", fn:()=>askMrC(f) });
+  opts.push({ label:"Not yet, go back", fn:landmarkMenu });
+  menu("The path splits", `<p>Leaving ${curLM().name}, you see more than one way to go.</p>`, opts);
+}
+function shortcutFails(sc){ return G.forkRoll[G.lmIndex] < sc.risk * (perk("ritchie") ? 0.6 : 1); }
+function askMrC(f){
+  let line;
+  if(f.shortcut){
+    const bad = shortcutFails(f.shortcut) !== (hr(G.lmIndex*31 + G.day) < 0.15);
+    line = bad ? `See that shortcut? ${f.shortcut.name}? Not today, my friend. I've got a bad feeling about it. Stay on Lancer Way or take the detour.`
+               : `${f.shortcut.name}? Today, that's clear. Go that way and you'll save time. Just don't let me catch you running.`;
+  } else line = "No shortcuts here. But that detour is worth every minute. Trust me.";
+  if(f.detour) line += ` And if you've got time, ${f.detour.name.toLowerCase()} is always a good call.`;
+  message(`<p class="quote"><span class="who">Mr. C</span> points down the path with his whole arm:<br>"${line}"</p>`, continueOn);
+}
+function takeShortcut(sc){
+  G.forkDone[G.lmIndex] = true; G.atLandmark = false;
+  const r = advance();
+  let msgs;
+  if(shortcutFails(sc)) msgs = [sc.bad()];
+  else {
+    const room = nextLM().mile - G.miles - 1;
+    const go = Math.max(0, Math.min(sc.save, room));
+    G.miles += go;
+    msgs = [`${sc.good} You skipped ahead ${go} miles.`];
+    if(chance(0.2)) msgs = msgs.concat(giveDemerit("Uh oh. Mr. C was patrolling the shortcut. \"OUT OF BOUNDS!\""));
+  }
+  afterMessages(msgs.concat(r.msgs), startTravel);
+}
+function takeDetour(dt){
+  G.forkDone[G.lmIndex] = true;
+  let msgs = [];
+  for(let i=0;i<dt.stops;i++) msgs = msgs.concat(advance().msgs);
+  msgs.unshift(`You took the detour. ${dt.reward()}`);
+  afterMessages(msgs, landmarkMenu);
+}
+
+/* =========================================================
+   TIME, HEALTH, TRAVEL
+   ========================================================= */
+function advance({move=false, rest=false}={}){
+  const msgs = [];
+  G.day += DAYS_PER_STOP;
+  G.weather = rollWeather();
+  const a = alive();
+  const need = a.length * RATIONS[G.rations].eat;
+  let hungry = false;
+  if(G.snacks >= need) G.snacks -= need; else { G.snacks = 0; hungry = true; }
+  if(hungry && !G.hungryWarned){ msgs.push("You're out of snacks! Everyone is getting hungry and slowing down."); G.hungryWarned = true; }
+  if(!hungry) G.hungryWarned = false;
+  const needHoodies = isCold() && G.hoodies < a.length;
+  let arrive = false;
+  if(move){
+    let sp = PACE[G.pace].miles * SNEAKER_F[Math.min(G.sneakers,4)];
+    if(isStorm()) sp *= 0.7;
+    if(hungry) sp *= 0.75;
+    if(perk("sosa")) sp *= 1.1;
+    let moved = Math.max(1, Math.round(sp * rnd(0.85,1.15)));
+    const nx = nextLM();
+    if(G.miles + moved >= nx.mile){ moved = nx.mile - G.miles; arrive = true; }
+    G.miles += moved;
+  }
+  for(const p of a){
+    let d = rest ? 9 : (move ? PACE[G.pace].h : 2);
+    d += RATIONS[G.rations].h;
+    if(hungry) d -= 12;
+    if(p.sick) d -= rest ? 2 : 6;
+    if(needHoodies) d -= 4;
+    if(move && G.weather==="Hot" && G.pace==="hustle") d -= 2;
+    if(move && G.pace==="hustle" && perk("mrg")) d += 2;
+    if(move && G.sneakers===0) d -= 3;
+    d += rint(-1,1);
+    p.health = Math.max(0, Math.min(100, p.health + d));
+    if(p.sick && chance(rest ? 0.4 : 0.12)){ msgs.push(`${p.name} is feeling better.`); p.sick = null; }
+    else if(!p.sick && chance(0.015 + (100-p.health)/100*0.07 + (needHoodies?0.04:0))){
+      p.sick = needHoodies && chance(.5) ? "has a cold" : pick(ILLS);
+      msgs.push(`${p.name} ${p.sick}.`);
+    }
+    if(p.health <= 0){ p.gone = true; msgs.push(goneMsg(p)); }
+  }
+  if(needHoodies && !rest && chance(.25)) msgs.push(`It's ${G.weather.toLowerCase()} out and you don't have enough hoodies. Everyone is shivering.`);
+  return { msgs, arrive };
+}
+
+function goneMsg(p){
+  return p.idx===0 ? `${p.name} got too sick to lead the trip and had to call in a substitute. The trip is over.`
+                   : `${p.name} was sent home to recover and won't finish ${CONFIG.road} this year.`;
+}
+
+function checkLate(msgs){
+  if(!G.lateNoted && curDate() > CONFIG.graduation && G.miles < CONFIG.totalMiles){
+    G.lateNoted = true;
+    msgs.push(`Graduation Day (May 21) has come and gone. You can still finish ${CONFIG.road}, but you'll be walking at the summer ceremony.`);
+  }
+}
+
+function afterMessages(msgs, then){
+  checkLate(msgs);
+  updateStatus();
+  showMessages(msgs, () => { if(isOver()) return gameOver(); then(); });
+}
+function isOver(){ return G.party.length && (G.party[0].gone || alive().length===0); }
+
+let tickTimer = null;
+function startTravel(){
+  G.atLandmark = false; G.traveling = true; G.crowd = null;
+  setPanel(`<p>Your group is walking down ${CONFIG.road}...</p><button class="cont" data-continue>Stop and look around <span class="hint">(Space)</span></button>`);
+  panel.querySelector(".cont").onclick = () => act(stopTravel);
+  clearTimeout(tickTimer); tickTimer = setTimeout(doTick, 1000);
+}
+function giveDemerit(why){
+  G.demerits++; G.demTotal++;
+  const out = [`${why} Mr. C pulls out his demerit pad. Demerit! (${G.demerits} of 3)`];
+  if(G.demerits >= 3){ G.demerits = 0; G.day += 8; out.push("That's 3 demerits. DETENTION! Your whole group spends 8 days in the detention room copying the student handbook."); }
+  return out;
+}
+function bpEncounter(){
+  G.enc = "bp";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  menu("Hall pass check", `<p class="quote"><span class="who">BP</span> steps out in full uniform, sunglasses on, radio on his shoulder.<br>"Hold it right there, Lancers. Where are you headed? Let me see a hall pass."</p><p>Hall passes: ${G.passes}</p>`,
+    [ { label:`Show him a hall pass`, disabled:G.passes<1, fn:()=>{ G.passes--; done(['BP checks the pass, hands it back, and nods. "You\'re good. Carry on, Lancers." You used 1 hall pass.']); } },
+      { label:"Explain that you're headed to graduation", fn:()=>{
+          if(chance(perk("ritchie") ? 0.75 : 0.45)) done(['BP thinks about it for a long second. "Alright. I\'ll let it slide this time. Get a pass next time."']);
+          else { G.day += 4; done(['"Nice try." BP walks your whole group back to the front office to get passes. You lose 4 days.']); } } },
+      { label:"Make a run for it", fn:()=>{
+          G.day += 4;
+          done(["BP doesn't even chase you. He just talks into his radio. Thirty seconds later, Mr. C comes around the corner.", ...giveDemerit('"RUNNING FROM BP? REALLY?"'), "You lose 4 days getting walked back to the office."]); } } ]);
+}
+function mrcEncounter(){
+  G.enc = "mrc";
+  const run = G.pace === "hustle";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  const line = run ? "HEY! HEY! STOP RUNNING! THIS IS A SCHOOL, NOT A TRACK MEET!"
+                   : pick(["Is that shirt tucked in? Let me see.", "Why is this group in my hallway?", "Walk, don't run! ...I know you weren't running. I'm just saying it."]);
+  const opts = run ? [
+      { label:"\"Yes, Mr. C!\" Slow down to a steady walk", fn:()=>{ G.pace = "walk"; done(['Mr. C crosses his arms and nods. "That\'s better." Your pace is now a steady walk. No demerit.']); } },
+      { label:"Keep hustling", fn:()=>{ done(giveDemerit('Mr. C yells after you: "I SAW THAT!"')); } }
+    ] : [
+      { label:"\"Yes, Mr. C!\"", fn:()=>{ if(chance(0.3)) done(giveDemerit("Mr. C spots an untucked shirt on one of your 8th graders.")); else done(['Mr. C looks everyone over. "Hmm. Fine. Move along."']); } },
+      { label:"Argue with Mr. C", fn:()=>{ G.day += 2; done(['Mr. C gives your group a two-day lecture about respect.', ...giveDemerit("")]); } }
+    ];
+  menu("Mr. C", `<p class="quote"><span class="who">Mr. C</span> comes around the corner, big brown hair first, demerit pad in hand.<br>"${line}"</p><p>Demerits so far: ${G.demerits} of 3.</p>`, opts);
+}
+function eddyEncounter(){
+  G.cart = { state:"here" };
+  const leave = () => { G.cart = { state:"leave", t0:performance.now() }; };
+  const need = alive().length;
+  menu("Campus security", `<p class="quote"><span class="who">Eddy</span> rolls up in his security golf cart and taps the brakes.<br>"Afternoon! Campus security. Can I see some ID from everybody?"</p><p>ID badges: ${G.ids} for ${need} people.</p>`,
+    [ { label:"Show your ID badges", fn:()=>{
+          if(G.ids >= need){
+            menu("Campus security", `<p class="quote"><span class="who">Eddy:</span><br>"Everybody checks out! You know what, hop on. I'm headed that way anyway."</p>`,
+              [ { label:"Hop on the golf cart", fn:()=>{
+                    let m;
+                    if(chance(0.15)){ G.day += 4; m = ["Everyone piled on... and the battery died halfway down Lancer Way. You lost 4 days pushing the cart back to the charging station."]; }
+                    else { G.cart = { state:"ride" }; const go = Math.max(0, Math.min(rint(20,35), nextLM().mile - G.miles - 1)); G.miles += go; m = [`Eddy floored it. All 12 miles per hour of it. You rode ${go} miles!`]; }
+                    afterMessages(m, ()=>{ leave(); startTravel(); }); } },
+                { label:"No thanks, we'll walk", fn:()=>{ leave(); afterMessages(['"Suit yourself!" Eddy beeps the horn twice and zooms off.'], startTravel); } } ]);
+          } else {
+            const missing = need - G.ids, cost = missing*2;
+            G.day += 4; G.money = Math.max(0, G.money - cost); G.ids = need; leave();
+            afterMessages([`Eddy counts the badges. "${missing === 1 ? "One of you" : missing + " of you"} ${missing === 1 ? "doesn't" : "don't"} have ID." He drives your group to the front office for temporary badges. You lose 4 days and $${cost}.`], startTravel);
+          } } },
+      { label:"Say you left your IDs in your lockers", fn:()=>{
+          leave();
+          if(perk("ritchie")) afterMessages(['Eddy squints, then grins. "Mr. Ritchie! I\'ve known you twenty years. Go ahead."'], startTravel);
+          else { G.day += 4; afterMessages(['"Then let\'s go get them." You lose 4 days walking back to the lockers.'], startTravel); } } } ]);
+}
+function mrssEncounter(){
+  G.enc = "mrss";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  const sick = alive().filter(p => p.sick);
+  menu("Mrs. S, guidance counselor", `<p class="quote"><span class="who">Mrs. S</span> catches up with your group, curls bouncing, clipboard of sticky notes in hand.<br>"Hi friends! Quick check-in. How is everybody really doing?"</p>`,
+    [ { label:"Talk about how everyone is feeling", fn:()=>{
+          const m = ["Everyone takes a few minutes to talk things through. Mrs. S listens, hands out mints, and reminds the 8th graders that they matter. Everyone feels lighter."];
+          alive().forEach(p => { p.health = Math.min(100, p.health + 10); if(p.sick && chance(.5)){ m.push(`${p.name} is feeling better.`); p.sick = null; } });
+          done(m); } },
+      { label:"Ask her to help plan the rest of the trip", fn:()=>{
+          const left = CONFIG.totalMiles - G.miles;
+          const per = Math.max(1, Math.round(PACE[G.pace].miles * SNEAKER_F[Math.min(G.sneakers,4)]));
+          const days = Math.ceil(left/per) * DAYS_PER_STOP;
+          const daysToGrad = Math.round((CONFIG.graduation - curDate()) / 86400000);
+          const verdict = days <= daysToGrad - 20 ? "You're right on track. Keep it up!" : days <= daysToGrad ? "You'll make it, but it'll be close. Don't waste any days." : "At this pace, you'll miss graduation. Time to speed up or take a shortcut.";
+          G.gpa = Math.min(4.5, G.gpa + 0.05);
+          done([`Mrs. S does the math on a sticky note. "You have ${left} miles left. At your pace that's about ${days} days, and graduation is ${daysToGrad} days away. ${verdict}" GPA +0.05 for good planning.`]); } },
+      { label:"\"We're doing great, thanks Mrs. S!\"", fn:()=>done([sick.length ? `"Are you sure? ${sick[0].name} doesn't look so good. My door is always open."` : '"Love to hear it! My door is always open."']) } ]);
+}
+function karenEncounter(){
+  G.enc = "karen";
+  const done = m => { G.enc = null; afterMessages(m, startTravel); };
+  const cost = alive().length * 3;
+  menu("Chef's lunch cart", `<p class="quote"><span class="who">Chef</span> pushes a lunch cart around the corner, glasses on, apron tied.<br>"Hot lunch! Who's hungry? You can't walk all the way to graduation on vending machine snacks."</p>`,
+    [ { label:`Buy a hot lunch for everyone <span class="hint">($${cost})</span>`, disabled:G.money<cost, fn:()=>{
+          G.money -= cost; const m = [`Chef serves up her famous chicken and rice. Everyone feels much better.`];
+          alive().forEach(p => { p.health = Math.min(100, p.health + 15); if(p.sick && chance(.3)){ m.push(`${p.name} is feeling better.`); p.sick = null; } });
+          done(m); } },
+      { label:"Ask if she has anything for the road", fn:()=>{ const n = rint(10,25); G.snacks += n; done([`"Take these and don't tell anybody." Chef slips your group ${n} snacks.`]); } },
+      { label:"Thank her and keep walking", fn:()=>done(['"Alright, but eat something green!"']) } ]);
+}
+function roadsideEncounter(){
+  const pp = pick(TRAIL_PEOPLE);
+  menu(null, `<p>${pp[0]} waves your group over from the side of ${CONFIG.road}.</p>`,
+    [ { label:"Stop and talk", fn:()=>talkTo(pp, startTravel) },
+      { label:"Wave back and keep walking", fn:startTravel } ]);
+}
+function stopTravel(){ G.traveling = false; G.enc = null; clearTimeout(tickTimer); landmarkMenu(); }
+
+function doTick(){
+  if(!G.traveling) return;
+  const before = G.miles;
+  const r = advance({move:true});
+  const bpHit = BP_MILES.find(m => before < m && G.miles >= m && !G.bpSeen[m]);
+  if(bpHit && !r.arrive) G.bpSeen[bpHit] = true;
+  const mrcHit = MRC_MILES.find(m => before < m && G.miles >= m && !G.mrcSeen[m]);
+  if(mrcHit && !r.arrive) G.mrcSeen[mrcHit] = true;
+  const mrssHit = MRSS_MILES.find(m => before < m && G.miles >= m && !G.mrssSeen[m]);
+  if(mrssHit && !r.arrive) G.mrssSeen[mrssHit] = true;
+  if(!r.arrive && chance(0.4)){ const m = randomEvent(); if(m) r.msgs.push(m); }
+  checkLate(r.msgs);
+  updateStatus();
+  if(isOver()){ G.traveling = false; return showMessages(r.msgs, gameOver); }
+  if(r.arrive){
+    G.traveling = false;
+    setPanel(`<p>Arriving at ${nextLM().name}...</p>`);
+    setTimeout(() => showMessages(r.msgs, arrive), 900);
+    return;
+  }
+  const enc = r.arrive ? null : bpHit ? bpEncounter : mrcHit ? mrcEncounter : mrssHit ? mrssEncounter : (G.pace==="hustle" && chance(0.08)) ? mrcEncounter : chance(0.06) ? eddyEncounter : chance(0.05) ? karenEncounter : chance(0.12) ? roadsideEncounter : null;
+  if(r.msgs.length){
+    G.traveling = false;
+    showMessages(r.msgs, () => { if(isOver()) return gameOver(); enc ? enc() : startTravel(); });
+    return;
+  }
+  if(enc){ G.traveling = false; return enc(); }
+  tickTimer = setTimeout(doTick, 1000);
+}
+
+function arrive(){
+  G.lmIndex++; G.atLandmark = true;
+  const L = curLM();
+  updateStatus();
+  if(L.final) return graduation();
+  if(L.crossing==="carpool") return carpoolCrossing();
+  if(L.crossing==="fountain") return fountainCrossing();
+  message(`<h2>${L.short}</h2><p>You have arrived at ${L.name}. It is ${fmtDate(curDate())}.</p>`, landmarkMenu);
+}
+
+/* =========================================================
+   RANDOM EVENTS
+   ========================================================= */
+const EVENTS = [
+  { w:10, f:()=>{ const t = pick(TEACHERS);
+      const n = perk("drt") ? 2 : 3, gain = perk("drt") ? 0.2 : 0.1;
+      if(G.pencils>=n){ G.pencils-=n; G.gpa=Math.min(4.5,G.gpa+gain); return `Pop quiz in ${t}'s class! You used ${n} pencils and aced it. GPA +${gain}.`; }
+      G.pencils=0; G.gpa=Math.max(0,G.gpa-0.25); return `Pop quiz in ${t}'s class, and you're out of pencils. You borrowed a crayon and bombed it. GPA −0.25.`; }},
+  { w:6, f:()=>{
+      if(G.chargers>0){ G.chargers--; return "A Chromebook died in the middle of a project! You used a spare charger."; }
+      G.day+=8; return "A Chromebook died and nobody had a charger. You lost 8 days at the tech help desk."; }},
+  { w:5, f:()=>{ if(G.sneakers<=0) return null; G.sneakers--; return `A pair of sneakers fell apart on the stairs. You have ${G.sneakers} left.`; }},
+  { w:6, f:()=>{ const a=rint(5,20); G.money+=a; return `Found $${a} in the pocket of an old hoodie!`; }},
+  { w:6, f:()=>{ if(G.snacks<10) return null; if(perk("melissa") && chance(.75)) return "A gang of Florida seagulls swooped in, but Melissa had every snack sealed in a labeled bin. They left with nothing."; const l=Math.round(G.snacks*rnd(0.1,0.3)); G.snacks-=l; return `A gang of Florida seagulls swooped in and stole ${l} snacks!`; }},
+  { w:7, f:()=>{ G.day+=4; return "Lightning within 8 miles! Everyone waits out the lightning delay. You lose 4 days."; }},
+  { w:4, f:()=>{ G.day+=2; return "Fire drill! Everyone lines up on the field. You lose 2 days."; }},
+  { w:5, f:()=>{ G.gpa=Math.min(4.5,G.gpa+0.15); return `${pick(TEACHERS)} offered extra credit and your group took it! GPA +0.15.`; }},
+  { w:6, f:()=>{ const a=rint(15,40); G.snacks+=a; return `A teacher shared leftover donuts from the faculty lounge. +${a} snacks!`; }},
+  { w:5, f:()=>{ G.day+=4; return "You took a wrong turn at the portables. You lose 4 days."; }},
+  { w:3, cond:()=>[7,8,9].includes(month()), f:()=>{ G.day+=8; alive().forEach(p=>p.health=Math.min(100,p.health+10)); return "Hurricane day! School is canceled. You lose 8 days, but everyone comes back rested."; }},
+  { w:4, f:()=>{ alive().forEach(p=>p.health=Math.min(100,p.health+8)); return "It's Spirit Week! Everyone wears navy and gold, and spirits are high."; }},
+  { w:4, f:()=>{ if(G.pencils<5 || perk("melissa")) return null; const l=Math.ceil(G.pencils*rnd(.2,.4)); G.pencils-=l; return `A backpack zipper broke and ${l} pencils rolled under the lockers.`; }},
+  { w:6, cond:()=>[11,0,1].includes(month()), f:()=>{
+      if(G.hoodies >= alive().length) return "Cold snap! It's 45 degrees, which is basically the Arctic in Florida. Good thing everyone has a hoodie.";
+      const p = pick(alive().filter(x=>!x.sick)); if(!p) return null;
+      p.sick="has a cold"; p.health=Math.max(1,p.health-10);
+      return `Cold snap! It's 45 degrees and ${p.name} has no hoodie. ${p.name} has a cold.`; }},
+  { w:7, f:()=>{ const p = pick(alive().filter(x=>!x.sick)); if(!p) return null; p.sick=pick(ILLS); p.health=Math.max(1,p.health-10); return `${p.name} ${p.sick}.`; }},
+  { w:3, f:()=>{ const nx=nextLM(); let a=rint(10,20); a=Math.min(a, nx.mile-G.miles-1); if(a<=0) return null; G.miles+=a; return `A field trip bus gave your group a ride! You skip ahead ${a} miles.`; }},
+  { w:3, f:()=>{ const p = pick(alive().slice(1)); if(!p) return null; G.day+=2; return `${p.name} got lost in the band hallway. You lose 2 days finding them.`; }}
+];
+function randomEvent(){
+  const pool = EVENTS.filter(e => !e.cond || e.cond());
+  for(let tries=0; tries<4; tries++){
+    let r = Math.random()*pool.reduce((s,e)=>s+e.w,0);
+    for(const e of pool){ r -= e.w; if(r<=0){ const m = e.f(); if(m) return m; break; } }
+  }
+  return null;
+}
+
+/* =========================================================
+   CROSSINGS
+   ========================================================= */
+function mishap(where){
+  if(perk("melissa") && chance(.6)) return `While ${where}, a backpack went flying, but Melissa had everything zipped, labeled and packed tight. Nothing was lost.`;
+  const lost = [];
+  const s = Math.round(G.snacks*rnd(.15,.35)); if(s>0){ G.snacks-=s; lost.push(`${s} snacks`); }
+  if(G.pencils>0 && chance(.6)){ const p=Math.ceil(G.pencils*rnd(.2,.5)); G.pencils-=p; lost.push(`${p} pencils`); }
+  if(G.chargers>0 && chance(.45)){ G.chargers--; lost.push("a laptop charger"); }
+  if(G.sneakers>1 && chance(.3)){ G.sneakers--; lost.push("a pair of sneakers"); }
+  let m = `Uh oh! While ${where}, a backpack went flying. You lost ${lost.length ? listJoin(lost) : "nothing important, thankfully"}.`;
+  const p = pick(alive().filter(x=>!x.sick));
+  if(p && chance(.35)){ p.sick="sprained an ankle"; p.health=Math.max(1,p.health-15); m += ` ${p.name} sprained an ankle.`; }
+  return m;
+}
+function finishCrossing(msgs){ afterMessages(msgs, landmarkMenu); }
+
+function carpoolCrossing(){
+  const cars = rint(3,15), speed = pick(["crawling","creeping along","moving fast"]);
+  const show = () => menu("The Carpool Lane",
+    `<p>Afternoon pickup is in full swing. There are ${cars} cars in line, ${speed}. Your group needs to get across.</p>`,
+    [ {label:"Make a run for it", fn:()=>{
+        const risk = (cars*0.035 + (speed==="moving fast"?0.2:0)) * (perk("ritchie")?0.5:1);
+        finishCrossing([chance(risk) ? mishap("dashing across the carpool lane") : "You darted across the carpool lane. Everyone made it, and the crossing guard gave you a look."]); }},
+      {label:"Wait for the crossing guard", fn:()=>{
+        const r = advance();
+        r.msgs.unshift(chance(.05) ? mishap("crossing with the guard") : `Officer Dan blew his whistle and walked everyone across. It took ${DAYS_PER_STOP} days, but nobody got hurt.`);
+        finishCrossing(r.msgs); }},
+      {label:`Pay a senior $10 to drive you around`, disabled:G.money<10, fn:()=>{
+        G.money-=10; finishCrossing(["A senior with a very loud car drove your group around the whole line. Smooth, but expensive."]); }},
+      {label:"Ask the crossing guard for advice", fn:()=>{
+        message(`<p class="quote"><span class="who">Officer Dan:</span><br>"${cars>9 ? "With this many cars? I wouldn't run it. Wait for my whistle." : "Line's not too bad today. Still, I'd rather you wait for me."}"</p>`, show); }}
+    ]);
+  show();
+}
+
+function fountainCrossing(){
+  const depth = Math.round(rnd(0.8,4.2)*10)/10;
+  const show = () => menu("The Courtyard Fountain",
+    `<p>The fountain's pipe broke and flooded the courtyard. The water is ${depth} feet deep where ${CONFIG.road} crosses it.</p>`,
+    [ {label:"Wade straight through", fn:()=>{
+        if(depth < 2.2) return finishCrossing(["Your group waded through. Wet socks all around, but everyone made it."]);
+        finishCrossing([chance((depth-1.5)*0.3*(perk("ritchie")?0.5:1)) ? mishap("wading through the fountain") : "It was deep, but your group held their backpacks over their heads and made it across."]); }},
+      {label:"Hop the stepping stones", fn:()=>{
+        const p = pick(alive().filter(x=>!x.sick));
+        if(p && chance(perk("ritchie")?0.11:0.22)){ p.sick="sprained an ankle"; p.health=Math.max(1,p.health-15); return finishCrossing([`${p.name} slipped on a stepping stone and sprained an ankle.`]); }
+        finishCrossing(["Hop, hop, hop. Everyone made it across the stepping stones with dry shoes."]); }},
+      {label:"Take the long way through the halls", fn:()=>{
+        const r1 = advance(), r2 = advance();
+        finishCrossing([`You went the long way around through the halls. It took ${DAYS_PER_STOP*2} days, but everyone stayed dry.`].concat(r1.msgs, r2.msgs)); }},
+      {label:"Pay the custodian $8 to shut off the water", disabled:G.money<8, fn:()=>{
+        G.money-=8; finishCrossing(["Mr. Gomez shut off the water and mopped a path. Everyone walked across without a problem."]); }},
+      {label:"Ask the custodian for advice", fn:()=>{
+        message(`<p class="quote"><span class="who">Mr. Gomez:</span><br>"${depth>2.2 ? "Too deep to wade with laptops. Take the long way, or I can shut it off for a few bucks." : "It's shallow right now. You'll just get wet socks."}"</p>`, show); }}
+    ]);
+  show();
+}
+
+/* =========================================================
+   SNACK RUN MINI-GAME
+   ========================================================= */
+const SNACK_TYPES = [
+  { t:"pizza", v:8, w:3 }, { t:"burger", v:10, w:2 }, { t:"apple", v:3, w:3 },
+  { t:"cookie", v:5, w:3 }, { t:"nugget", v:4, w:3 }, { t:"gull", v:-6, w:3 }, { t:"special", v:15, w:1 }
+];
+const SR = { items:[], time:0, grabbed:0, spawn:0, pops:[] };
+const snackTime = () => perk("rich") ? 26 : 20, snackCarry = () => perk("rich") ? 120 : 80;
+
+function startSnackRun(){
+  G.mode = "snack";
+  Object.assign(SR, { items:[], time:snackTime(), grabbed:0, spawn:0, pops:[] });
+  setPanel(`<h2>Snack Run</h2><p class="quote"><span class="who">Chef:</span> "Welcome to MY cafeteria. Grab what you can, and if you see a gold plate, that's my chef's special. Don't you dare touch those seagulls."</p><p>Click or tap the snacks as they fly through the Lancer Cafe. You have ${snackTime()} seconds and can carry ${snackCarry()} snacks back. Don't click the seagulls. They steal.</p>
+    <button class="cont" data-continue>Done <span class="hint">(Space)</span></button>`);
+  panel.querySelector(".cont").onclick = () => act(endSnackRun);
+}
+function endSnackRun(){
+  if(G.mode !== "snack") return;
+  G.mode = "trail";
+  const got = Math.max(0, SR.grabbed), cap = snackCarry(), carry = Math.min(cap, got);
+  G.snacks += carry;
+  const r = advance();
+  const msg = got > cap ? `You grabbed ${got} snacks but could only carry ${cap} back.` : `Your snack run brought back ${carry} snacks.`;
+  afterMessages([msg].concat(r.msgs), landmarkMenu);
+}
+function updateSnack(dt){
+  SR.time -= dt;
+  if(SR.time <= 0){ SR.time = 0; endSnackRun(); return; }
+  SR.spawn -= dt;
+  if(SR.spawn <= 0){
+    SR.spawn = rnd(0.3, 0.6);
+    let r = Math.random()*SNACK_TYPES.reduce((a,b)=>a+b.w,0), type = SNACK_TYPES[0];
+    for(const s of SNACK_TYPES){ r -= s.w; if(r<=0){ type = s; break; } }
+    const left = chance(.5);
+    SR.items.push({ ...type, x: left ? -12 : W+12, y: rnd(46, 130), vx: (left?1:-1)*rnd(55,110), ph: rnd(0,6) });
+  }
+  SR.items.forEach(it => { it.x += it.vx*dt; it.ph += dt*6; });
+  SR.items = SR.items.filter(it => it.x > -20 && it.x < W+20);
+  SR.pops.forEach(p => { p.y -= 18*dt; p.life -= dt; });
+  SR.pops = SR.pops.filter(p => p.life > 0);
+}
+function snackClick(lx, ly){
+  for(let i=SR.items.length-1; i>=0; i--){
+    const it = SR.items[i], yy = it.y + Math.sin(it.ph)*3;
+    if(Math.abs(lx-it.x) < 11 && Math.abs(ly-yy) < 11){
+      SR.items.splice(i,1);
+      SR.grabbed = Math.max(0, SR.grabbed + it.v);
+      SR.pops.push({ x:it.x, y:yy, txt: it.t==="special" ? `+${it.v} Chef's special!` : it.v>0 ? `+${it.v}` : `${it.v} seagull!`, c: it.v>0 ? "#1d7a2f" : "#c0392b", life:0.9 });
+      return;
+    }
+  }
+}
+
+/* =========================================================
+   ENDINGS AND HONOR ROLL
+   ========================================================= */
+function computeScore(){
+  let ppl = 0;
+  alive().forEach(p => ppl += p.health>=70 ? 500 : p.health>=45 ? 400 : p.health>=20 ? 300 : 200);
+  const gpa = Math.round(G.gpa*250);
+  const sup = G.sneakers*20 + G.hoodies*4 + Math.floor(G.snacks/10) + Math.floor(G.pencils/5) + G.chargers*6 + Math.floor(G.money/5);
+  let total = Math.round(Math.max(0, ppl + gpa + sup - G.demTotal*40) * G.mult);
+  if(G.lateNoted) total = Math.round(total*0.6);
+  return { ppl, gpa, sup, total };
+}
+function graduation(){
+  G.mode = "grad";
+  const s = computeScore(), a = alive();
+  saveHonor(G.party[0].name, s.total);
+  message(`<h2>Congratulations, Class of ${CONFIG.classOf}!</h2>
+    <p>On ${fmtDate(curDate())}, ${listJoin(a.map(p=>esc(p.name)))} made it to the Graduation stage at the end of ${CONFIG.road}.${G.lateNoted ? " It was the summer ceremony, but it still counts!" : ""}</p>
+    <div class="grid2"><span>Lancers who made it</span><span>${a.length} of 5: ${s.ppl} pts</span>
+    <span>GPA ${G.gpa.toFixed(2)}</span><span>${s.gpa} pts</span>
+    <span>Leftover supplies</span><span>${s.sup} pts</span>
+    ${G.demTotal ? `<span>Demerits from Mr. C</span><span>${G.demTotal} (−${G.demTotal*40} pts)</span>` : ""}
+    <span>Led by ${charOf().name}</span><span>x${G.mult}</span>
+    ${G.lateNoted ? `<span>Late to graduation</span><span>x0.6</span>` : ""}
+    <span><b>Final score</b></span><span><b>${s.total}</b></span></div>`,
+    () => showHonor(titleScreen), "See the Honor Roll");
+}
+function gameOver(){
+  G.traveling = false; clearTimeout(tickTimer);
+  const lead = G.party[0];
+  message(`<h2>The trail ends here</h2><p>${esc(lead.name)}'s group didn't make it to the end of ${CONFIG.road} this year. ${G.miles} miles from ${CONFIG.town}, the journey is over.</p><p>Here lies the school year of ${esc(lead.name)}. Pepperoni and cheese.</p>`, titleScreen, "Try again");
+}
+
+const HONOR_KEY = "lancerway-honor-roll";
+const HONOR_DEFAULT = [
+  {n:"Sir Lancelot",s:7400},{n:"Mrs. Brooks",s:5200},{n:"Coach Matt",s:4100},{n:"Officer Dan",s:3000},{n:"A Seagull",s:1200}
+];
+function loadHonor(){ try{ const v = JSON.parse(localStorage.getItem(HONOR_KEY)); if(Array.isArray(v) && v.length) return v; }catch(e){} return HONOR_DEFAULT.slice(); }
+function saveHonor(n,s){ const list = loadHonor(); list.push({n,s}); list.sort((a,b)=>b.s-a.s); try{ localStorage.setItem(HONOR_KEY, JSON.stringify(list.slice(0,10))); }catch(e){} }
+function showHonor(then){
+  const list = loadHonor().slice(0,10);
+  message(`<h2>The Lancer Honor Roll</h2><ol class="honor">${list.map(e=>`<li>${esc(e.n)}: ${e.s}</li>`).join("")}</ol>`, then);
+}
+
+/* =========================================================
+   DRAWING
+   ========================================================= */
+const cv = $("#scene"), ctx = cv.getContext("2d");
+const W = 400, H = 200, SC = 2;
+cv.width = W*SC; cv.height = H*SC; ctx.scale(SC,SC);
+const PXM = 6, PARTY_X = 135, BACK_Y = 144, ROAD_T = 148, ROAD_B = 172, PARTY_Y = 167, FRONT_Y = 192;
+
+let OUT = null;
+function R(c,x,y,w,h){ ctx.fillStyle=OUT||c; ctx.fillRect(Math.round(x),Math.round(y),w,h); }
+function T(txt,x,y,c,size=7,align="center"){ ctx.fillStyle=c; ctx.font=`bold ${size}px "Courier New",Courier,monospace`; ctx.textAlign=align; ctx.textBaseline="middle"; ctx.fillText(txt,x,y); }
+function tri(cx,top,half,h,c){ for(let i=0;i<h;i++){ const w=Math.round(half*(i+1)/h); R(c,cx-w,top+i,w*2,1); } }
+const wx = mile => PARTY_X + (mile - G.displayMiles)*PXM;
+const nearLM = (mile, r) => LANDMARKS.some(l => Math.abs(l.mile-mile) < r);
+
+function bricks(x,y,w,h,base,dark){
+  R(base,x,y,w,h);
+  for(let yy=y+3, row=0; yy<y+h; yy+=4, row++){
+    R(dark,x,yy,w,1);
+    for(let xx=x+(row%2?4:0); xx<x+w; xx+=8) R(dark,xx,yy-3,1,3);
+  }
+}
+function sign(cx,y,txt,bg="#1d2b4f",fg="#f2c230",size=6){
+  ctx.font=`bold ${size}px "Courier New",Courier,monospace`;
+  const w = Math.ceil(ctx.measureText(txt).width) + 8;
+  R(fg,cx-w/2-1,y-1,w+2,size+5); R(bg,cx-w/2,y,w,size+3); T(txt,cx,y+(size+3)/2+0.5,fg,size);
+}
+
+function shade(hex, f=0.72){
+  if(!hex || hex[0]!=="#") return hex;
+  if(hex.length===4) hex = "#"+hex[1]+hex[1]+hex[2]+hex[2]+hex[3]+hex[3];
+  const n = parseInt(hex.slice(1),16);
+  return `rgb(${Math.round((n>>16&255)*f)},${Math.round((n>>8&255)*f)},${Math.round((n&255)*f)})`;
+}
+const PS = 1.35;   // people size
+/* Draws one person with a dark outline. x,y = where their feet touch the ground. */
+function person(x,y,o,fr){
+  ctx.fillStyle="rgba(0,0,0,.22)"; ctx.beginPath(); ctx.ellipse(x+0.5,y+0.6,7*(o.big?1.25:1),1.6,0,0,Math.PI*2); ctx.fill();
+  ctx.save(); ctx.translate(Math.round(x),Math.round(y)); ctx.scale(PS,PS);
+  OUT = "#141a2c";
+  for(const [dx,dy] of [[-0.7,0],[0.7,0],[0,-0.7],[0,0.7]]){ ctx.save(); ctx.translate(dx,dy); figure(o,fr); ctx.restore(); }
+  OUT = null; figure(o,fr);
+  ctx.restore();
+}
+function figure(o,fr){
+  const t = o.teacher ? 2 : 0, big = o.big ? 1 : 0, thin = o.thin ? 1 : 0;
+  const L = -4-big+thin, Wd = 9+big*2-thin*2, top = -14-t-big, th = -6-top;
+  const walk = fr ? 1 : 0;
+  const shirt = o.cop ? "#1f3a68" : o.chef ? "#fbfbf8" : o.shirt;
+  if(o.grad){
+    R("#1d2b4f",L,top,Wd,-top-1); R(shade("#1d2b4f",.7),L,top,1,-top-1); R("#f2c230",-1,top,3,4);
+    R("#2a2a2a",-3,-1,3,1); R("#2a2a2a",1,-1,3,1);
+  } else {
+    // legs and shoes
+    R(o.pants,-3-walk-big,-6,2+big,5); R(o.pants,1+walk,-6,2+big,5);
+    R(shade(o.pants,.75),-3-walk-big,-6,1,5);
+    R("#2a2a2a",-4-walk-big,-1,3+big,1); R("#2a2a2a",1+walk,-1,3+big,1);
+    R("#e8e8e8",-4-walk-big,-1,1,1); R("#e8e8e8",3+walk+big,-1,1,1);
+    // body
+    R(shirt,L,top,Wd,th); R(shade(shirt),L,top,1,th); R(shade(shirt,.85),L+1,top+th-1,Wd-1,1);
+    if(o.cardigan){ R(o.cardigan,L,top,3,th); R(o.cardigan,L+Wd-3,top,3,th); R(shade(o.cardigan),L,top,1,th); R("#e0c070",L+Wd-3,top+3,1,1); R("#e0c070",L+Wd-3,top+6,1,1); }
+    if(o.chef){ R("#e6e6e0",L+1,top+3,Wd-2,th-3); R("#b9b9b0",-1,top+2,1,1); R("#b9b9b0",1,top+2,1,1); R("#b9b9b0",-1,top+5,1,1); R("#b9b9b0",1,top+5,1,1); R("#d81b60",-2,top,5,1); }
+    if(o.apron){ R(o.apron,L+1,top+3,Wd-2,th-1); R(o.apron,-2,top,1,3); R(o.apron,2,top,1,3); R(shade(o.apron,.7),L+1,top+5,Wd-2,1); R("#ffffff",-1,top+7,3,2); R(shade(o.apron,.8),L+1,top+th+1,Wd-2,2); }
+    if(o.badge){ R("#f2c230",-3,top+2,2,2); R("#c9a000",-3,top+3,1,1); R("#f4f4f4",L+Wd-3,top+2,2,1); }
+    if(o.cop){ R("#f2c230",-3,top+2,2,2); R("#c9a000",-3,top+3,1,1); R("#2a2a2a",L+Wd-2,top+1,1,3); R("#f2c230",1,top+2,2,1); R("#111",L,top+th-2,Wd,1); R("#f2c230",0,top+th-2,1,1); R("#111",L+Wd-1,top+th-3,1,2); }
+    if(o.vest){ R("#ff7a1a",L,top,Wd,7); R("#fff59a",L,top+3,Wd,1); }
+    else if(o.tie){ R("#ffffff",-1,top,3,1); R(o.tie,0,top+1,1,6); R(shade(o.tie),0,top+6,1,1); }
+    else if(o.polo){ R(o.collar||"#ffffff",-2,top,5,1); R(o.collar||"#ffffff",-1,top+1,1,1); R(o.collar||"#ffffff",1,top+1,1,1); R(shade(shirt,.6),0,top+1,1,2); }
+    else if(!o.cop && !o.chef) R(shirt==="#ffffff"?"#1d2b4f":"#ffffff",-1,top,3,1);
+    if(o.teacher && !o.vest && !o.tie && !o.cop && !o.chef){ R("#f2c230",0,top+1,1,4); R("#fff",-1,top+5,3,2); R("#2e6db4",-1,top+5,3,1); }
+    if(!o.teacher) { R(shade(o.pants,.6),L,-7,Wd,1); }
+    // back arm, front arm
+    const sl = o.cardigan || shirt;
+    R(shade(sl,.6),L-1,top+1-walk,1,5); R(shade(o.skin,.8),L-1,top+6-walk,1,1);
+    if(o.point){ R(sl,L+Wd,top+1,6,2); R(o.skin,L+Wd+6,top+1,2,2); R(o.skin,L+Wd+8,top+1,1,1); }
+    else { R(sl,L+Wd,top+1+walk,1,5); R(o.skin,L+Wd,top+6+walk,1,1); }
+    // things they carry
+    if(o.backpack){ R(o.backpack,L-3,top+1,3,6); R(shade(o.backpack),L-3,top+1,1,6); R(shade(o.backpack,.55),L-3,top+3,3,1); R(shade(o.backpack,.6),L,top,1,2); }
+    if(o.clip){ R("#8a6a43",L+Wd+1,top+3,4,6); R("#fff",L+Wd+2,top+4,2,4); R("#9a9a9a",L+Wd+2,top+2,2,1); }
+    else if(o.radio){ R("#111",L+Wd-2,top,2,3); R("#555",L+Wd-1,top-2,1,2); }
+    else if(o.slip){ R("#ff8fb3",L+Wd+1,top+4,3,4); R("#c2185b",L+Wd+1,top+5,3,1); }
+    else if(o.book && !o.point){ R(o.book,L+Wd+1,top+4,3,4); R("#fff",L+Wd+1,top+4,1,4); }
+    if(o.stop){ R("#999",L+Wd+3,top-8,1,14); R("#c62828",L+Wd+1,top-13,6,6); R("#fff",L+Wd+2,top-11,4,1); }
+  }
+  // head
+  const hy = top - 7;
+  if(o.long){ R(o.hair,-4,hy,3,9); R(shade(o.hair,.75),-4,hy+3,1,6); }
+  if(o.curly && !o.chef){ R(o.hair,-4,hy-3,10,4); R(o.hair,-5,hy-1,3,7); R(o.hair,3,hy-2,2,3); }
+  if(o.bighair){ R(o.hair,-4,hy-5,10,6); R(o.hair,-5,hy-3,2,7); R(o.hair,4,hy-3,2,3); R(shade(o.hair,1.25),-2,hy-5,6,1); R(shade(o.hair,.75),-4,hy,2,1); }
+  R(o.skin,-1,top-1,3,1);
+  R(o.skin,-2,hy,6,6); R(shade(o.skin,.85),-2,hy+5,6,1);
+  R(shade(o.skin,.8),-1,hy+2,1,2);
+  const hairTop = !o.bald && !o.cop && !o.chef && !o.cap && !o.bighair;
+  if(o.bald){ R(o.hair,-3,hy+1,2,3); R("#ffffff",0,hy,2,1); }
+  else if(o.curly && !o.chef){ R(o.hair,-2,hy-1,6,1); R(o.hair,-3,hy,2,4); const d="rgba(0,0,0,.3)"; R(d,-3,hy-3,1,1); R(d,0,hy-3,1,1); R(d,3,hy-2,1,1); R(d,-5,hy+1,1,1); R(d,-4,hy+3,1,1); R(d,-2,hy-2,1,1); R(d,2,hy-1,1,1); R(d,-1,hy-1,1,1); }
+  else if(o.bighair){ R(o.hair,-3,hy,2,4); }
+  else if(hairTop){ R(o.hair,-2,hy-1,6,2); R(o.hair,-3,hy,2,3); R(o.hair,3,hy,1,1); }
+  else R(o.hair,-3,hy+1,2,2);
+  if(o.gray){ R("#b0b0b0",-1,hy-1,1,1); R("#b0b0b0",2,hy-1,1,1); R("#b0b0b0",-3,hy+1,1,1); }
+  // face
+  if(o.beard){ R(o.beard,-2,hy+3,6,3); R(o.beard,-2,hy+1,1,2); if(o.gray){ R("#a0a0a0",0,hy+5,1,1); R("#a0a0a0",3,hy+4,1,1); } }
+  R("#9c4a3a",2,hy+4,2,1);
+  if(o.sunglasses){ R("#111",0,hy+1,4,2); R("#5a6b80",2,hy+1,1,1); R("#111",-1,hy+2,1,1); }
+  else if(o.wild){ R(o.wild,-1,hy,6,4); R("#fff3b0",0,hy+1,2,2); R("#fff3b0",3,hy+1,2,2); R("#1a1a1a",1,hy+2,1,1); R("#1a1a1a",4,hy+2,1,1); R("#ffeb3b",4,hy,1,1); R("#00bcd4",-1,hy+3,1,1); }
+  else if(o.glasses){ R("#1a1a1a",0,hy+1,4,3); R("#d6eeff",1,hy+2,2,1); R("#1a1a1a",2,hy+2,1,1); R("#1a1a1a",-1,hy+2,1,1); }
+  else { R("#ffffff",1,hy+2,1,1); R("#1a1a1a",2,hy+2,1,1); R(o.bald||!hairTop?shade(o.skin,.6):o.hair,1,hy+1,2,1); }
+  // hats
+  if(o.cop){ R("#1d2b4f",-3,hy-3,7,3); R("#2a3d6e",-3,hy-3,7,1); R("#111",1,hy,5,1); R("#f2c230",0,hy-2,1,1); }
+  if(o.chef){ R("#fbfbf8",-4,hy-8,9,5); R("#fbfbf8",-3,hy-3,7,3); R("#e3e3dc",-3,hy-1,7,1); R("#e3e3dc",-4,hy-8,1,5); R(o.hair,-3,hy+1,1,2); }
+  if(o.cap){ R(o.cap,-3,hy-2,7,2); R(o.cap,3,hy-1,3,1); R(shade(o.cap,.7),-3,hy-1,7,1); }
+  if(o.grad){ R("#111",-4,hy-3,10,1); R("#111",-2,hy-2,6,1); R("#f2c230",5,hy-3,1,4); }
+}
+function drawCart(x,y,dir,riders){
+  ctx.save(); ctx.translate(Math.round(x),Math.round(y)); if(dir<0) ctx.scale(-1,1);
+  (riders||[]).forEach((lk,i) => person(-13+i*4, -6, lk, 0));
+  person(8,-6,SPECIALS.eddy.look,0);
+  R("#141a2c",-17,-27,34,3); R("#f4f4f4",-16,-26,32,2);
+  R("#9aa0a8",-15,-24,1,16); R("#9aa0a8",12,-24,1,16);
+  R("#141a2c",-18,-12,36,9); R("#f4f4f4",-17,-11,34,7); R("#1d2b4f",-17,-8,34,2); R("#cfcfcf",-17,-11,1,7); R(Math.floor(performance.now()/400)%2?"#ff9a1a":"#c25e00",-2,-30,4,3);
+  R("#9fd3f0",13,-11,3,3);
+  for(const wxp of [-12,8]){ R("#111",wxp,-4,6,6); R("#8a8a8a",wxp+2,-2,2,2); }
+  ctx.restore();
+  T("SECURITY", x+(dir<0?2:-2), y-9.5, "#1d2b4f", 3.5);
+}
+function lookFor(p){ return (p.idx===0 && G.char) ? { ...charOf().look, teacher:true } : PARTY_LOOKS[p.idx]; }
+function drawLineup(tm){
+  R("#efe6cf",0,0,W,H);
+  R("#1d2b4f",0,0,W,22); R("#f2c230",0,22,W,2);
+  T("CHOOSE YOUR TEACHER",W/2,11,"#f2c230",9);
+  for(let x=0;x<W;x+=14){ R("#24386a",x,30,13,78); R("#1d2b4f",x+11,30,2,78); R("#8fa3cf",x+3,36,6,1); R("#8fa3cf",x+3,38,6,1); R("#8fa3cf",x+10,64,1,4); }
+  R("#c9b48a",0,108,W,H-108); for(let x=0;x<W;x+=20) R("#b9a37a",x,108,1,H-108);
+  const n = CHARACTERS.length, gap = W/n;
+  CHARACTERS.forEach((c,i) => {
+    const cx = gap*i + gap/2, sel = i===G.pickHover;
+    if(sel){ R("rgba(242,194,48,.35)",cx-gap/2+2,26,gap-4,170); }
+    ctx.save(); ctx.translate(cx, 168 + (sel ? -Math.abs(Math.sin(tm/180))*4 : 0)); ctx.scale(1.95,1.95);
+    person(0,0,{ ...c.look, teacher:true },0);
+    ctx.restore();
+    R(sel?"#f2c230":"#1d2b4f",cx-gap/2+4,176,gap-8,16);
+    T(`${i+1}. ${c.name}`,cx,184,sel?"#1d2b4f":"#f2c230",6);
+  });
+}
+function bubble(x,y,txt){
+  ctx.font = `bold 6px "Courier New",Courier,monospace`;
+  const w = Math.ceil(ctx.measureText(txt).width) + 6, bx = Math.round(x - w/2), by = y - 12;
+  R("#1d2b4f",bx-1,by-1,w+2,11); R("#fff",bx,by,w,9); R("#fff",x-1,by+9,3,2);
+  T(txt,x,by+4.8,"#1d2b4f",6);
+}
+function palm(x,b){
+  for(let i=0;i<24;i+=2) R(i%4?"#8a6a43":"#73583a", x+Math.round(Math.sin(i/9)*2), b-i-2, 3, 2);
+  const tx = x+Math.round(Math.sin(24/9)*2)+1, ty = b-25;
+  for(let a=0;a<7;a++){
+    const ang = -Math.PI + a*(Math.PI/6);
+    for(let k=1;k<11;k++) R(a%2?"#2f7d32":"#3d9a3f", tx+Math.cos(ang)*k, ty+Math.sin(ang)*k*0.7 + k*k*0.06, 2, 2);
+  }
+  R("#5a3d1e",tx-1,ty+1,2,2); R("#5a3d1e",tx+1,ty+2,2,2);
+}
+function streetSign(x,b){ R("#8a8a8a",x,b-26,1,26); R("#fff",x-18,b-31,37,8); R("#1f6b3a",x-17,b-30,35,6); T(CONFIG.road.toUpperCase(),x+0.5,b-26.8,"#fff",5); }
+
+/* ---- buildings ---- */
+function drawGate(cx,b){
+  const kx = cx-92;
+  R("#e8dcc0",kx-26,b-30,52,30); R("#1d2b4f",kx-28,b-36,56,6);
+  for(let i=0;i<7;i++) R(i%2?"#f2c230":"#1d2b4f",kx-28+i*8,b-30,8,4);
+  R("#86c0e3",kx-20,b-22,16,12); R("#6b4a2b",kx+4,b-22,10,22);
+  sign(kx,b-45,"CAMPUS STORE");
+  for(const s of [-1,1]){ const x0 = s<0 ? cx-60 : cx+34, x1 = s<0 ? cx-34 : cx+100;
+    R("#2a2a2a",x0,b-14,x1-x0,1); R("#2a2a2a",x0,b-4,x1-x0,1); for(let x=x0;x<x1;x+=4) R("#2a2a2a",x,b-16,1,16); }
+  for(const dx of [-36,28]){ bricks(cx+dx,b-46,8,46,"#a5463a","#83362c"); R("#e8dcc0",cx+dx-1,b-49,10,3); R("#f2c230",cx+dx+2,b-53,4,4); }
+  R("#2a2a2a",cx-28,b-44,56,2); for(let x=cx-26;x<cx+28;x+=6) R("#2a2a2a",x,b-42,1,4);
+  sign(cx,b-64,CONFIG.town.toUpperCase(),"#1d2b4f","#f2c230",7);
+}
+function drawSchool(cx,b,size,label){
+  const [w,h,floors] = { small:[112,40,2], medium:[136,50,2], large:[164,62,3] }[size];
+  const l = Math.round(cx-w/2), t = b-h;
+  R("#bbb",l-12,b-h-22,1,h+22); R("#1d2b4f",l-11,b-h-22,12,8); R("#f2c230",l-11,b-h-19,12,2);
+  if(size==="large"){ const tx = cx+w/2-26; bricks(tx-12,t-26,24,26,"#a5463a","#83362c"); R("#e8dcc0",tx-14,t-29,28,3); tri(tx,t-42,15,13,"#1d2b4f"); R("#fff",tx-5,t-22,10,10); R("#1d2b4f",tx,t-20,1,4); R("#1d2b4f",tx,t-17,3,1); }
+  bricks(l,t,w,h,"#a5463a","#83362c");
+  R("#e8dcc0",l-2,t-4,w+4,4);
+  const fh = (h-8)/floors;
+  for(let f=0; f<floors; f++){
+    const y = Math.round(t+6+f*fh);
+    for(let x=l+8; x<l+w-10; x+=16){
+      if(f===floors-1 && Math.abs(x+4-cx) < 16) continue;
+      R("#e8dcc0",x-1,y-1,10,11); R("#86c0e3",x,y,8,9); R("#e8dcc0",x+4,y,1,9); R("#d6eefa",x+1,y+1,2,3);
+    }
+  }
+  R("#e8dcc0",cx-11,b-23,22,23); R("#1d2b4f",cx-9,b-21,18,21); R("#f2c230",cx,b-21,1,21); R("#f2c230",cx-3,b-11,1,2); R("#f2c230",cx+3,b-11,1,2);
+  R("#cfc6ae",cx-15,b-2,30,2);
+  R("#2f6b2f",l,b-5,cx-15-l,5); R("#2f6b2f",cx+15,b-5,l+w-cx-15,5);
+  sign(cx - (size==="large"?20:0),t-15,label);
+}
+function drawLibrary(cx,b){
+  const w=124,h=42,l=cx-w/2,t=b-h;
+  R("#e6dcc4",l,t,w,h); tri(cx,t-18,w/2+4,16,"#d9cdb0"); R("#cfc4a6",l-4,t-3,w+8,3);
+  sign(cx,t-12,"LIBRARY","#e6dcc4","#1d2b4f");
+  for(let i=0;i<6;i++){ const x = l+8+i*21; R("#fbf8ef",x,t,7,h-4); R("#cfc4a6",x+5,t,2,h-4); }
+  R("#3a2a1a",cx-7,b-22,14,18);
+  R("#cfc6ae",l-4,b-4,w+8,4);
+  R("#f2c230",cx+18,t+6,30,10); T("BOOK FAIR",cx+33,t+11,"#1d2b4f",5);
+}
+function drawChurch(cx,b,tm){
+  const w=140,h=46,l=cx-w/2,t=b-h;
+  // nave
+  R("#f6f2e8",l,t,w,h); tri(cx,t-26,w/2+8,26,"#5d6470"); R("#4b515c",l-8,t-1,w+16,2);
+  // tall arched stained-glass windows
+  const glass=["#c0392b","#2e6db4","#f2c230","#2f7d32","#8e44ad"];
+  for(const dx of [-58,-40,28,46]){ R("#8a8070",cx+dx-1,t+7,10,22); for(let i=0;i<5;i++) for(let j=0;j<2;j++) R(glass[(i+j+Math.abs(dx))%5],cx+dx+j*4,t+8+i*4,4,4); R("#f6f2e8",cx+dx,t+7,1,1); R("#f6f2e8",cx+dx+7,t+7,1,1); }
+  // steeple tower
+  R("#f6f2e8",cx-13,t-58,26,34); R("#e2dccd",cx+9,t-58,4,34);
+  R("#4b515c",cx-15,t-60,30,3);
+  // belfry with swinging bell
+  R("#2a2a2a",cx-6,t-54,12,12); const sw=Math.round(Math.sin(tm/300)*2); R("#f2c230",cx-3+sw,t-50,6,6); R("#f2c230",cx-4+sw,t-45,8,1);
+  // rose window
+  ctx.fillStyle="#8a8070"; ctx.beginPath(); ctx.arc(cx,t-34,7,0,Math.PI*2); ctx.fill();
+  for(let k=0;k<8;k++){ ctx.fillStyle=glass[k%5]; ctx.beginPath(); ctx.moveTo(cx,t-34); ctx.arc(cx,t-34,6,k*Math.PI/4,(k+1)*Math.PI/4); ctx.fill(); }
+  R("#f6f2e8",cx-1,t-35,2,2);
+  // spire and cross
+  tri(cx,t-84,13,24,"#5d6470");
+  R("#f2c230",cx-1,t-98,3,15); R("#f2c230",cx-5,t-94,11,3);
+  // doors
+  R("#e2dccd",cx-12,b-26,24,26); R("#6b4a2b",cx-10,b-23,20,23); R("#6b4a2b",cx-8,b-25,16,2); R("#3d2a18",cx,b-23,1,23); R("#f2c230",cx-3,b-12,1,2); R("#f2c230",cx+3,b-12,1,2);
+  R("#cfc6ae",cx-18,b-3,36,3); R("#bdb39a",cx-14,b-1,28,1);
+  R("#2f6b2f",l,b-5,cx-18-l,5); R("#2f6b2f",cx+18,b-5,l+w-cx-18,5);
+  sign(cx,t-22,"CHURCH","#1d2b4f","#f2c230",6);
+}
+function drawGym(cx,b){
+  const w=164,h=40,l=cx-w/2,t=b-h;
+  ctx.fillStyle="#1d2b4f"; ctx.beginPath(); ctx.ellipse(cx,t,w/2,20,0,Math.PI,0); ctx.fill();
+  R("#f2c230",l,t-1,w,2);
+  T("LANCERS GYM",cx,t-9,"#f2c230",9);
+  R("#d8c39a",l,t,w,h);
+  for(let x=l+6;x<l+w-6;x+=10) R("#86c0e3",x,t+5,7,5);
+  for(const dx of [-40,22]){ R("#1d2b4f",cx+dx,b-20,18,20); R("#f2c230",cx+dx+9,b-20,1,20); }
+  R("#cfc6ae",l,b-2,w,2);
+}
+function drawStadium(cx,b){
+  const l=cx-90;
+  for(let i=0;i<6;i++){ R(i%2?"#9aa0a8":"#b6bcc4",l,b-12-i*6,180,6); for(let x=l+3;x<l+177;x+=5) if(hr(x*7+i)>0.45) R(["#1d2b4f","#f2c230","#fff","#c0392b"][Math.floor(hr(x+i*3)*4)],x,b-16-i*6,2,3); }
+  for(const dx of [-96,96]){ R("#777",cx+dx,b-80,2,80); R("#ddd",cx+dx-6,b-86,14,7); R("#fff7c2",cx+dx-5,b-85,12,5); }
+  R("#555",cx-1,b-74,3,38); R("#1d2b4f",cx-30,b-96,60,24); R("#f2c230",cx-30,b-96,60,1);
+  T("LANCERS",cx,b-89,"#f2c230",8); T("HOME 21  VIS 7",cx,b-79,"#ff8a3a",5);
+  R("#f2c230",cx+60,b-40,2,40); R("#f2c230",cx+52,b-32,18,2); R("#f2c230",cx+52,b-50,2,18); R("#f2c230",cx+68,b-50,2,18);
+  R("#fff",cx-70,b-26,34,18); R("#c0392b",cx-70,b-26,34,5); T("SNACKS",cx-53,b-14,"#1d2b4f",6);
+}
+function drawCarpool(cx,b){
+  R("#55585e",cx-110,b-14,220,14);
+  const cols=["#c0392b","#2e6db4","#ececec","#2f7d32","#f2c230","#7a1f2b","#333"];
+  for(let i=0;i<7;i++){ const x = cx-104+i*30; if(Math.abs(x+11-cx)<16) continue; const c = cols[i];
+    R(c,x,b-10,24,7); R(c,x+4,b-15,15,6); R("#9fd3f0",x+6,b-14,5,4); R("#9fd3f0",x+12,b-14,5,4); R("#111",x+3,b-4,5,4); R("#111",x+16,b-4,5,4); }
+  R("#8a8a8a",cx+40,b-40,1,26); sign(cx+40,b-48,"CARPOOL LANE","#fff","#1d2b4f",5);
+}
+function drawFountain(cx,b,tm){
+  R("#c8bfa8",cx-60,b-6,120,6);
+  R("#9aa0a8",cx-30,b-12,60,8); R("#5fb0e8",cx-28,b-11,56,4);
+  R("#9aa0a8",cx-3,b-30,6,18); R("#9aa0a8",cx-14,b-32,28,4); R("#5fb0e8",cx-12,b-31,24,2);
+  for(let i=0;i<10;i++){ const p = ((tm/600)+i/10)%1; const dir = i%2?1:-1; R("#bfe6ff",cx+dir*p*16,b-40+p*p*28-(1-p)*6,2,2); }
+  R("#bfe6ff",cx,b-42,1,10);
+  sign(cx,b-58,"COURTYARD","#e6dcc4","#1d2b4f",5);
+}
+function drawStage(cx,b){
+  R("#1d2b4f",cx-64,b-58,128,40); R("#f2c230",cx-64,b-58,128,2);
+  T("CLASS OF " + CONFIG.classOf,cx,b-46,"#f2c230",9); T("CONGRATULATIONS",cx,b-34,"#fff",6);
+  R("#1d2b4f",cx-78,b-18,156,18); R("#f2c230",cx-78,b-18,156,2);
+  R("#6b4a2b",cx+30,b-30,10,12);
+  for(let i=0;i<=16;i++){ const a = Math.PI - i*Math.PI/16; const x = cx+Math.cos(a)*84, y = b-50-Math.sin(a)*34; R(i%2?"#f2c230":"#1d2b4f",x-3,y-3,6,6); }
+  for(let i=0;i<8;i++){ R(i%2?"#f2c230":"#1d2b4f",cx-76+i*20,b-12,10,8); }
+}
+
+/* ---- scene ---- */
+function sky(){
+  if(isStorm()) return ["#55626f","#93a0aa"];
+  if(G.party.length && [11,0,1].includes(month())) return ["#86b3dc","#dbe9f3"];
+  return ["#3e8fd8","#bfe3f7"];
+}
+function drawScene(tm){
+  const m = G.displayMiles;
+  const [s1,s2] = sky();
+  const g = ctx.createLinearGradient(0,0,0,114); g.addColorStop(0,s1); g.addColorStop(1,s2);
+  ctx.fillStyle = g; ctx.fillRect(0,0,W,114);
+  if(!isStorm()){ ctx.fillStyle="#ffe680"; ctx.beginPath(); ctx.arc(352,28,12,0,Math.PI*2); ctx.fill(); }
+  for(let i=0;i<5;i++){
+    const span = W+80, x = ((hr(i+1)*span*3 - m*PXM*0.15) % span + span) % span - 40, y = 14+hr(i+9)*36;
+    const c = isStorm() ? "#7d8790" : "#fff";
+    R(c,x,y,30,6); R(c,x+6,y-4,16,5); R(c,x-4,y+3,38,4);
+  }
+  const s = m*PXM*0.4;
+  for(let i=Math.floor(s/8); i*8 - s < W; i++){ const x = i*8 - s, h = 6 + hr(i)*10; R("#3f7a3a",x,114-h,8,h); R("#4f8a45",x+2,114-h+2,4,3); }
+  R("#5c9b45",0,114,W,H-114);
+  for(let i=Math.floor((m*PXM)/7); i*7 - m*PXM < W; i++){ if(hr(i*3)>0.7) R("#4f8a3c", i*7 - m*PXM, 118 + hr(i)*22, 2, 1); }
+  const first = Math.floor((m-30)/11), last = Math.ceil((m+50)/11);
+  for(let i=first;i<=last;i++){ const mi = i*11 + hr(i)*5; if(i<0 || hr(i*2.7)>0.55 || nearLM(mi,16)) continue; palm(wx(mi), BACK_Y-1); }
+  for(let k=Math.floor((m-40)/100); k<=Math.ceil((m+60)/100); k++){ const mi = k*100+50; if(mi<0||mi>CONFIG.totalMiles||nearLM(mi,16)) continue; streetSign(wx(mi), BACK_Y); }
+  LANDMARKS.forEach(L => {
+    const x = wx(L.mile); if(x < -140 || x > W+140) return;
+    if(L.kind==="gate") drawGate(x,BACK_Y);
+    else if(L.kind==="school") drawSchool(x,BACK_Y,L.size,L.label);
+    else if(L.kind==="library") drawLibrary(x,BACK_Y);
+    else if(L.kind==="church") drawChurch(x,BACK_Y,tm);
+    else if(L.kind==="gym") drawGym(x,BACK_Y);
+    else if(L.kind==="stadium") drawStadium(x,BACK_Y);
+    else if(L.crossing==="carpool") drawCarpool(x,BACK_Y);
+    else if(L.crossing==="fountain") drawFountain(x,BACK_Y,tm);
+    else if(L.kind==="stage") drawStage(x,BACK_Y);
+  });
+  drawPeople(m, false);
+  R("#d9d2bd",0,BACK_Y,W,ROAD_T-BACK_Y); R("#66676d",0,ROAD_T,W,ROAD_B-ROAD_T); R("#d9d2bd",0,ROAD_B,W,2);
+  for(let i=Math.floor((m*PXM)/20); i*20 - m*PXM < W; i++) R("#f2c230", i*20 - m*PXM, 159, 10, 2);
+  LANDMARKS.forEach(L => {
+    const x = wx(L.mile); if(x < -80 || x > W+80) return;
+    if(L.crossing==="carpool") for(let j=0;j<6;j++) R("#f4f4f4",x-14+j*5,ROAD_T+1,3,ROAD_B-ROAD_T-2);
+    if(L.crossing==="fountain"){ R("#4fa3db",x-44,ROAD_T,88,ROAD_B-ROAD_T); R("#7cc3ef",x-40,ROAD_T+4,30,1); R("#7cc3ef",x+6,ROAD_T+13,26,1); for(let j=0;j<5;j++) R("#8d8d8d",x-30+j*14,ROAD_T+7+(j%2)*6,8,4); }
+    if(L.kind==="gate"){ R("#f4f4f4",x+12,ROAD_T,2,ROAD_B-ROAD_T); }
+    if(L.final){ for(let j=0;j<6;j++) R(j%2?"#1d2b4f":"#f2c230",x-6,ROAD_T+j*4,4,4); }
+  });
+  if(!G.cart && !G.enc && G.party.length && G.mode==="trail"){
+    const cyc = (tm % 28000)/28000;
+    if(cyc < 0.3) drawCart(W+40 - cyc/0.3*(W+80), 157, -1, null);
+  }
+  const walking = Math.abs(G.miles - G.displayMiles) > 0.3;
+  const members = G.party.length ? G.party.filter(p=>!p.gone) : PARTY_LOOKS.map((_,i)=>({idx:i}));
+  members.forEach((p,i) => {
+    const fr = walking ? (Math.floor(tm/140) + i) % 2 : 0;
+    if(!(G.cart && G.cart.state==="ride")) person(PARTY_X - i*16, PARTY_Y - (walking && fr ? 1 : 0), { ...lookFor(p), grad: G.mode==="grad" }, fr);
+  });
+  // people who stop your group on the road
+  if(G.enc==="bp"){ person(PARTY_X+34, PARTY_Y, SPECIALS.bp.look, 0); bubble(PARTY_X+34, PARTY_Y-34, "Hall pass?"); }
+  if(G.enc==="mrc"){ person(PARTY_X+34, PARTY_Y, { ...SPECIALS.mrc.look, point:true }, 0); bubble(PARTY_X+30, PARTY_Y-38, G.pace==="hustle" ? "STOP RUNNING!" : "Demerit!"); }
+  if(G.enc==="mrss"){ person(PARTY_X+34, PARTY_Y, SPECIALS.mrss.look, 0); bubble(PARTY_X+34, PARTY_Y-38, "How is everyone?"); }
+  if(G.enc==="karen"){ person(PARTY_X+30, PARTY_Y, SPECIALS.karen.look, 0); R("#9aa0a8",PARTY_X+38,PARTY_Y-14,18,2); R("#c9ced6",PARTY_X+38,PARTY_Y-12,18,8); R("#f2c230",PARTY_X+41,PARTY_Y-17,5,3); R("#c0392b",PARTY_X+48,PARTY_Y-17,5,3); R("#111",PARTY_X+39,PARTY_Y-3,3,3); R("#111",PARTY_X+51,PARTY_Y-3,3,3); bubble(PARTY_X+30, PARTY_Y-40, "Hot lunch!"); }
+  if(G.cart && G.cart.state==="here") bubble(PARTY_X+30, PARTY_Y-44, "ID please!");
+  // Eddy's golf cart: parked, riding, leaving, or just cruising by
+  if(G.cart){
+    if(G.cart.state==="here") drawCart(PARTY_X+34, PARTY_Y-6, -1, null);
+    else if(G.cart.state==="ride") drawCart(PARTY_X, PARTY_Y, 1, alive().slice(0,5).map(lookFor));
+    else if(G.cart.state==="leave"){ const dx = (tm - G.cart.t0)*0.25; if(dx > W) G.cart = null; else drawCart(PARTY_X+34+dx, PARTY_Y-6, 1, null); }
+  }
+  drawPeople(m, true);
+  for(let i=first;i<=last;i++){ const mi = i*11 + 5 + hr(i+50)*5; if(i<0 || hr(i*4.1)>0.35 || nearLM(mi,10)) continue; palm(wx(mi), H+4); }
+  if(isStorm()){ ctx.fillStyle="rgba(200,220,240,.6)"; for(let i=0;i<70;i++){ const x = (hr(i)*W + tm*0.15) % W, y = (hr(i+70)*H + tm*0.35) % H; ctx.fillRect(x,y,1,5); } }
+  if(G.mode==="grad"){ for(let i=0;i<10;i++){ const p = ((tm/1800)+hr(i))%1; const x = PARTY_X-40+hr(i+3)*110 + Math.sin(p*6+i)*6, y = 140 - Math.sin(p*Math.PI)*110; R("#111",x-4,y,9,2); R("#111",x-2,y+2,5,2); R("#f2c230",x+4,y,1,4); } }
+}
+
+function npcLook(seed, teacher){
+  const skins=["#f1c9a5","#e9b98f","#c68a5e","#8d5a3b","#5e3b26"], hairs=["#1a1a1a","#3b2414","#c98b3b","#6b4a2b","#888"];
+  const shirts = teacher ? ["#ffffff","#9cc3e6","#d6c7a1","#7a1f2b","#2f7d32"] : ["#1d2b4f","#ffffff","#f2c230","#1d2b4f","#ffffff"];
+  const pants = teacher ? ["#c9b48a","#3a3a3a","#1d2b4f"] : ["#c9b48a","#1d2b4f"];
+  return { teacher, skin:skins[Math.floor(hr(seed+1)*5)], hair:hairs[Math.floor(hr(seed+2)*5)], shirt:shirts[Math.floor(hr(seed+3)*5)],
+    pants:pants[Math.floor(hr(seed+4)*pants.length)], backpack: teacher ? null : ["#c0392b","#2e6db4","#2f7d32","#f2c230","#6b4a2b"][Math.floor(hr(seed+5)*5)], book:["#7a1f2b","#2e6db4","#f2c230"][Math.floor(hr(seed+6)*3)] };
+}
+function drawPeople(m, front){
+  const y = front ? FRONT_Y : BACK_Y + 1;
+  for(let i=Math.floor((m-30)/7); i<=Math.ceil((m+50)/7); i++){
+    if(i<1) continue;
+    const mi = i*7 + hr(i*3.3)*4;
+    if(mi > CONFIG.totalMiles - 10 || nearLM(mi,14) || hr(i) > 0.6) continue;
+    if((hr(i*5.7) < 0.45) !== front) continue;
+    const x = wx(mi); if(x<-20||x>W+20) continue;
+    const teacher = hr(i*9.1) < 0.3;
+    person(x, y, npcLook(i*13, teacher), 0);
+    if(Math.abs(x - PARTY_X + 20) < 34 && G.party.length) bubble(x, y-31-(teacher?3:0), SHOUTS[i % SHOUTS.length]);
+  }
+  LANDMARKS.forEach((L,li) => {
+    const x0 = wx(L.mile); if(x0 < -120 || x0 > W+120) return;
+    const spots = front ? [[-58,true],[40,false],[56,false]] : [[-24,false],[30,true]];
+    spots.forEach(([dx,teacher],k) => {
+      const o = npcLook(li*101 + k*7 + (front?3:0), teacher);
+      if(L.crossing==="carpool" && front && k===0){ o.vest = true; o.stop = true; }
+      person(x0+dx, y, o, 0);
+      if(front && k===0 && Math.abs(x0 - PARTY_X) < 30 && G.party.length && G.atLandmark && G.mode!=="grad"){
+        bubble(x0+dx, y-35, L.kind==="crossing" ? "Wait up!" : "Welcome!");
+      }
+    });
+    if(front && FORKS[li]){
+      person(x0+80, y, SPECIALS.mrc.look, 0);
+      if(Math.abs(x0 - PARTY_X) < 30 && G.atLandmark && G.party.length) bubble(x0+80, y-36, "This way!");
+    }
+  });
+  if(!front){
+    BP_MILES.forEach(mi => {
+      const x = wx(mi) + Math.sin(performance.now()/1400 + mi)*14; if(x<-20||x>W+20) return;
+      const fr = Math.floor(performance.now()/220)%2;
+      person(x, y, SPECIALS.bp.look, fr);
+      if(Math.abs(x - PARTY_X) < 50 && G.party.length) bubble(x, y-35, "Hall pass?");
+    });
+    MRC_MILES.forEach(mi => {
+      const x = wx(mi) + Math.sin(performance.now()/1100 + mi)*10; if(x<-20||x>W+20) return;
+      person(x, y, { ...SPECIALS.mrc.look, point:false, slip:true }, Math.floor(performance.now()/260)%2);
+      if(Math.abs(x - PARTY_X) < 60 && G.party.length) bubble(x, y-38, G.pace==="hustle" ? "STOP RUNNING!" : "Walk!");
+    });
+  }
+}
+
+/* ---- snack run scene ---- */
+function drawItem(it){
+  const x = Math.round(it.x), y = Math.round(it.y + Math.sin(it.ph)*3);
+  switch(it.t){
+    case "pizza": R("#b5732a",x-6,y-6,12,2); for(let i=0;i<10;i++){ const w=10-i; R("#f6c453",x-w/2,y-4+i,w,1);} R("#c0392b",x-2,y-2,2,2); R("#c0392b",x+1,y+1,2,2); break;
+    case "burger": R("#d9933d",x-6,y-6,12,4); R("#5cb85c",x-6,y-2,12,1); R("#6b3e26",x-6,y-1,12,3); R("#f2c230",x-5,y+2,10,1); R("#d9933d",x-6,y+3,12,3); break;
+    case "apple": R("#d63a3a",x-4,y-3,8,7); R("#d63a3a",x-3,y-4,6,9); R("#5a3d1e",x,y-7,1,3); R("#4caf50",x+1,y-7,3,2); R("#ff9a9a",x-2,y-2,1,2); break;
+    case "cookie": R("#c8904d",x-5,y-3,10,7); R("#c8904d",x-3,y-5,6,11); R("#4a2c17",x-2,y-2,2,2); R("#4a2c17",x+2,y,2,2); R("#4a2c17",x-1,y+3,2,1); break;
+    case "nugget": R("#d9a441",x-5,y-3,10,7); R("#e8bd62",x-3,y-2,4,2); R("#b78431",x+2,y+2,3,1); break;
+    case "special": R("#141a2c",x-7,y-3,14,6); R("#f2c230",x-6,y-2,12,4); R("#fff6c2",x-4,y-2,8,1); R("#c0392b",x-1,y-6,2,4); R("#c0392b",x-2,y-5,4,2); break;
+    case "gull": { const f = Math.sin(it.ph*2) > 0 ? -3 : 1; const d = it.vx>0?1:-1;
+      R("#f4f4f4",x-6,y-2,12,5); R("#d0d0d0",x-3,y-3+f,6,3); R("#f4f4f4",x+d*6-1,y-4,3,3); R("#f2a33a",x+d*8,y-3,2,1); R("#111",x+d*6,y-3,1,1); break; }
+  }
+}
+function drawSnack(){
+  R("#efe6cf",0,0,W,H);
+  for(let y=26;y<150;y+=10) R("#e3d8bc",0,y,W,1);
+  R("#1d2b4f",0,0,W,24); R("#f2c230",0,24,W,2);
+  T("LANCER CAFE: SNACK RUN",W/2,12,"#f2c230",9);
+  for(let x=30;x<W;x+=90){ R("#cfc6ae",x-1,33,42,26); R("#86c0e3",x,34,40,24); R("#cfc6ae",x+19,34,2,24); }
+  R("#c9b48a",0,150,W,50); for(let x=0;x<W;x+=20) for(let y=150;y<H;y+=20) if(((x+y)/20)%2===0) R("#b9a37a",x,y,20,20);
+  for(const x of [14,306]){ R("#8a6a43",x,138,80,6); R("#6b5233",x+6,144,4,14); R("#6b5233",x+70,144,4,14); }
+  // Chef behind the serving counter
+  ctx.save(); ctx.translate(W/2-6,152); ctx.scale(2.2,2.2); person(0,0,SPECIALS.karen.look,0); ctx.restore();
+  R("#141a2c",W/2-56,124,112,2); R("#c4cad0",W/2-55,125,110,4); R("#9aa2aa",W/2-55,129,110,28); R("#b4bcc4",W/2-55,129,110,2);
+  for(let i=0;i<4;i++){ R("#e8e8e8",W/2-48+i*26,120,20,5); R(["#e8a23a","#6b3e26","#5cb85c","#d9a441"][i],W/2-46+i*26,120,16,2); }
+  T("CHEF",W/2,143,"#1d2b4f",7);
+  bubble(W/2+4, 50, KAREN_LINES[Math.floor(performance.now()/3000) % KAREN_LINES.length]);
+  SR.items.forEach(drawItem);
+  SR.pops.forEach(p => T(p.txt, p.x, p.y, p.c, 8));
+  R("#1d2b4f",8,182,W-16,10); R(SR.time<5?"#c0392b":"#f2c230",9,183,Math.max(0,(W-18)*SR.time/snackTime()),8);
+  T(`Grabbed: ${SR.grabbed}   Time: ${Math.ceil(SR.time)}s`, W/2, 172, "#1d2b4f", 9);
+}
+
+cv.addEventListener("pointerdown", e => {
+  if(G.mode !== "snack") return;
+  const r = cv.getBoundingClientRect();
+  snackClick((e.clientX - r.left)/r.width*W, (e.clientY - r.top)/r.height*H);
+});
+
+/* =========================================================
+   MAIN LOOP
+   ========================================================= */
+let lastT = performance.now();
+function loop(now){
+  const dt = Math.min(0.05, (now - lastT)/1000); lastT = now;
+  if(G.mode === "pick") drawLineup(now);
+  else if(G.mode === "snack"){ updateSnack(dt); if(G.mode === "snack") drawSnack(); else drawScene(now); }
+  else {
+    const diff = G.miles - G.displayMiles;
+    G.displayMiles = Math.abs(diff) < 0.02 ? G.miles : G.displayMiles + diff*Math.min(1, dt*3);
+    drawScene(now);
+  }
+  requestAnimationFrame(loop);
+}
+titleScreen();
+requestAnimationFrame(loop);
+</script>
+</body>
+</html>
