@@ -333,14 +333,14 @@ const perk = id => G.char === id;
 
 /* Special campus characters you meet on the trail. Change looks or names here. */
 const SPECIALS = {
-  bp:    { name:"BP", look:{ skin:"#f1c9a5", hair:"#b08a5a", bald:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", radio:true, pants:"#c9b48a", teacher:true } },
+  bp:    { name:"BP", look:{ skin:"#f1c9a5", hair:"#8a7a6a", gray:true, bald:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", radio:true, pants:"#c9b48a", teacher:true } },
   mrc:   { name:"Mr. C", look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, beard:"#6b4a2b", shirt:"#2e6db4", polo:true, collar:"#f2c230", pants:"#c9b48a", big:true, point:true, teacher:true } },
   eddy:  { name:"Eddy", look:{ skin:"#c99468", hair:"#2a2a2a", gray:true, mustache:"#3a3a3a", cop:true, radio:true, shirt:"#1f3a68", pants:"#1d2b4f", teacher:true } },
   mrss:  { name:"Mrs. S", look:{ skin:"#f1c9a5", hair:"#7a4a2a", curly:true, shirt:"#5b7fb8", cardigan:"#f3ead2", pants:"#1d2b4f", clip:true, teacher:true } },
   carlos:{ name:"Carlos", look:{ skin:"#d9a679", hair:"#2a2a2a", gray:true, mustache:"#2a2a2a", glasses:true, shirt:"#d6e4f0", polo:true, collar:"#ffffff", pants:"#3a3a3a", teacher:true } },
   coachw:{ name:"Coach W", look:{ skin:"#5e3b26", hair:"#111111", cap:"#1d2b4f", shirt:"#1d2b4f", polo:true, collar:"#f2c230", whistle:true, pants:"#c9b48a", big:true, teacher:true } },
   mrt:   { name:"Mr. T", look:{ skin:"#6b4226", hair:"#1a1a1a", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", trumpet:true, teacher:true } },
-  jill:  { name:"Ms. Jill", look:{ skin:"#f1c9a5", hair:"#c9a35a", long:true, glasses:true, shirt:"#2e6db4", cardigan:"#f3ead2", pants:"#1d2b4f", teacher:true } },
+  jill:  { name:"Ms. Jill", look:{ skin:"#dba57a", hair:"#c9a35a", long:true, shirt:"#2e6db4", cardigan:"#f3ead2", pants:"#1d2b4f", teacher:true } },
   campbell:{ name:"Mr. Campbell", look:{ skin:"#f1c9a5", hair:"#6b4a2b", beard:"#6b4a2b", big:true, shirt:"#1d2b4f", tank:true, pants:"#c9b48a", book:"#c0392b", teacher:true } },
   moore: { name:"Mr. Moore", look:{ skin:"#e9b98f", hair:"#3b2414", beard:"#3b2414", shirt:"#7a1f2b", polo:true, collar:"#f3ead2", pants:"#3a3a3a", guitar:true, teacher:true } },
   roberto:{ name:"Roberto", look:{ skin:"#c99468", hair:"#d6d6d6", mustache:"#e4e4e4", hardhat:"#1d2b4f", small:true, shirt:"#3d6fb0", polo:true, collar:"#6f9ad0", pants:"#3a4a6a", shovel:true, teacher:true } },
@@ -1854,7 +1854,7 @@ const P_LEADERS = [
 ];
 const P_SPECIALS = [
   { name:"BP", role:"Hall pass patrol", blurb:"Ball cap pulled low, button-up shirt, khakis, and a radio in hand. Better have a hall pass.",
-    look:{ skin:"#f1c9a5", hair:"#b08a5a", bald:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", buttons:true, radio:true, bg:"#55657f" } },
+    look:{ skin:"#efc39e", hair:"#8a7a6a", bald:true, wrinkles:true, older:true, stubble:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", buttons:true, radio:true, bg:"#55657f" } },
   { name:"Mr. C", role:"Demerit patrol", blurb:"Big brown hair, demerit pad in hand, and he WILL see you running.",
     look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, beard:"#6b4a2b", shirt:"#2e6db4", polo:true, collar:"#f2c230", big:true, heavy:true, point:true, stern:true, bg:"#a85a3a" } },
   { name:"Eddy", role:"Campus security", blurb:"Rolls up in his golf cart at a blazing 12 miles per hour. ID, please!",
@@ -1868,7 +1868,7 @@ const P_SPECIALS = [
   { name:"Mr. T", role:"Music teacher", blurb:"Warming up by the stadium with a shining trumpet and the fight song ready.",
     look:{ skin:"#6b4226", hair:"#1a1a1a", short:true, shirt:"#ffffff", tie:"#1d2b4f", trumpet:true, bg:"#8a3a5a" } },
   { name:"Ms. Jill", role:"Front desk", blurb:"Sign in, grab a visitor badge, and say good morning. She knows everybody's name.",
-    look:{ skin:"#f1c9a5", hair:"#c9a35a", long:true, glasses:true, shirt:"#2e6db4", cardigan:"#f3ead2", lashes:true, lips:"#c05070", bigSmile:true, earrings:true, bg:"#6a8fc0" } },
+    look:{ skin:"#dba57a", hair:"#c9a35a", long:true, shirt:"#2e6db4", cardigan:"#f3ead2", lashes:true, lips:"#c05070", bigSmile:true, earrings:true, bg:"#6a8fc0" } },
   { name:"Mr. Campbell", role:"5th grade teacher", blurb:"A big guy with a big beard, a Cambridge muscle shirt, and an even bigger heart. Keeps emergency snacks in his desk.",
     look:{ skin:"#f1c9a5", hair:"#6b4a2b", beard:"#6b4a2b", side:true, shirt:"#1d2b4f", tank:true, big:true, heavy:true, bg:"#d9a43a" } },
   { name:"Mr. Moore", role:"Bible quiz", blurb:"Guitar in hand and a Bible quiz ready. The joy of the Lord is his... well, you'll have to answer that.",
@@ -1997,6 +1997,12 @@ function portrait(o){
     s.push(`<path d="M${cx-hw+4},${cy+2} Q${cx-hw+2},${cy+60} ${cx},${cy+80} Q${cx+hw-2},${cy+60} ${cx+hw-4},${cy+2} Q${cx+hw-10},${cy+30} ${cx+26},${cy+34} Q${cx},${cy+26} ${cx-26},${cy+34} Q${cx-hw+10},${cy+30} ${cx-hw+4},${cy+2} Z" fill="${o.beard}"/>`);
     s.push(`<path d="M${cx-22},${cy+30} Q${cx},${cy+20} ${cx+22},${cy+30} Q${cx},${cy+34} ${cx-22},${cy+30} Z" fill="${o.beard}"/>`);
     for(let i=0;i<8;i++) s.push(`<path d="M${cx-30+i*8},${cy+48} l2,10" stroke="${pshade(o.beard,1.8)}" stroke-width="1" opacity=".5"/>`);
+  }
+  if(o.stubble){ for(let i=0;i<26;i++){ const a = Math.PI*(0.12 + 0.76*i/25); s.push(`<circle cx="${cx - Math.cos(a)*(hw-12)}" cy="${cy+18 + Math.sin(a)*38}" r="1.4" fill="#8a7a6a" opacity=".55"/>`); } }
+  if(o.older){
+    s.push(`<path d="M${cx-32},${cy+10} q10,5 20,0 M${cx+12},${cy+10} q10,5 20,0" stroke="${skinD}" stroke-width="2" fill="none"/>`);
+    s.push(`<path d="M${cx-38},${cy-4} l-7,-3 M${cx-38},${cy+1} l-7,1 M${cx+38},${cy-4} l7,-3 M${cx+38},${cy+1} l7,1" stroke="${skinD}" stroke-width="2"/>`);
+    s.push(`<path d="M${cx-14},${cy+20} q-8,10 -6,22 M${cx+14},${cy+20} q8,10 6,22" stroke="${skinD}" stroke-width="2.2" fill="none"/>`);
   }
   if(o.beard && o.gray){ for(let i=0;i<9;i++) s.push(`<path d="M${cx-34+i*8},${cy+42+(i%3)*9} l3,9" stroke="#c4c4c4" stroke-width="2.4" stroke-linecap="round"/>`); s.push(`<path d="M${cx-14},${cy+30} l6,2 M${cx+10},${cy+30} l6,-2" stroke="#c4c4c4" stroke-width="2"/>`); }
   // eyes
