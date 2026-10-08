@@ -12,7 +12,7 @@
   *{box-sizing:border-box}
   html,body{margin:0;background:#0a1226;color:var(--ink);
     font-family:"Courier New",Courier,ui-monospace,Menlo,Consolas,monospace;}
-  #app{max-width:900px;margin:0 auto;padding:14px 12px 30px;}
+  #app{max-width:min(1240px, calc((100vh - 150px) * 2));min-width:min(100%, 900px);margin:0 auto;padding:10px 12px 24px;}
   header{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:10px}
   h1{margin:0;color:var(--gold);font-size:clamp(28px,6vw,44px);letter-spacing:6px;line-height:1;
      text-shadow:3px 3px 0 #000, 6px 6px 0 var(--navy2);}
@@ -26,11 +26,55 @@
   .status span{display:block;font-size:12px;color:var(--dim)}
   .status b{display:block;color:#fff;font-size:14px;line-height:1.25}
   @media (max-width:640px){.status{grid-template-columns:repeat(3,1fr)} .status div:nth-child(3){border-right:none}}
-  .panel{background:#050505;min-height:230px;padding:16px 18px 20px;font-size:17px;line-height:1.5}
+  .stage{position:relative}
+  .panel{background:#050505;padding:16px 18px 20px;font-size:17px;line-height:1.5}
+  .panel:empty{display:none}
+  @media (min-width:760px){
+    .panel{position:absolute;left:50%;bottom:14px;transform:translateX(-50%);width:min(92%,780px);max-height:calc(100% - 28px);overflow:auto;
+      background:rgba(5,8,18,.95);border:3px solid var(--gold);border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.7)}
+    .panel:has(.cards){width:min(97%,1160px);top:14px;bottom:14px}
+  }
+  .hud{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .stage.busy .hud{display:none}
+  .hud .bar{position:absolute;top:8px;display:flex;gap:6px;flex-wrap:wrap}
+  .hud .bar.l{left:8px;right:120px}
+  .hud .bar.r{right:8px}
+  .hot{all:unset;pointer-events:auto;cursor:pointer;position:absolute;white-space:nowrap;transform:translate(-50%,-100%);
+    background:var(--gold);color:#14213f;font:inherit;font-weight:bold;font-size:clamp(11px,1.35vw,15px);padding:5px 10px;border:2px solid #14213f;border-radius:8px;
+    box-shadow:0 3px 0 #14213f,0 6px 14px rgba(0,0,0,.35)}
+  .hot:hover,.hot:focus-visible{background:#fff;outline:none}
+  .hot .k{display:inline-block;background:#14213f;color:var(--gold);border-radius:4px;padding:0 4px;margin-right:6px;font-size:.8em}
+  .hot.go{transform:translate(-100%,-50%);font-size:clamp(13px,1.6vw,18px);padding:8px 14px}
+  .bar .hot{position:static;transform:none;background:rgba(20,33,63,.88);color:#fff;border-color:var(--gold);box-shadow:none}
+  .bar .hot:hover,.bar .hot:focus-visible{background:var(--gold);color:#14213f}
+  .bar .hot .k{background:var(--gold);color:#14213f}
+  .hot.pulse{animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{50%{box-shadow:0 3px 0 #14213f,0 0 0 6px rgba(242,194,48,.45)}}
+  @media (max-width:640px){ .hot .t{display:none} .hot{padding:4px 7px} }
+  .tabs{display:flex;gap:8px;margin:0 0 12px;flex-wrap:wrap}
+  .tab{all:unset;cursor:pointer;padding:7px 14px;border:2px solid var(--line);color:var(--dim);font-weight:bold}
+  .tab.on{border-color:var(--gold);color:#14213f;background:var(--gold)}
+  .tab:focus-visible{outline:2px solid #fff}
+  .cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:12px;align-items:start}
+  button.card{display:flex!important;flex-direction:column;justify-content:flex-start;height:100%;box-sizing:border-box}
+  .card{display:flex;flex-direction:column;border:3px solid var(--gold);border-radius:10px;overflow:hidden;background:#0f1730;padding:0!important;cursor:default}
+  button.card{cursor:pointer}
+  button.card:hover,button.card:focus-visible{border-color:#fff;background:#1a2648;transform:translateY(-2px)}
+  .card .cimg svg{display:block;width:100%;height:auto}
+  .card .cbody{padding:8px 10px 10px;display:flex;flex-direction:column;gap:3px}
+  .card b{color:var(--gold);font-size:17px}
+  .card .cm{color:#fff;font-size:13px}
+  .card .cb{font-size:13px;color:var(--ink);line-height:1.35}
+  .card .cp{font-size:12px;color:#8fe08f;line-height:1.35}
   .panel h2{color:var(--gold);margin:0 0 8px;font-size:21px;letter-spacing:1px}
   .panel p{margin:0 0 10px;max-width:72ch}
   .panel .quote{border-left:4px solid var(--gold);padding-left:12px;color:#fff}
   .panel .who{color:var(--gold)}
+  .panel .por{float:left;width:118px;margin:2px 14px 10px 0;border:3px solid var(--gold);border-radius:8px;overflow:hidden;background:#0f1730}
+  .panel .por svg{display:block;width:100%;height:auto}
+  .panel .menu,.panel .cont,.panel .names{clear:both}
+  .panel .opt .thumb{display:inline-block;width:46px;height:51px;vertical-align:middle;margin-right:10px;border:2px solid var(--gold);border-radius:6px;overflow:hidden}
+  .panel .opt .thumb svg{display:block;width:100%;height:100%}
   .menu{display:grid;gap:6px;margin-top:12px;max-width:560px}
   .opt{all:unset;cursor:pointer;padding:8px 12px;border:2px solid var(--line);background:#0f1730;color:#fff;font:inherit;font-size:16px}
   .opt:hover,.opt:focus-visible{border-color:var(--gold);background:#1a2648}
@@ -78,11 +122,14 @@
     <div class="sub">From Lancerville to Graduation</div>
   </header>
   <div class="frame">
-    <canvas id="scene" aria-label="The trail scene"></canvas>
+    <div class="stage" id="stage">
+      <canvas id="scene" aria-label="The trail scene"></canvas>
+      <div id="hud" class="hud"></div>
+      <div id="panel" class="panel" aria-live="polite"></div>
+    </div>
     <div id="status" class="status"></div>
-    <div id="panel" class="panel" aria-live="polite"></div>
   </div>
-  <footer>Press 1–9 to choose an option. Press Space or Enter to continue. Go Lancers!</footer>
+  <footer>Click the buttons in the scene, or press 1–9. Press Space or Enter to continue. Go Lancers!</footer>
 </div>
 
 <script>
@@ -101,20 +148,22 @@ const CONFIG = {
   totalMiles: 1000
 };
 
+const CAMPBELL_TALK = ["Mr. Campbell, 5th grade teacher","Welcome to 5th grade country! Biggest classroom, biggest heart, biggest lunch box. Here, take some of my emergency snacks for the road.","snacks"];
 const LANDMARKS = [
   { mile:0, name:"Lancerville", short:"Lancerville", kind:"gate", store:"the Campus Store", priceMult:1,
     look:"The front gate of Lancerville. Backpacks are zipped, lunches are packed, and Lancer Way stretches all the way to the Upper School.",
     people:[
       ["Coach Matt, campus store","Most folks buy at least 3 pairs of sneakers. Lancer Way is longer than it looks."],
       ["A nervous kindergartner","Is it true the high school is at the END of the road? Like the very end?"],
-      ["Mrs. Harper, front office","Sign in, grab a visitor badge, and pack a hoodie. Florida gets cold in January. Well, Florida cold."]
+      ["Ms. Jill, front desk","Sign in, grab a visitor badge, and pack a hoodie. Florida gets cold in January. Well, Florida cold."]
     ]},
   { mile:90, name:"the Lower School", short:"Lower School", kind:"school", size:"small", label:"LOWER SCHOOL",
     look:"Finger paintings in the windows and a playground full of kids who move faster than you ever will.",
     people:[
       ["Ms. Rivera, 2nd grade teacher","Pack extra snacks. Growing Lancers get hungry every single stop. Here, take some goldfish crackers.","snacks"],
       ["A 3rd grader","I traded my pudding cup for a pencil. Best trade ever. Pop quizzes are everywhere out there."],
-      ["The recess monitor","Thinking about cutting across my playground? I see EVERYTHING. Just so you know."]
+      ["The recess monitor","Thinking about cutting across my playground? I see EVERYTHING. Just so you know."],
+      CAMPBELL_TALK
     ]},
   { mile:190, name:"the Library", short:"Library", kind:"library", store:"the Book Fair", priceMult:1.2,
     look:"Quiet, cool, and full of air conditioning. The Book Fair is set up by the front desk.",
@@ -256,16 +305,16 @@ const ILLS = ["has a cold","has the flu","sprained an ankle","has a stomach bug"
 const CHARACTERS = [
   { id:"drt", name:"Dr. T", blurb:"Black hair, a legendary black beard, and a big brain.",
     perk:"Scholar: pop quizzes use only 2 pencils and boost GPA more.", money:650, mult:1.5,
-    look:{ skin:"#f1c9a5", hair:"#1a1a1a", beard:"#1a1a1a", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", book:"#7a1f2b" } },
+    look:{ skin:"#f1c9a5", hair:"#1a1a1a", beard:"#1a1a1a", gray:true, shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", book:"#7a1f2b" } },
   { id:"mrg", name:"Mr. G", blurb:"Young, dark hair, full of energy.",
     perk:"Energetic: hustle pace barely wears your group down.", money:550, mult:2,
     look:{ skin:"#e9b98f", hair:"#1a1a1a", shirt:"#2e6db4", pants:"#c9b48a" } },
   { id:"ritchie", name:"Mr. Richie", blurb:"The veteran. Bald, wise, and has seen it all.",
     perk:"Been there: crossings are twice as safe.", money:500, mult:2,
-    look:{ skin:"#f1c9a5", hair:"#c9c9c9", bald:true, shirt:"#ffffff", cardigan:"#6b4f33", pants:"#3a3a3a", book:"#2e6db4" } },
+    look:{ skin:"#f1c9a5", hair:"#c9c9c9", bald:true, glasses:true, hat:"#6e5a44", shirt:"#ffffff", cardigan:"#6b4f33", pants:"#3a3a3a", book:"#2e6db4" } },
   { id:"rich", name:"Miss Ritch", blurb:"Young, glasses, sharp eyes.",
     perk:"Sharp-eyed: Snack Runs last longer and you carry more back.", money:500, mult:2,
-    look:{ skin:"#f1c9a5", hair:"#6b4a2b", long:true, glasses:true, shirt:"#7a1f2b", pants:"#1d2b4f" } },
+    look:{ skin:"#f1c9a5", hair:"#6b4a2b", long:true, glasses:true, big:true, shirt:"#7a1f2b", pants:"#1d2b4f" } },
   { id:"melissa", name:"Melissa", blurb:"Curly hair, clipboard, and the most organized person on campus.",
     perk:"Organized: seagulls and spills rarely cost you anything.", money:450, mult:2.5,
     look:{ skin:"#e9b98f", hair:"#8a5a2b", curly:true, shirt:"#2f7d32", pants:"#c9b48a", clip:true } },
@@ -274,31 +323,37 @@ const CHARACTERS = [
     look:{ skin:"#b07a52", hair:"#1a1a1a", shirt:"#f2c230", pants:"#1d2b4f" } },
   { id:"mrk", name:"Mr. K", blurb:"Forty, wise, and wealthy. Always wears the suit.",
     perk:"Deep pockets: starts with the most money.", money:900, mult:1,
-    look:{ skin:"#e9b98f", hair:"#3b2414", shirt:"#1d2b4f", tie:"#f2c230", pants:"#1d2b4f" } },
-  { id:"msm", name:"Ms. M", blurb:"Spunky, creative, and friendly to all. New to the party!",
+    look:{ skin:"#e9b98f", hair:"#e6c25a", big:true, shirt:"#1d2b4f", tie:"#f2c230", pants:"#1d2b4f" } },
+  { id:"msm", name:"Ms. M", blurb:"Spunky, creative, and friendly to all. Never without her robotics book.",
     perk:"Friend to all: people share twice as much, and BP and Mr. C go easier on you.", money:500, mult:2,
-    look:{ skin:"#f0c8a0", hair:"#1a1a1a", long:true, streak:"#b05ad6", shirt:"#e8467c", pants:"#1d2b4f", palette:true } }
+    look:{ skin:"#e3b48a", hair:"#1a1a1a", long:true, streak:"#b05ad6", shirt:"#ffffff", dress:true, pants:"#e3b48a", robo:true } }
 ];
 const charOf = () => CHARACTERS.find(c => c.id === G.char);
 const perk = id => G.char === id;
 
 /* Special campus characters you meet on the trail. Change looks or names here. */
 const SPECIALS = {
-  bp:    { name:"BP", look:{ skin:"#c68a5e", hair:"#1a1a1a", cop:true, sunglasses:true, radio:true, pants:"#1d2b4f", shirt:"#1f3a68", teacher:true } },
-  mrc:   { name:"Mr. C", look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, shirt:"#2e6db4", polo:true, collar:"#f2c230", pants:"#c9b48a", big:true, point:true, teacher:true } },
-  eddy:  { name:"Eddy", look:{ skin:"#f1c9a5", hair:"#7a5a3a", shirt:"#2b2e36", polo:true, collar:"#f2c230", badge:true, pants:"#2b2e36", cap:"#111111", teacher:true } },
+  bp:    { name:"BP", look:{ skin:"#f1c9a5", hair:"#b08a5a", bald:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", radio:true, pants:"#c9b48a", teacher:true } },
+  mrc:   { name:"Mr. C", look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, beard:"#6b4a2b", shirt:"#2e6db4", polo:true, collar:"#f2c230", pants:"#c9b48a", big:true, point:true, teacher:true } },
+  eddy:  { name:"Eddy", look:{ skin:"#c99468", hair:"#2a2a2a", gray:true, mustache:"#3a3a3a", cop:true, radio:true, shirt:"#1f3a68", pants:"#1d2b4f", teacher:true } },
   mrss:  { name:"Mrs. S", look:{ skin:"#f1c9a5", hair:"#7a4a2a", curly:true, shirt:"#5b7fb8", cardigan:"#f3ead2", pants:"#1d2b4f", clip:true, teacher:true } },
   carlos:{ name:"Carlos", look:{ skin:"#d9a679", hair:"#2a2a2a", gray:true, mustache:"#2a2a2a", glasses:true, shirt:"#d6e4f0", polo:true, collar:"#ffffff", pants:"#3a3a3a", teacher:true } },
   coachw:{ name:"Coach W", look:{ skin:"#5e3b26", hair:"#111111", cap:"#1d2b4f", shirt:"#1d2b4f", polo:true, collar:"#f2c230", whistle:true, pants:"#c9b48a", big:true, teacher:true } },
   mrt:   { name:"Mr. T", look:{ skin:"#6b4226", hair:"#1a1a1a", shirt:"#ffffff", tie:"#1d2b4f", pants:"#3a3a3a", trumpet:true, teacher:true } },
-  karen: { name:"Chef", look:{ skin:"#93603f", hair:"#1a1a1a", gray:true, thin:true, chef:true, glasses:true, apron:"#1d2b4f", pants:"#2a2a2a", teacher:true } }
+  jill:  { name:"Ms. Jill", look:{ skin:"#f1c9a5", hair:"#c9a35a", long:true, glasses:true, shirt:"#2e6db4", cardigan:"#f3ead2", pants:"#1d2b4f", teacher:true } },
+  campbell:{ name:"Mr. Campbell", look:{ skin:"#f1c9a5", hair:"#6b4a2b", beard:"#6b4a2b", big:true, shirt:"#1d2b4f", tank:true, pants:"#c9b48a", book:"#c0392b", teacher:true } },
+  moore: { name:"Mr. Moore", look:{ skin:"#e9b98f", hair:"#3b2414", beard:"#3b2414", shirt:"#7a1f2b", polo:true, collar:"#f3ead2", pants:"#3a3a3a", guitar:true, teacher:true } },
+  roberto:{ name:"Roberto", look:{ skin:"#c99468", hair:"#d6d6d6", mustache:"#e4e4e4", hardhat:"#1d2b4f", small:true, shirt:"#3d6fb0", polo:true, collar:"#6f9ad0", pants:"#3a4a6a", shovel:true, teacher:true } },
+  karen: { name:"Chef", look:{ skin:"#93603f", hair:"#1a1a1a", gray:true, thin:true, chef:true, chefColor:"#7a1f2b", long:true, glasses:true, apron:"#1d2b4f", pants:"#2a2a2a", teacher:true } }
 };
 const BP_MILES = [220, 510, 840];        // where BP checks hall passes
 const MRC_MILES = [410, 690, 910];       // where Mr. C patrols for runners
 const MRSS_MILES = [120, 600, 950];      // where Mrs. S checks in on your group
 const CARLOS_MILE = 330;                 // Carlos's computer checkpoint
 const COACHW_MILE = 730;                 // Coach W and the laundry
-const MRT_MILE = 800;                    // Mr. T playing trumpet by the stadium
+const MRT_MILE = 800;
+const MOORE_MILE = 455;                  // Mr. Moore's Bible quiz, just before the church
+const ROBERTO_MILE = 150;                // Roberto and his ditch                    // Mr. T playing trumpet by the stadium
 const KAREN_LINES = ["Grab 'em while they're hot!","Watch those seagulls!","Chef's special coming up!","No running in my cafeteria!","Eat something green!"];
 
 const ITEMS = [
@@ -338,7 +393,7 @@ const PARTY_LOOKS = [
    UTILITIES
    ========================================================= */
 const $ = s => document.querySelector(s);
-const panel = $("#panel"), statusEl = $("#status");
+const panel = $("#panel"), statusEl = $("#status"), hudEl = $("#hud"), stageEl = $("#stage");
 const rnd = (a=0,b=1) => a + Math.random()*(b-a);
 const rint = (a,b) => Math.floor(rnd(a,b+1));
 const pick = a => a[Math.floor(Math.random()*a.length)];
@@ -380,7 +435,7 @@ function rollWeather(){
    PANEL HELPERS
    ========================================================= */
 let lastAct = 0;
-function setPanel(html){ panel.innerHTML = html; }
+function setPanel(html){ const h = html ? withPortrait(html) : ""; panel.innerHTML = h; stageEl.classList.toggle("busy", !!h); if(h) panel.scrollTop = 0; }
 function menu(title, intro, opts){
   setPanel(`${title?`<h2>${title}</h2>`:""}${intro||""}<div class="menu">${
     opts.map((o,i)=>`<button class="opt" data-key="${i+1}" ${o.disabled?"disabled":""}><span class="num">${i+1}.</span>${o.label}</button>`).join("")
@@ -401,10 +456,10 @@ function act(fn){ const now = performance.now(); if(now - lastAct < 120) return;
 document.addEventListener("keydown", e => {
   if(e.target.tagName === "INPUT") return;
   if(/^[1-9]$/.test(e.key)){
-    const b = panel.querySelector(`.opt[data-key="${e.key}"]`);
+    const b = panel.querySelector(`.opt[data-key="${e.key}"]`) || (stageEl.classList.contains("busy") ? null : hudEl.querySelector(`[data-key="${e.key}"]`));
     if(b && !b.disabled){ e.preventDefault(); b.click(); }
   } else if(e.key===" " || e.key==="Enter"){
-    const b = panel.querySelector("[data-continue]");
+    const b = panel.querySelector("[data-continue]") || (stageEl.classList.contains("busy") ? null : hudEl.querySelector("[data-continue]"));
     if(b){ e.preventDefault(); b.click(); }
   }
 });
@@ -446,12 +501,22 @@ function learn(){
   show();
 }
 
-function chooseCharacter(){
+function chooseCharacter(tab){
   G.mode = "pick"; G.pickHover = 0;
-  menu("Choose your teacher", `<p>You'll lead four 8th graders down ${CONFIG.road}. Which teacher are you? Teachers with less money earn a bigger score multiplier.</p>`,
-    CHARACTERS.map((c,i) => ({ label:`${c.name}: ${money(c.money)}, score x${c.mult}<span class="tip-line">${c.blurb} ${c.perk}</span>`,
-      fn:()=>{ G.char=c.id; G.mult=c.mult; G.money=c.money; G.mode="trail"; nameParty(); } })));
-  panel.querySelectorAll(".opt").forEach((b,i) => { b.onmouseenter = b.onfocus = () => { G.pickHover = i; }; });
+  const meet = tab === "meet";
+  const tabs = `<div class="tabs"><button class="tab ${meet?"":"on"}" data-tab="lead">Choose your leader</button><button class="tab ${meet?"on":""}" data-tab="meet">People you'll meet along the way</button></div>`;
+  const body = meet
+    ? `<p>Keep an eye out for these folks on ${CONFIG.road}. Some will help you, and some will slow you down.</p><div class="cards">${P_SPECIALS.map(c =>
+        `<div class="card"><div class="cimg">${portraitFor(c.name)}</div><div class="cbody"><b>${c.name}</b><span class="cm">${c.role}</span><span class="cb">${c.blurb}</span></div></div>`).join("")}</div>`
+    : `<p>You'll lead four 8th graders down ${CONFIG.road}. Which teacher are you? Teachers with less money earn a bigger score multiplier.</p><div class="cards">${CHARACTERS.map((c,i) =>
+        `<button class="opt card" data-key="${i+1}"><div class="cimg">${portraitFor(c.name)}</div><div class="cbody"><b>${i+1}. ${c.name}</b><span class="cm">${money(c.money)} · score x${c.mult}</span><span class="cb">${c.blurb}</span><span class="cp">${c.perk}</span></div></button>`).join("")}</div>`;
+  setPanel(`${tabs}${body}`);
+  panel.querySelectorAll(".tab").forEach(t => t.onclick = () => act(() => chooseCharacter(t.dataset.tab)));
+  panel.querySelectorAll("button.card").forEach((b,i) => {
+    const c = CHARACTERS[i];
+    b.onmouseenter = b.onfocus = () => { G.pickHover = i; };
+    b.onclick = () => act(() => { G.char=c.id; G.mult=c.mult; G.money=c.money; G.mode="trail"; nameParty(); });
+  });
 }
 
 function nameParty(){
@@ -510,7 +575,7 @@ function store(isStart){
    MENUS ON THE TRAIL
    ========================================================= */
 function landmarkMenu(){
-  updateStatus();
+  updateStatus(); G.ui = "landmark"; G.pend = null; setPanel(""); return;
   const L = curLM(), at = G.atLandmark;
   const where = at ? `You are at ${L.name}.` : `You are on ${CONFIG.road}, ${G.miles} miles from ${CONFIG.town}.`;
   const opts = [
@@ -708,10 +773,22 @@ function isOver(){ return G.party.length && (G.party[0].gone || alive().length==
 
 let tickTimer = null;
 function startTravel(){
-  G.atLandmark = false; G.traveling = true; G.crowd = null;
-  setPanel(`<p>Your group is walking down ${CONFIG.road}...</p><button class="cont" data-continue>Stop and look around <span class="hint">(Space)</span></button>`);
-  panel.querySelector(".cont").onclick = () => act(stopTravel);
+  G.atLandmark = false; G.traveling = true; G.crowd = null; G.ui = "travel"; G.pend = null;
+  setPanel("");
   clearTimeout(tickTimer); tickTimer = setTimeout(doTick, 800);
+}
+/* Someone stops your group: show them on the trail with a button to talk. */
+const ENC_INFO = { bpEncounter:["bp","BP"], mrcEncounter:["mrc","Mr. C"], mrssEncounter:["mrss","Mrs. S"], carlosEncounter:["carlos","Carlos"],
+  coachEncounter:["coachw","Coach W"], mrtEncounter:["mrt","Mr. T"], karenEncounter:["karen","Chef"], eddyEncounter:["","Eddy"],
+  mooreEncounter:["moore","Mr. Moore"], robertoEncounter:["roberto","Roberto"], roadsideEncounter:["roadside",""] };
+function pend(fn){
+  G.traveling = false; clearTimeout(tickTimer);
+  const info = ENC_INFO[fn.name] || ["", "them"];
+  let label = `Talk to ${info[1]}`;
+  if(fn === eddyEncounter) G.cart = { state:"here" };
+  else if(fn === roadsideEncounter){ G.roadPP = pick(TRAIL_PEOPLE); G.roadSeed = rint(1,9999); G.enc = "roadside"; label = "Say hi"; }
+  else G.enc = info[0];
+  G.pend = { fn, label }; G.ui = "pend"; setPanel("");
 }
 function giveDemerit(why){
   G.demerits++; G.demTotal++;
@@ -722,7 +799,7 @@ function giveDemerit(why){
 function bpEncounter(){
   G.enc = "bp";
   const done = m => { G.enc = null; afterMessages(m, startTravel); };
-  menu("Hall pass check", `<p class="quote"><span class="who">BP</span> steps out in full uniform, sunglasses on, radio on his shoulder.<br>"${pick(["Hold it right there, Lancers. Where are you headed? Let me see a hall pass.","You again? Hall pass. Let's see it.","Nobody walks this hallway without a pass. Not on my watch.","Afternoon. Routine check. I'm going to need a hall pass."])}"</p><p>Hall passes: ${G.passes}</p>`,
+  menu("Hall pass check", `<p class="quote"><span class="who">BP</span> steps out in his button-up and khakis, radio in hand.<br>"${pick(["Hold it right there, Lancers. Where are you headed? Let me see a hall pass.","You again? Hall pass. Let's see it.","Nobody walks this hallway without a pass. Not on my watch.","Afternoon. Routine check. I'm going to need a hall pass."])}"</p><p>Hall passes: ${G.passes}</p>`,
     [ { label:`Show him a hall pass`, disabled:G.passes<1, fn:()=>{ G.passes--; done(['BP checks the pass, hands it back, and nods. "You\'re good. Carry on, Lancers." You used 1 hall pass.']); } },
       { label:"Explain that you're headed to graduation", fn:()=>{
           if(chance(perk("ritchie") || perk("msm") ? 0.75 : 0.45)) done(['BP thinks about it for a long second. "Alright. I\'ll let it slide this time. Get a pass next time."']);
@@ -856,12 +933,61 @@ function karenEncounter(){
       { label:"Thank her and keep walking", fn:()=>done(['"Alright, but eat something green!"']) } ]);
 }
 function roadsideEncounter(){
-  const pp = pick(TRAIL_PEOPLE);
-  menu(null, `<p>${pp[0]} waves your group over from the side of ${CONFIG.road}.</p>`,
-    [ { label:"Stop and talk", fn:()=>talkTo(pp, startTravel) },
-      { label:"Wave back and keep walking", fn:startTravel } ]);
+  const pp = G.roadPP || pick(TRAIL_PEOPLE);
+  talkTo(pp, () => { G.enc = null; G.roadPP = null; startTravel(); });
+}
+function mooreEncounter(){
+  G.enc = "moore"; let score = 0, qi = 0;
+  const QS = [
+    ["How many disciples did Jesus choose?", ["7","12","40"], 1],
+    ["Who was swallowed by a big fish?", ["Jonah","Moses","Peter"], 0],
+    ["What did David use to defeat Goliath?", ["A sword","A sling and a stone","A bow and arrow"], 1]
+  ];
+  const done = m => { G.enc = null; G.mooreDone = true; afterMessages(m, startTravel); };
+  const intro = `<p class="quote"><span class="who">Mr. Moore</span> is sitting on a bench, tuning his guitar.<br>"Hey, Lancers! Nobody walks past me without a Bible quiz. Four questions. Get the last one right and I'll play you a song for the road."</p>`;
+  const finale = (note="", tries=0) => {
+    setPanel(`<h2>Bible quiz: final question</h2>${note}<p class="quote"><span class="who">Mr. Moore:</span><br>He starts strumming. "Finish the verse: <b>The joy of the Lord is my ______.</b>" (Nehemiah 8:10)</p>
+      <div class="names"><label for="bq">Your answer</label><input type="text" id="bq" maxlength="24" autocomplete="off"></div>
+      <div class="menu"><button class="opt" id="bqGo"><span class="num">1.</span>Say it!</button></div>`);
+    const box = $("#bq"); box.focus();
+    const go = () => {
+      const v = box.value.toLowerCase().replace(/[^a-z]/g, "");
+      if(!v) return box.focus();
+      if(v === "strength"){
+        score++;
+        const gain = +(score*0.05).toFixed(2);
+        G.gpa = Math.min(4.5, G.gpa + gain);
+        alive().forEach(p => { p.health = Math.min(100, p.health + 12); });
+        done([`"STRENGTH! That's right!" Mr. Moore plays a worship song, and your whole group sings along: <i>"The joy of the Lord is my strength!"</i><br><br>You got ${score} of 4 right. Everyone feels stronger. Health up, GPA +${gain}.`]);
+      } else {
+        finale(`<p class="bad">"Ooh, not quite! ${tries >= 1 ? "Here's a hint: it starts with <b>S</b> and it means power." : "Try again!"}"</p>`, tries + 1);
+      }
+    };
+    $("#bqGo").onclick = () => act(go);
+    box.addEventListener("keydown", e => { if(e.key === "Enter"){ e.preventDefault(); go(); } });
+  };
+  const ask = (note="") => {
+    if(qi >= QS.length) return finale(note);
+    const [q, opts, ans] = QS[qi];
+    menu(`Bible quiz: question ${qi+1} of 4`, `${qi === 0 ? intro : note}<p class="quote"><span class="who">Mr. Moore:</span><br>"${q}"</p>`,
+      opts.map((o,i) => ({ label:o, fn:() => { const ok = i === ans; if(ok) score++; qi++;
+        ask(ok ? `<p class="ok">Correct! Mr. Moore strums a happy chord.</p>` : `<p class="bad">Not quite. The answer is ${opts[ans]}.</p>`); } })));
+  };
+  ask();
+}
+function robertoEncounter(){
+  G.enc = "roberto";
+  const done = m => { G.enc = null; G.robertoDone = true; afterMessages(m, startTravel); };
+  const n = perk("msm") ? 40 : 20;
+  menu("Roberto's ditch", `<p class="quote"><span class="who">Roberto</span> is leaning on his shovel next to a half-dug ditch.<br>"Ay, amigos! If you shovel this ditch, I'll give you 20 cookies."</p>`,
+    [ { label:`Grab a shovel and dig <span class="hint">(2 days)</span>`, fn:() => {
+          G.day += 2; G.snacks += n; G.robertoDug = true;
+          alive().forEach(p => { p.health = Math.max(5, p.health - 3); });
+          done([`Your group digs until the ditch is perfect. Roberto inspects it, nods slowly, and hands over a big tin of cookies. "¡Muy bien! Best ditch on campus." +${n} snacks.${perk("msm") ? " (Ms. M made a new friend, so he doubled it!)" : ""}`]); } },
+      { label:"Sorry, Roberto, we have to keep moving", fn:() => done(['Roberto shrugs and leans back on his shovel. "More cookies for me, then."']) } ]);
 }
 function stopTravel(){ G.traveling = false; G.enc = null; clearTimeout(tickTimer); landmarkMenu(); }
+function snackCartRun(){ G.snackCart = null; G.traveling = false; clearTimeout(tickTimer); startSnackRun(); }
 
 function doTick(){
   if(!G.traveling) return;
@@ -879,6 +1005,10 @@ function doTick(){
   if(coachHit) G.coachDone = true;
   const mrtHit = !r.arrive && !G.mrtDone && before < MRT_MILE && G.miles >= MRT_MILE;
   if(mrtHit) G.mrtDone = true;
+  const mooreHit = !r.arrive && !G.mooreDone && before < MOORE_MILE && G.miles >= MOORE_MILE;
+  const robertoHit = !r.arrive && !G.robertoDone && before < ROBERTO_MILE && G.miles >= ROBERTO_MILE;
+  if(G.snackCart != null && G.snackCart < G.miles - 12) G.snackCart = null;
+  if(G.snackCart == null && !r.arrive && chance(0.07)){ const sc = G.miles + rint(6,9); if(!nearLM(sc, 20)) G.snackCart = sc; }
   if(!r.arrive && chance(0.15)){ const m = randomEvent(); if(m) r.msgs.push(m); }
   checkLate(r.msgs);
   updateStatus();
@@ -889,13 +1019,13 @@ function doTick(){
     setTimeout(() => showMessages(r.msgs, arrive), 900);
     return;
   }
-  const enc = r.arrive ? null : carlosHit ? carlosEncounter : coachHit ? coachEncounter : mrtHit ? mrtEncounter : bpHit ? bpEncounter : mrcHit ? mrcEncounter : mrssHit ? mrssEncounter : (G.pace==="hustle" && chance(0.06)) ? mrcEncounter : chance(0.03) ? eddyEncounter : chance(0.03) ? karenEncounter : chance(0.03) ? roadsideEncounter : null;
+  const enc = r.arrive ? null : robertoHit ? robertoEncounter : mooreHit ? mooreEncounter : carlosHit ? carlosEncounter : coachHit ? coachEncounter : mrtHit ? mrtEncounter : bpHit ? bpEncounter : mrcHit ? mrcEncounter : mrssHit ? mrssEncounter : (G.pace==="hustle" && chance(0.06)) ? mrcEncounter : chance(0.03) ? eddyEncounter : chance(0.03) ? karenEncounter : chance(0.03) ? roadsideEncounter : null;
   if(r.msgs.length){
     G.traveling = false;
-    showMessages(r.msgs, () => { if(isOver()) return gameOver(); enc ? enc() : startTravel(); });
+    showMessages(r.msgs, () => { if(isOver()) return gameOver(); enc ? pend(enc) : startTravel(); });
     return;
   }
-  if(enc){ G.traveling = false; return enc(); }
+  if(enc) return pend(enc);
   tickTimer = setTimeout(doTick, 800);
 }
 
@@ -906,6 +1036,7 @@ function arrive(){
   if(L.final) return graduation();
   if(L.crossing==="carpool") return carpoolCrossing();
   if(L.crossing==="fountain") return fountainCrossing();
+  if(L.look) return message(`<h2>${L.name.replace(/^the /, "The ")}</h2><p>${L.look}</p>`, landmarkMenu, "Look around");
   landmarkMenu();
 }
 
@@ -1020,6 +1151,7 @@ const snackTime = () => perk("rich") ? 26 : 20, snackCarry = () => perk("rich") 
 function startSnackRun(){
   G.mode = "snack";
   Object.assign(SR, { items:[], time:snackTime(), grabbed:0, spawn:0, pops:[] });
+  G.ui = "snack"; setPanel(""); return;
   setPanel(`<h2>Snack Run</h2><p class="quote"><span class="who">Chef:</span> "Welcome to MY cafeteria. Grab what you can, and if you see a gold plate, that's my chef's special. Don't you dare touch those seagulls."</p><p>Click or tap the snacks as they fly through the Lancer Cafe. You have ${snackTime()} seconds and can carry ${snackCarry()} snacks back. Don't click the seagulls. They steal.</p>
     <button class="cont" data-continue>Done <span class="hint">(Space)</span></button>`);
   panel.querySelector(".cont").onclick = () => act(endSnackRun);
@@ -1143,7 +1275,7 @@ const PS = 1.35;   // people size
 /* Draws one person with a dark outline. x,y = where their feet touch the ground. */
 function person(x,y,o,fr){
   ctx.fillStyle="rgba(0,0,0,.22)"; ctx.beginPath(); ctx.ellipse(x+0.5,y+0.6,7*(o.big?1.25:1),1.6,0,0,Math.PI*2); ctx.fill();
-  ctx.save(); ctx.translate(Math.round(x),Math.round(y)); ctx.scale(PS,PS);
+  ctx.save(); ctx.translate(Math.round(x),Math.round(y)); ctx.scale(PS*(o.small?0.8:1),PS*(o.small?0.8:1));
   OUT = "#141a2c";
   for(const [dx,dy] of [[-0.7,0],[0.7,0],[0,-0.7],[0,0.7]]){ ctx.save(); ctx.translate(dx,dy); figure(o,fr); ctx.restore(); }
   OUT = null; figure(o,fr);
@@ -1153,7 +1285,7 @@ function figure(o,fr){
   const t = o.teacher ? 2 : 0, big = o.big ? 1 : 0, thin = o.thin ? 1 : 0;
   const L = -4-big+thin, Wd = 9+big*2-thin*2, top = -14-t-big, th = -6-top;
   const walk = fr ? 1 : 0;
-  const shirt = o.cop ? "#1f3a68" : o.chef ? "#fbfbf8" : o.shirt;
+  const shirt = o.cop ? "#1f3a68" : o.chef ? (o.chefColor||"#fbfbf8") : o.shirt;
   if(o.grad){
     R("#1d2b4f",L,top,Wd,-top-1); R(shade("#1d2b4f",.7),L,top,1,-top-1); R("#f2c230",-1,top,3,4);
     R("#2a2a2a",-3,-1,3,1); R("#2a2a2a",1,-1,3,1);
@@ -1165,8 +1297,10 @@ function figure(o,fr){
     R("#e8e8e8",-4-walk-big,-1,1,1); R("#e8e8e8",3+walk+big,-1,1,1);
     // body
     R(shirt,L,top,Wd,th); R(shade(shirt),L,top,1,th); R(shade(shirt,.85),L+1,top+th-1,Wd-1,1);
+    if(o.tank){ R(o.skin,L,top,2,2); R(o.skin,L+Wd-2,top,2,2); R(o.skin,-1,top,3,2); R("#f2c230",L+2,top+3,Wd-4,1); }
+    if(o.dress){ R(shirt,L-1,top+th-1,Wd+2,3); R(shade(shirt,.85),L-1,top+th+1,Wd+2,1); R("#f2c230",L,top+3,Wd,1); }
     if(o.cardigan){ R(o.cardigan,L,top,3,th); R(o.cardigan,L+Wd-3,top,3,th); R(shade(o.cardigan),L,top,1,th); R("#e0c070",L+Wd-3,top+3,1,1); R("#e0c070",L+Wd-3,top+6,1,1); }
-    if(o.chef){ R("#e6e6e0",L+1,top+3,Wd-2,th-3); R("#b9b9b0",-1,top+2,1,1); R("#b9b9b0",1,top+2,1,1); R("#b9b9b0",-1,top+5,1,1); R("#b9b9b0",1,top+5,1,1); R("#d81b60",-2,top,5,1); }
+    if(o.chef){ R(shade(shirt,.9),L+1,top+3,Wd-2,th-3); const bt = o.chefColor ? "#f2c230" : "#b9b9b0"; R(bt,-1,top+2,1,1); R(bt,1,top+2,1,1); R(bt,-1,top+5,1,1); R(bt,1,top+5,1,1); R("#d81b60",-2,top,5,1); }
     if(o.apron){ R(o.apron,L+1,top+3,Wd-2,th-1); R(o.apron,-2,top,1,3); R(o.apron,2,top,1,3); R(shade(o.apron,.7),L+1,top+5,Wd-2,1); R("#ffffff",-1,top+7,3,2); R(shade(o.apron,.8),L+1,top+th+1,Wd-2,2); }
     if(o.badge){ R("#f2c230",-3,top+2,2,2); R("#c9a000",-3,top+3,1,1); R("#f4f4f4",L+Wd-3,top+2,2,1); }
     if(o.cop){ R("#f2c230",-3,top+2,2,2); R("#c9a000",-3,top+3,1,1); R("#2a2a2a",L+Wd-2,top+1,1,3); R("#f2c230",1,top+2,2,1); R("#111",L,top+th-2,Wd,1); R("#f2c230",0,top+th-2,1,1); R("#111",L+Wd-1,top+th-3,1,2); }
@@ -1174,17 +1308,20 @@ function figure(o,fr){
     else if(o.tie){ R("#ffffff",-1,top,3,1); R(o.tie,0,top+1,1,6); R(shade(o.tie),0,top+6,1,1); }
     else if(o.polo){ R(o.collar||"#ffffff",-2,top,5,1); R(o.collar||"#ffffff",-1,top+1,1,1); R(o.collar||"#ffffff",1,top+1,1,1); R(shade(shirt,.6),0,top+1,1,2); }
     else if(!o.cop && !o.chef) R(shirt==="#ffffff"?"#1d2b4f":"#ffffff",-1,top,3,1);
-    if(o.teacher && !o.vest && !o.tie && !o.cop && !o.chef){ R("#f2c230",0,top+1,1,4); R("#fff",-1,top+5,3,2); R("#2e6db4",-1,top+5,3,1); }
+    if(o.teacher && !o.vest && !o.tie && !o.cop && !o.chef && !o.tank){ R("#f2c230",0,top+1,1,4); R("#fff",-1,top+5,3,2); R("#2e6db4",-1,top+5,3,1); }
     if(!o.teacher) { R(shade(o.pants,.6),L,-7,Wd,1); }
     // back arm, front arm
-    const sl = o.cardigan || shirt;
+    const sl = o.tank ? o.skin : (o.cardigan || shirt);
     R(shade(sl,.6),L-1,top+1-walk,1,5); R(shade(o.skin,.8),L-1,top+6-walk,1,1);
     if(o.point){ R(sl,L+Wd,top+1,6,2); R(o.skin,L+Wd+6,top+1,2,2); R(o.skin,L+Wd+8,top+1,1,1); }
     else { R(sl,L+Wd,top+1+walk,1,5); R(o.skin,L+Wd,top+6+walk,1,1); }
     // things they carry
     if(o.backpack){ R(o.backpack,L-3,top+1,3,6); R(shade(o.backpack),L-3,top+1,1,6); R(shade(o.backpack,.55),L-3,top+3,3,1); R(shade(o.backpack,.6),L,top,1,2); }
     if(o.whistle){ R("#d0d0d0",0,top+3,2,2); R("#f2c230",-1,top,1,3); R("#f2c230",2,top,1,3); }
-    if(o.palette){ R("#c8a26b",L+Wd+1,top+3,5,4); R("#e53935",L+Wd+2,top+3,1,1); R("#1e88e5",L+Wd+4,top+4,1,1); R("#43a047",L+Wd+2,top+5,1,1); R("#fdd835",L+Wd+4,top+6,1,1); }
+    if(o.guitar){ R("#a0522d",L,top+3,6,5); R("#7a3b1a",L+2,top+4,2,2); R("#3a2a1a",L+5,top+3,7,1); R("#c9a000",L+11,top+2,2,2); }
+    if(o.shovel){ R("#8a6a43",L+Wd+2,top-3,1,15); R("#5a4429",L+Wd+1,top-4,3,1); R("#9aa0a8",L+Wd+1,top+11,3,3); R(o.skin,L+Wd+1,top-2,2,2); }
+    if(o.robo){ R("#1e7f8c",L+Wd+1,top+3,4,5); R("#d8d8d8",L+Wd+2,top+4,2,2); R("#111",L+Wd+2,top+4,1,1); R("#f2c230",L+Wd+3,top+3,1,1); }
+    else if(o.palette){ R("#c8a26b",L+Wd+1,top+3,5,4); R("#e53935",L+Wd+2,top+3,1,1); R("#1e88e5",L+Wd+4,top+4,1,1); R("#43a047",L+Wd+2,top+5,1,1); R("#fdd835",L+Wd+4,top+6,1,1); }
     else if(o.trumpet){ }
     else if(o.clip){ R("#8a6a43",L+Wd+1,top+3,4,6); R("#fff",L+Wd+2,top+4,2,4); R("#9a9a9a",L+Wd+2,top+2,2,1); }
     else if(o.radio){ R("#111",L+Wd-2,top,2,3); R("#555",L+Wd-1,top-2,1,2); }
@@ -1216,8 +1353,10 @@ function figure(o,fr){
   else { R("#ffffff",1,hy+2,1,1); R("#1a1a1a",2,hy+2,1,1); R(o.bald||!hairTop?shade(o.skin,.6):o.hair,1,hy+1,2,1); }
   // hats
   if(o.cop){ R("#1d2b4f",-3,hy-3,7,3); R("#2a3d6e",-3,hy-3,7,1); R("#111",1,hy,5,1); R("#f2c230",0,hy-2,1,1); }
-  if(o.chef){ R("#fbfbf8",-4,hy-8,9,5); R("#fbfbf8",-3,hy-3,7,3); R("#e3e3dc",-3,hy-1,7,1); R("#e3e3dc",-4,hy-8,1,5); R(o.hair,-3,hy+1,1,2); }
-  if(o.cap){ R(o.cap,-3,hy-2,7,2); R(o.cap,3,hy-1,3,1); R(shade(o.cap,.7),-3,hy-1,7,1); }
+  if(o.chef){ const hc = o.chefColor||"#fbfbf8", hd = shade(hc,.85); R(hc,-4,hy-8,9,5); R(hc,-3,hy-3,7,3); R(hd,-3,hy-1,7,1); R(hd,-4,hy-8,1,5); R(o.hair,-3,hy+1,1,2); }
+  if(o.hat){ R(shade(o.hat,.8),-4,hy-1,9,1); R(o.hat,-3,hy-3,7,2); R("#3a2a1e",-3,hy-2,7,1); R(shade(o.hat,1.2),-1,hy-4,3,1); }
+  if(o.cap){ const cl = o.capLow ? 1 : 0; R(o.cap,-3,hy-2+cl,7,2); R(o.cap,3,hy-1+cl,3,1); R(shade(o.cap,.7),-3,hy-1+cl,7,1); }
+  if(o.hardhat){ R(o.hardhat,-3,hy-3,7,3); R(shade(o.hardhat,1.5),-1,hy-3,2,1); R(shade(o.hardhat,.8),-4,hy-1,9,1); }
   if(o.streak) R(o.streak,0,hy-1,2,1);
   if(o.mustache){ R(o.mustache,1,hy+3,4,1); R(o.mustache,1,hy+4,1,1); }
   if(o.trumpet){ R(o.skin,3,hy+4,2,2); R("#f2c230",4,hy+4,6,1); R("#d4a017",5,hy+3,1,1); R("#d4a017",7,hy+3,1,1); R("#f2c230",9,hy+2,2,5); R("#fff3b0",10,hy+3,1,3); }
@@ -1269,6 +1408,44 @@ function drawNotes(x,y){
   const tm = performance.now()/600;
   for(let i=0;i<3;i++){ const ph = (tm + i/3) % 1; const nx = x + ph*14 + i*3, ny = y - ph*14;
     ctx.globalAlpha = 1 - ph; R("#1d2b4f", nx, ny, 2, 2); R("#1d2b4f", nx+1, ny-4, 1, 4); R("#1d2b4f", nx+2, ny-4, 2, 1); ctx.globalAlpha = 1; }
+}
+function kid(x,y,look,fr,sc=0.62){ ctx.save(); ctx.translate(Math.round(x),Math.round(y)); ctx.scale(sc,sc); person(0,0,look,fr); ctx.restore(); }
+function drawPlayground(x,b,tm,seed){
+  // swing set
+  const red = "#c0392b";
+  R(red,x-18,b-24,40,2);
+  for(let i=0;i<22;i++){ R(red,x-18-Math.round(i*0.3),b-22+i,2,1); R(red,x+20+Math.round(i*0.3),b-22+i,2,1); }
+  [[x-8,0],[x+10,1.7]].forEach(([sx,ph],k) => {
+    const a = Math.sin(tm/520 + ph)*0.55, sxp = sx + Math.sin(a)*13, syp = b-22 + Math.cos(a)*13;
+    for(let t=1;t<13;t+=2){ R("#777",sx + Math.sin(a)*t, b-22 + Math.cos(a)*t, 1, 1); }
+    R("#5a4429",sxp-3,syp,6,1);
+    kid(sxp, syp+6, npcLook(seed*7+k, false), 0, 0.5);
+  });
+  // slide
+  const sx = x+40;
+  R("#8a8a8a",sx,b-20,2,20); R("#8a8a8a",sx+5,b-20,2,20); for(let y=b-18;y<b;y+=4) R("#8a8a8a",sx,y,7,1);
+  R("#2e6db4",sx-1,b-22,9,2);
+  for(let i=0;i<22;i++) R("#f2c230",sx+7+i,b-21+Math.round(i*0.9),2,2);
+  const st = (tm/2600 + seed*0.3) % 1;
+  if(st < 0.55) kid(sx+7+st/0.55*20, b-23+st/0.55*18, npcLook(seed*7+5, false), 0, 0.48);
+  // two kids playing catch
+  const ax = x+78, bx = x+112, cyc = tm/1100 + seed, dir = Math.floor(cyc)%2, t = cyc%1;
+  kid(ax, b, npcLook(seed*7+2,false), 0); kid(bx, b, npcLook(seed*7+3,false), 0);
+  const ballx = dir ? bx - (bx-ax)*t : ax + (bx-ax)*t, bally = b-13 - Math.sin(t*Math.PI)*16;
+  R("#e53935",ballx-1,bally-1,3,3); R("#ff9a9a",ballx-1,bally-1,1,1);
+}
+function drawDitch(x,b,dug){
+  if(dug){ R("#7a5a3a",x-2,b-2,20,2); R("#8a6a46",x+2,b-3,10,1); return; }
+  R("#3a2614",x-2,b-4,20,4); R("#5a3d22",x-1,b-4,18,1);
+  R("#8a6a46",x+20,b-7,8,7); R("#7a5a3a",x+22,b-9,4,2);
+}
+function drawLunchCart(x,b){
+  R("#141a2c",x-15,b-17,30,13); R("#1d2b4f",x-14,b-16,28,11); R("#f2c230",x-14,b-16,28,2);
+  T("CAFE",x,b-9,"#f2c230",5);
+  R("#c0392b",x-16,b-26,32,4); R("#fff",x-12,b-26,4,4); R("#fff",x-4,b-26,4,4); R("#fff",x+4,b-26,4,4);
+  R("#9aa0a8",x-13,b-22,1,6); R("#9aa0a8",x+12,b-22,1,6);
+  R("#e8a23a",x-10,b-19,5,2); R("#d63a3a",x-2,b-19,4,3); R("#c8904d",x+5,b-19,5,2);
+  R("#2a2a2a",x-12,b-4,4,4); R("#2a2a2a",x+8,b-4,4,4);
 }
 function bubble(x,y,txt){
   ctx.font = `bold 6px "Courier New",Courier,monospace`;
@@ -1420,6 +1597,8 @@ function drawScene(tm){
   for(let i=Math.floor((m*PXM)/7); i*7 - m*PXM < W; i++){ if(hr(i*3)>0.7) R("#4f8a3c", i*7 - m*PXM, 118 + hr(i)*22, 2, 1); }
   const first = Math.floor((m-30)/11), last = Math.ceil((m+50)/11);
   for(let i=first;i<=last;i++){ const mi = i*11 + hr(i)*5; if(i<0 || hr(i*2.7)>0.55 || nearLM(mi,16)) continue; palm(wx(mi), BACK_Y-1); }
+  for(let k=Math.floor((m-60)/130); k<=Math.ceil((m+80)/130); k++){ const mi = k*130+65; if(mi<20||mi>CONFIG.totalMiles-30||nearLM(mi,26)||Math.abs(mi-ROBERTO_MILE)<14||Math.abs(mi-MOORE_MILE)<14) continue; drawPlayground(wx(mi)-60, BACK_Y-6, tm, k); }
+  { const lo = LANDMARKS[1], x = wx(lo.mile); if(x > -260 && x < W+120) drawPlayground(x-200, BACK_Y-6, tm, 99); }
   for(let k=Math.floor((m-40)/100); k<=Math.ceil((m+60)/100); k++){ const mi = k*100+50; if(mi<0||mi>CONFIG.totalMiles||nearLM(mi,16)) continue; streetSign(wx(mi), BACK_Y); }
   LANDMARKS.forEach(L => {
     const x = wx(L.mile); if(x < -140 || x > W+140) return;
@@ -1459,6 +1638,9 @@ function drawScene(tm){
   if(G.enc==="carlos"){ drawCarlosDesk(PARTY_X+44, PARTY_Y); bubble(PARTY_X+42, PARTY_Y-40, "Password?"); }
   if(G.enc==="mrt"){ person(PARTY_X+34, PARTY_Y, SPECIALS.mrt.look, 0); drawNotes(PARTY_X+48, PARTY_Y-32); bubble(PARTY_X+34, PARTY_Y-40, "Song for the road?"); }
   if(G.enc==="coachw"){ drawLaundry(PARTY_X+46, PARTY_Y); person(PARTY_X+34, PARTY_Y, SPECIALS.coachw.look, 0); bubble(PARTY_X+34, PARTY_Y-40, "Do the laundry?"); }
+  if(G.enc==="moore"){ person(PARTY_X+34, PARTY_Y, SPECIALS.moore.look, 0); drawNotes(PARTY_X+48, PARTY_Y-32); bubble(PARTY_X+34, PARTY_Y-40, "Bible quiz time!"); }
+  if(G.enc==="roberto"){ drawDitch(PARTY_X+44, PARTY_Y, G.robertoDug); person(PARTY_X+34, PARTY_Y, SPECIALS.roberto.look, 0); bubble(PARTY_X+34, PARTY_Y-34, "20 cookies?"); }
+  if(G.enc==="roadside"){ const o = npcLook(G.roadSeed||7, (G.roadSeed||7) % 3 === 0); person(PARTY_X+34, PARTY_Y, o, 0); bubble(PARTY_X+34, PARTY_Y-36, "Hey, Lancers!"); }
   if(G.enc==="mrss"){ person(PARTY_X+34, PARTY_Y, SPECIALS.mrss.look, 0); bubble(PARTY_X+34, PARTY_Y-38, "How is everyone?"); }
   if(G.enc==="karen"){ person(PARTY_X+30, PARTY_Y, SPECIALS.karen.look, 0); R("#9aa0a8",PARTY_X+38,PARTY_Y-14,18,2); R("#c9ced6",PARTY_X+38,PARTY_Y-12,18,8); R("#f2c230",PARTY_X+41,PARTY_Y-17,5,3); R("#c0392b",PARTY_X+48,PARTY_Y-17,5,3); R("#111",PARTY_X+39,PARTY_Y-3,3,3); R("#111",PARTY_X+51,PARTY_Y-3,3,3); bubble(PARTY_X+30, PARTY_Y-40, "Hot lunch!"); }
   if(G.cart && G.cart.state==="here") bubble(PARTY_X+30, PARTY_Y-44, "ID please!");
@@ -1499,11 +1681,13 @@ function drawPeople(m, front){
     spots.forEach(([dx,teacher],k) => {
       const o = npcLook(li*101 + k*7 + (front?3:0), teacher);
       if(L.crossing==="carpool" && front && k===0){ o.vest = true; o.stop = true; }
-      person(x0+dx, y, o, 0);
+      person(x0+dx, y, L.kind==="gate" && front && k===0 ? SPECIALS.jill.look : o, 0);
       if(front && k===0 && Math.abs(x0 - PARTY_X) < 30 && G.party.length && G.atLandmark && G.mode!=="grad"){
         bubble(x0+dx, y-35, L.kind==="crossing" ? "Wait up!" : "Welcome!");
       }
     });
+    if(!front && L.short==="Lower School") person(x0-78, y, SPECIALS.campbell.look, 0);
+    if(!front && !L.final && !L.crossing) drawLunchCart(x0+112, y);
     if(front && FORKS[li]){
       person(x0+80, y, SPECIALS.mrc.look, 0);
       if(Math.abs(x0 - PARTY_X) < 30 && G.atLandmark && G.party.length) bubble(x0+80, y-36, "This way!");
@@ -1519,6 +1703,9 @@ function drawPeople(m, front){
     { const x = wx(CARLOS_MILE); if(x > -40 && x < W+40 && G.enc !== "carlos") drawCarlosDesk(x, y); }
     { const x = wx(COACHW_MILE); if(x > -40 && x < W+40 && !G.coachDone && G.enc !== "coachw"){ drawLaundry(x+10, y); person(x, y, SPECIALS.coachw.look, 0); if(Math.abs(x - PARTY_X) < 60 && G.party.length) bubble(x, y-38, "Laundry, anyone?"); } }
     { const x = wx(MRT_MILE); if(x > -40 && x < W+40 && G.enc !== "mrt"){ person(x, y, SPECIALS.mrt.look, 0); drawNotes(x+14, y-30); if(Math.abs(x - PARTY_X) < 60 && G.party.length && !G.mrtDone) bubble(x, y-40, "Go Lancers!"); } }
+    { const x = wx(MOORE_MILE); if(x > -40 && x < W+40 && G.enc !== "moore"){ person(x, y, SPECIALS.moore.look, 0); if(!G.mooreDone && Math.abs(x - PARTY_X) < 70 && G.party.length) bubble(x, y-38, "Bible quiz!"); } }
+    { const x = wx(ROBERTO_MILE); if(x > -40 && x < W+40){ drawDitch(x+10, y, G.robertoDug); if(G.enc !== "roberto"){ person(x, y, SPECIALS.roberto.look, 0); if(!G.robertoDone && Math.abs(x - PARTY_X) < 70 && G.party.length) bubble(x, y-30, "Cookies!"); } } }
+    if(G.snackCart != null){ const x = wx(G.snackCart); if(x > -30 && x < W+30) drawLunchCart(x, y); }
     MRC_MILES.forEach(mi => {
       const x = wx(mi) + Math.sin(performance.now()/1100 + mi)*10; if(x<-20||x>W+20) return;
       person(x, y, { ...SPECIALS.mrc.look, point:false, slip:true }, Math.floor(performance.now()/260)%2);
@@ -1568,6 +1755,66 @@ cv.addEventListener("pointerdown", e => {
 });
 
 /* =========================================================
+   ON-SCENE BUTTONS
+   ========================================================= */
+let hudSig = "";
+function hudItems(){
+  const it = [], bar = [], barR = [];
+  if(G.mode === "snack"){ barR.push({ id:"sdone", label:"✓ Done", fn:endSnackRun, cont:true }); return { it, bar, barR }; }
+  if(G.mode !== "trail" || !G.party.length || stageEl.classList.contains("busy")) return { it, bar, barR };
+  if(G.ui === "travel"){
+    barR.push({ id:"stop", label:"✋ Stop", t:"and look around", fn:stopTravel, cont:true });
+    if(G.snackCart != null) it.push({ id:"scart", label:"🍕", t:"Snack Run!", x:wx(G.snackCart), y:BACK_Y-30, fn:snackCartRun, cls:"pulse" });
+  } else if(G.ui === "pend" && G.pend){
+    const pd = G.pend;
+    it.push({ id:"pend"+pd.label, label:"💬", t:pd.label, x:PARTY_X+36, y:PARTY_Y-60, cont:true, cls:"pulse", fn:() => { G.pend = null; G.ui = null; pd.fn(); } });
+  } else if(G.ui === "landmark"){
+    const L = curLM(), at = G.atLandmark, x0 = wx(L.mile);
+    it.push({ id:"go", label:"Continue", t:`on ${CONFIG.road} ➜`, x:W-6, y:160, fn:continueOn, cls:"go", cont:true });
+    if(at){
+      if(L.store) it.push({ id:"store", label:"🛒", t:`Enter ${L.store.replace(/^the /,"")}`, x: L.kind==="gate" ? x0-92 : x0, y:BACK_Y-22, fn:()=>store(false) });
+      if(L.church) it.push({ id:"church", label:"⛪", t:"Go to worship", x:x0, y:BACK_Y-22, fn:attendChapel });
+      if(L.people && L.people.length) it.push({ id:"talk", label:"💬", t: L.kind==="gate" ? "Talk to Ms. Jill & friends" : "Talk to people", x:x0-58, y:FRONT_Y-38, fn:talk });
+      if(L.short === "Lower School") it.push({ id:"camp", label:"💬", t:"Mr. Campbell", x:x0-78, y:BACK_Y-34, fn:()=>talkTo(CAMPBELL_TALK, landmarkMenu) });
+      if(!L.final && !L.crossing) it.push({ id:"snack", label:"🍕", t:"Snack Run", x:x0+112, y:BACK_Y-30, fn:startSnackRun });
+    } else {
+      it.push({ id:"talk", label:"💬", t:"Talk to people", x:PARTY_X+60, y:BACK_Y-30, fn:talk });
+    }
+    bar.push({ id:"sup", label:"🎒", t:"Supplies", fn:supplies },
+             { id:"map", label:"🗺️", t:"Map", fn:showMap },
+             { id:"pace", label:"👟", t:`Pace: ${PACE[G.pace].name}`, fn:changePace },
+             { id:"rat", label:"🍎", t:`Snacks: ${RATIONS[G.rations].name}`, fn:changeRations },
+             { id:"rest", label:"😴", t:"Rest", fn:restMenu });
+  }
+  return { it, bar, barR };
+}
+function renderHud(){
+  const { it, bar, barR } = hudItems();
+  const all = [...it, ...bar, ...barR];
+  const sig = all.map(o => o.id + o.label + (o.t||"")).join("|");
+  if(sig !== hudSig){
+    hudSig = sig; let k = 0;
+    const btn = o => `<button class="hot ${o.cls||""}" data-id="${o.id}" data-key="${++k}" ${o.cont ? "data-continue" : ""}><span class="k">${k}</span>${o.label}${o.t ? ` <span class="t">${o.t}</span>` : ""}</button>`;
+    hudEl.innerHTML = it.map(btn).join("") + `<div class="bar l">${bar.map(btn).join("")}</div><div class="bar r">${barR.map(btn).join("")}</div>`;
+    hudEl.querySelectorAll(".hot").forEach(b => { const o = all.find(q => q.id === b.dataset.id); b.onclick = () => act(o.fn); });
+  }
+  it.forEach(o => {
+    const b = hudEl.querySelector(`[data-id="${o.id}"]`); if(!b) return;
+    const show = o.x > -10 && o.x < W+10;
+    b.style.display = show ? "" : "none";
+    b.style.left = (o.x / W * 100) + "%"; b.style.top = (o.y / H * 100) + "%";
+  });
+}
+function drawWhereBanner(){
+  if(G.ui !== "landmark" || G.mode !== "trail" || !G.party.length || stageEl.classList.contains("busy")) return;
+  const txt = G.atLandmark ? curLM().short.toUpperCase() : `MILE ${G.miles} OF ${CONFIG.road.toUpperCase()}`;
+  ctx.font = `bold 9px "Courier New",Courier,monospace`;
+  const w = Math.ceil(ctx.measureText(txt).width) + 16;
+  R("#14213f",W/2-w/2,30,w,15); R("#f2c230",W/2-w/2,30,w,1); R("#f2c230",W/2-w/2,44,w,1);
+  T(txt,W/2,37.5,"#f2c230",9);
+}
+
+/* =========================================================
    MAIN LOOP
    ========================================================= */
 let lastT = performance.now();
@@ -1579,11 +1826,383 @@ function loop(now){
     const diff = G.miles - G.displayMiles;
     G.displayMiles = Math.abs(diff) < 0.02 ? G.miles : G.displayMiles + diff*Math.min(1, dt*3);
     drawScene(now);
+    drawWhereBanner();
   }
+  renderHud();
   requestAnimationFrame(loop);
 }
 titleScreen();
 requestAnimationFrame(loop);
+/* ---------- DETAILED PORTRAITS (character cards) ---------- */
+const P_LEADERS = [
+  { name:"Dr. T", role:"Leader", blurb:"Black hair, a legendary black beard, and a big brain.",
+    look:{ skin:"#f1c9a5", hair:"#1a1a1a", beard:"#1a1a1a", temples:true, gray:true, shirt:"#ffffff", tie:"#1d2b4f", book:"#7a1f2b", bg:"#3d5a8a" } },
+  { name:"Mr. G", role:"Leader", blurb:"Young, dark hair, full of energy.",
+    look:{ skin:"#e9b98f", hair:"#1a1a1a", shirt:"#2e6db4", spiky:true, bg:"#c98a2a" } },
+  { name:"Mr. Richie", role:"Leader", blurb:"The veteran. Bald, wise, and has seen it all.",
+    look:{ skin:"#f1c9a5", hair:"#c9c9c9", bald:true, fedora:"#6e5a44", glasses:true, shirt:"#ffffff", cardigan:"#6b4f33", book:"#2e6db4", wrinkles:true, bg:"#5b7a5a" } },
+  { name:"Miss Ritch", role:"Leader", blurb:"Young, glasses, sharp eyes.",
+    look:{ skin:"#f1c9a5", hair:"#6b4a2b", long:true, glasses:true, shirt:"#7a1f2b", lashes:true, heavy:true, bg:"#4c7fa8" } },
+  { name:"Melissa", role:"Leader", blurb:"Curly hair, clipboard, and the most organized person on campus.",
+    look:{ skin:"#e9b98f", hair:"#8a5a2b", curly:true, shirt:"#2f7d32", clip:true, lashes:true, bg:"#b56a3a" } },
+  { name:"Mr. Sousa", role:"Leader", blurb:"In his twenties, from Brazil, never slows down.",
+    look:{ skin:"#b07a52", hair:"#1a1a1a", shirt:"#f2c230", spiky:true, bigSmile:true, bg:"#2f8a5a" } },
+  { name:"Mr. K", role:"Leader", blurb:"Forty, wise, and wealthy. Always wears the suit.",
+    look:{ skin:"#e9b98f", hair:"#e6c25a", suit:"#1d2b4f", tie:"#f2c230", shirt:"#ffffff", spiky:true, muscular:true, bg:"#7a5a9a" } },
+  { name:"Ms. M", role:"Leader", blurb:"Spunky, creative, and friendly to all. Never without her robotics book.",
+    look:{ skin:"#e3b48a", hair:"#1a1a1a", long:true, streak:"#b05ad6", shirt:"#ffffff", dress:true, robobook:true, lashes:true, bigSmile:true, earrings:true, bg:"#3a9aa8" } }
+];
+const P_SPECIALS = [
+  { name:"BP", role:"Hall pass patrol", blurb:"Ball cap pulled low, button-up shirt, khakis, and a radio in hand. Better have a hall pass.",
+    look:{ skin:"#f1c9a5", hair:"#b08a5a", bald:true, cap:"#1d2b4f", capLow:true, shirt:"#cfe0f0", polo:true, collar:"#e8f0f8", buttons:true, radio:true, bg:"#55657f" } },
+  { name:"Mr. C", role:"Demerit patrol", blurb:"Big brown hair, demerit pad in hand, and he WILL see you running.",
+    look:{ skin:"#e9b98f", hair:"#6b4a2b", bighair:true, beard:"#6b4a2b", shirt:"#2e6db4", polo:true, collar:"#f2c230", big:true, heavy:true, point:true, stern:true, bg:"#a85a3a" } },
+  { name:"Eddy", role:"Campus security", blurb:"Rolls up in his golf cart at a blazing 12 miles per hour. ID, please!",
+    look:{ skin:"#c99468", hair:"#2a2a2a", gray:true, mustache:"#3a3a3a", wrinkles:true, cop:true, copcap:true, radio:true, bg:"#5a8a4a" } },
+  { name:"Mrs. S", role:"Guidance counselor", blurb:"Curls bouncing, clipboard of sticky notes, and her door is always open.",
+    look:{ skin:"#f1c9a5", hair:"#7a4a2a", curly:true, shirt:"#5b7fb8", cardigan:"#f3ead2", clip:true, lashes:true, bg:"#c77a8a" } },
+  { name:"Carlos", role:"Computer checkpoint", blurb:"Guards the admin password from behind his desk. ¡Alto!",
+    look:{ skin:"#d9a679", hair:"#2a2a2a", gray:true, mustache:"#2a2a2a", glasses:true, shirt:"#d6e4f0", polo:true, collar:"#ffffff", laptop:true, wrinkles:true, bg:"#2f6f8f" } },
+  { name:"Coach W", role:"Football coach", blurb:"Whistle around his neck and a mountain of laundry that needs doing.",
+    look:{ skin:"#5e3b26", hair:"#111111", cap:"#1d2b4f", shirt:"#1d2b4f", polo:true, collar:"#f2c230", whistle:true, big:true, muscular:true, bg:"#3a7a3a" } },
+  { name:"Mr. T", role:"Music teacher", blurb:"Warming up by the stadium with a shining trumpet and the fight song ready.",
+    look:{ skin:"#6b4226", hair:"#1a1a1a", short:true, shirt:"#ffffff", tie:"#1d2b4f", trumpet:true, bg:"#8a3a5a" } },
+  { name:"Ms. Jill", role:"Front desk", blurb:"Sign in, grab a visitor badge, and say good morning. She knows everybody's name.",
+    look:{ skin:"#f1c9a5", hair:"#c9a35a", long:true, glasses:true, shirt:"#2e6db4", cardigan:"#f3ead2", lashes:true, lips:"#c05070", bigSmile:true, earrings:true, bg:"#6a8fc0" } },
+  { name:"Mr. Campbell", role:"5th grade teacher", blurb:"A big guy with a big beard, a Cambridge muscle shirt, and an even bigger heart. Keeps emergency snacks in his desk.",
+    look:{ skin:"#f1c9a5", hair:"#6b4a2b", beard:"#6b4a2b", side:true, shirt:"#1d2b4f", tank:true, big:true, heavy:true, bg:"#d9a43a" } },
+  { name:"Mr. Moore", role:"Bible quiz", blurb:"Guitar in hand and a Bible quiz ready. The joy of the Lord is his... well, you'll have to answer that.",
+    look:{ skin:"#e9b98f", hair:"#3b2414", beard:"#3b2414", side:true, shirt:"#7a1f2b", polo:true, collar:"#f3ead2", guitar:true, bg:"#4a6a9a" } },
+  { name:"Roberto", role:"Grounds crew", blurb:"Navy hard hat, leaning on his shovel next to a ditch. Dig it for him and he'll pay you in cookies.",
+    look:{ skin:"#c99468", hair:"#d6d6d6", mustache:"#e4e4e4", wrinkles:true, hardhat:"#1d2b4f", small:true, shirt:"#3d6fb0", polo:true, collar:"#6f9ad0", shovel:true, bg:"#7a9a4a" } },
+  { name:"Chef", role:"Cafeteria", blurb:"Famous chicken and rice, a lunch cart, and a soft spot for hungry Lancers.",
+    look:{ skin:"#93603f", hair:"#1a1a1a", gray:true, thin:true, chef:true, chefColor:"#7a1f2b", bob:true, glasses:true, apron:"#1d2b4f", lashes:true, lips:"#b0405a", earrings:true, bigSmile:true, bg:"#c9773a" } }
+];
+
+/* ---------- color helpers ---------- */
+function pshade(hex, f){
+  const n = parseInt(hex.slice(1),16);
+  let r=(n>>16)&255, g=(n>>8)&255, b=n&255;
+  r=Math.max(0,Math.min(255,Math.round(r*f))); g=Math.max(0,Math.min(255,Math.round(g*f))); b=Math.max(0,Math.min(255,Math.round(b*f)));
+  return "#"+((1<<24)+(r<<16)+(g<<8)+b).toString(16).slice(1);
+}
+let puid = 0;
+
+/* ---------- portrait ---------- */
+function portrait(o){
+  const id = "pt" + (puid++);
+  const skin=o.skin, skinD=pshade(skin,.82), skinL=pshade(skin,1.08);
+  const hair=o.hair, hairD=pshade(hair,.7), hairL=pshade(hair,1.45);
+  const big=o.big?1:0, thin=o.thin?1:0, heavy=o.heavy?1:0, musc=o.muscular?1:0;
+  const hw = 54 + big*4 - thin*5 + heavy*10 + musc*2;   // head half-width
+  const hh = 62 + heavy*3;                              // head half-height
+  const cx=150, cy=150;
+  const sw = 112 + big*16 - thin*8 + heavy*22 + musc*26;  // shoulder half-width
+  const top = o.suit ? o.suit : o.cop ? "#1f3a68" : o.chef ? (o.chefColor||"#fbfbf8") : o.shirt;
+  let s = [];
+  // background
+  s.push(`<defs>
+    <radialGradient id="${id}bg" cx="50%" cy="38%" r="70%"><stop offset="0" stop-color="${pshade(o.bg,1.35)}"/><stop offset="1" stop-color="${pshade(o.bg,.7)}"/></radialGradient>
+    <linearGradient id="${id}sk" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="${skinD}"/><stop offset=".35" stop-color="${skin}"/><stop offset=".7" stop-color="${skinL}"/><stop offset="1" stop-color="${skinD}"/></linearGradient>
+    <linearGradient id="${id}sh" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${pshade(top,1.08)}"/><stop offset="1" stop-color="${pshade(top,.78)}"/></linearGradient>
+  </defs>`);
+  s.push(`<rect width="300" height="330" fill="url(#${id}bg)"/>`);
+  for(let i=0;i<7;i++) s.push(`<circle cx="${(i*53+30)%300}" cy="${(i*97+40)%180}" r="${8+i%3*6}" fill="#fff" opacity=".06"/>`);
+  const figStart = s.length;
+  // long hair behind
+  if(o.long){
+    s.push(`<path d="M${cx-hw-8},${cy-20} Q${cx-hw-22},${cy+70} ${cx-hw+2},${cy+125} L${cx+hw-2},${cy+125} Q${cx+hw+22},${cy+70} ${cx+hw+8},${cy-20} Z" fill="${hairD}"/>`);
+    if(o.streak) s.push(`<path d="M${cx-hw-6},${cy} Q${cx-hw-14},${cy+60} ${cx-hw+4},${cy+118}" stroke="${o.streak}" stroke-width="9" fill="none" stroke-linecap="round"/>`);
+  }
+  if(o.curly){
+    for(const [dx,dy,r] of [[-hw-6,-10,18],[-hw-8,18,17],[-hw-2,44,15],[hw+6,-10,18],[hw+8,18,17],[hw+2,44,15]])
+      s.push(`<circle cx="${cx+dx}" cy="${cy+dy}" r="${r}" fill="${hairD}"/>`);
+  }
+  // body
+  const by = 258;
+  s.push(`<path d="M${cx-sw},330 L${cx-sw+6},${by+18} Q${cx-sw+16},${by-6} ${cx-40},${by-14} L${cx+40},${by-14} Q${cx+sw-16},${by-6} ${cx+sw-6},${by+18} L${cx+sw},330 Z" fill="url(#${id}sh)"/>`);
+  // neck
+  const nk = 20 + musc*9 + heavy*8;
+  s.push(`<path d="M${cx-nk},${cy+42} L${cx-nk-2},${by-8} Q${cx},${by+8} ${cx+nk+2},${by-8} L${cx+nk},${cy+42} Z" fill="${skinD}"/>`);
+  if(musc){
+    s.push(`<path d="M${cx-sw+10},${by+40} Q${cx-sw+20},${by-4} ${cx-sw+60},${by+4}" stroke="${pshade(top,.7)}" stroke-width="3" fill="none"/>`);
+    s.push(`<path d="M${cx+sw-10},${by+40} Q${cx+sw-20},${by-4} ${cx+sw-60},${by+4}" stroke="${pshade(top,.7)}" stroke-width="3" fill="none"/>`);
+    s.push(`<path d="M${cx-52},${by+44} Q${cx-26},${by+56} ${cx-4},${by+44} M${cx+52},${by+44} Q${cx+26},${by+56} ${cx+4},${by+44}" stroke="${pshade(top,.72)}" stroke-width="3" fill="none"/>`);
+  }
+  // clothing details
+  if(o.suit){
+    s.push(`<path d="M${cx-30},${by-12} L${cx},${by+60} L${cx+30},${by-12} Z" fill="${o.shirt}"/>`);
+    s.push(`<path d="M${cx-6},${by-8} L${cx+6},${by-8} L${cx+9},${by+46} L${cx},${by+60} L${cx-9},${by+46} Z" fill="${o.tie}"/>`);
+    s.push(`<path d="M${cx-40},${by-14} L${cx-8},${by+70} L${cx-26},${by+30} L${cx-50},${by+10} Z" fill="${pshade(o.suit,.75)}"/>`);
+    s.push(`<path d="M${cx+40},${by-14} L${cx+8},${by+70} L${cx+26},${by+30} L${cx+50},${by+10} Z" fill="${pshade(o.suit,.75)}"/>`);
+    s.push(`<path d="M${cx+60},${by+30} l14,0 l-2,6 l-10,0 z" fill="#ffffff"/>`);
+  } else if(o.cop){
+    s.push(`<path d="M${cx-34},${by-12} L${cx},${by+16} L${cx+34},${by-12} L${cx+26},${by-16} L${cx},${by+2} L${cx-26},${by-16} Z" fill="${pshade("#1f3a68",.7)}"/>`);
+    s.push(`<line x1="${cx}" y1="${by+4}" x2="${cx}" y2="330" stroke="${pshade("#1f3a68",.6)}" stroke-width="3"/>`);
+    s.push(`<polygon points="${cx-52},${by+30} ${cx-46},${by+42} ${cx-34},${by+42} ${cx-44},${by+50} ${cx-40},${by+62} ${cx-52},${by+54} ${cx-64},${by+62} ${cx-60},${by+50} ${cx-70},${by+42} ${cx-58},${by+42}" fill="#f2c230" stroke="#b8900a" stroke-width="1.5"/>`);
+    s.push(o.copcap ? `<rect x="${cx+24}" y="${by+44}" width="44" height="13" rx="2" fill="#f4f4f4"/><text x="${cx+46}" y="${by+53.5}" font-family="Arial" font-weight="700" font-size="8" fill="#1f3a68" text-anchor="middle">SECURITY</text>` : `<rect x="${cx+30}" y="${by+30}" width="34" height="8" rx="2" fill="#f2c230"/>`);
+    s.push(`<rect x="${cx-sw+18}" y="${by+4}" width="40" height="10" rx="3" fill="${pshade("#1f3a68",.6)}"/>`);
+    s.push(`<rect x="${cx+sw-58}" y="${by+4}" width="40" height="10" rx="3" fill="${pshade("#1f3a68",.6)}"/>`);
+  } else if(o.chef){
+    s.push(`<path d="M${cx-34},${by-12} L${cx},${by+14} L${cx+34},${by-12}" fill="none" stroke="${o.chefColor ? pshade(o.chefColor,.7) : "#d8d8d0"}" stroke-width="5"/>`);
+    s.push(`<rect x="${cx-46}" y="${by+26}" width="92" height="80" rx="10" fill="${o.apron}"/>`);
+    s.push(`<path d="M${cx-30},${by+26} L${cx-22},${by-8} M${cx+30},${by+26} L${cx+22},${by-8}" stroke="${o.apron}" stroke-width="7"/>`);
+    s.push(`<text x="${cx}" y="${by+62}" font-family="Courier New, monospace" font-weight="700" font-size="17" fill="#f2c230" text-anchor="middle">CHEF</text>`);
+    for(const dy of [6,26]) for(const dx of [-58,58]) s.push(`<circle cx="${cx+dx}" cy="${by+dy+10}" r="4" fill="${o.chefColor ? "#f2c230" : "#c9c9c0"}"/>`);
+  } else {
+    if(o.cardigan){
+      s.push(`<path d="M${cx-sw},330 L${cx-sw+6},${by+18} Q${cx-sw+16},${by-6} ${cx-40},${by-14} L${cx-24},${by-4} L${cx-14},330 Z" fill="${o.cardigan}"/>`);
+      s.push(`<path d="M${cx+sw},330 L${cx+sw-6},${by+18} Q${cx+sw-16},${by-6} ${cx+40},${by-14} L${cx+24},${by-4} L${cx+14},330 Z" fill="${o.cardigan}"/>`);
+      for(const dy of [30,52,74]) s.push(`<circle cx="${cx+20}" cy="${by+dy}" r="3.5" fill="${pshade(o.cardigan,.6)}"/>`);
+    }
+    if(o.tie){
+      s.push(`<path d="M${cx-24},${by-12} L${cx},${by+6} L${cx+24},${by-12} L${cx+30},${by+2} L${cx},${by+12} L${cx-30},${by+2} Z" fill="${pshade(o.shirt,.9)}"/>`);
+      s.push(`<path d="M${cx-7},${by+4} L${cx+7},${by+4} L${cx+10},${by+60} L${cx},${by+72} L${cx-10},${by+60} Z" fill="${o.tie}"/>`);
+      s.push(`<rect x="${cx-8}" y="${by-2}" width="16" height="10" rx="2" fill="${pshade(o.tie,.8)}"/>`);
+    } else if(o.polo){
+      const cl = o.collar || "#ffffff";
+      s.push(`<path d="M${cx-38},${by-14} L${cx-6},${by+10} L${cx-30},${by+20} Z" fill="${cl}"/>`);
+      s.push(`<path d="M${cx+38},${by-14} L${cx+6},${by+10} L${cx+30},${by+20} Z" fill="${cl}"/>`);
+      s.push(`<path d="M${cx},${by+6} L${cx},${by+40}" stroke="${pshade(top,.6)}" stroke-width="3"/>`);
+      s.push(`<circle cx="${cx+4}" cy="${by+18}" r="2.5" fill="${pshade(top,.55)}"/><circle cx="${cx+4}" cy="${by+32}" r="2.5" fill="${pshade(top,.55)}"/>`);
+      if(o.buttons){ s.push(`<path d="M${cx},${by+40} L${cx},330" stroke="${pshade(top,.6)}" stroke-width="3"/>`); for(const dy of [48,64]) s.push(`<circle cx="${cx+4}" cy="${by+dy}" r="2.5" fill="${pshade(top,.55)}"/>`); s.push(`<rect x="${cx-62}" y="${by+30}" width="24" height="18" fill="none" stroke="${pshade(top,.7)}" stroke-width="2.5"/>`); }
+    } else {
+      s.push(`<path d="M${cx-26},${by-12} Q${cx},${by+16} ${cx+26},${by-12}" fill="none" stroke="${pshade(top,.7)}" stroke-width="5"/>`);
+    }
+    if(o.badge){
+      s.push(`<rect x="${cx-62}" y="${by+26}" width="26" height="32" rx="4" fill="#f2c230" stroke="#b8900a" stroke-width="2"/>`);
+      s.push(`<rect x="${cx-58}" y="${by+42}" width="18" height="4" fill="#8a6a10"/>`);
+      s.push(`<rect x="${cx+30}" y="${by+26}" width="40" height="12" rx="2" fill="#f4f4f4"/><text x="${cx+50}" y="${by+35}" font-family="Arial" font-weight="700" font-size="8" fill="#2b2e36" text-anchor="middle">SECURITY</text>`);
+    }
+  }
+  if(o.whistle){
+    s.push(`<path d="M${cx-30},${by-10} Q${cx},${by+60} ${cx+30},${by-10}" fill="none" stroke="#f2c230" stroke-width="3"/>`);
+    s.push(`<rect x="${cx-10}" y="${by+42}" width="22" height="13" rx="6" fill="#d0d4da" stroke="#8a9099" stroke-width="2"/><circle cx="${cx+12}" cy="${by+48}" r="4" fill="#8a9099"/>`);
+  }
+  if(o.radio){
+    s.push(`<rect x="${cx+52}" y="${by+2}" width="20" height="34" rx="4" fill="#1a1a1a"/><rect x="${cx+66}" y="${by-16}" width="4" height="20" fill="#333"/><rect x="${cx+56}" y="${by+8}" width="12" height="8" fill="#3a5a3a"/>`);
+  }
+  // ears
+  s.push(`<ellipse cx="${cx-hw+2}" cy="${cy+6}" rx="11" ry="15" fill="${skinD}"/><ellipse cx="${cx+hw-2}" cy="${cy+6}" rx="11" ry="15" fill="${skinD}"/>`);
+  // head
+  s.push(`<ellipse cx="${cx}" cy="${cy}" rx="${hw}" ry="${hh}" fill="url(#${id}sk)"/>`);
+  if(o.wrinkles){
+    s.push(`<path d="M${cx-22},${cy-40} q22,-6 44,0" stroke="${skinD}" stroke-width="2" fill="none"/><path d="M${cx-38},${cy+2} q-4,6 -2,12 M${cx+38},${cy+2} q4,6 2,12" stroke="${skinD}" stroke-width="2" fill="none"/>`);
+  }
+  if(heavy) s.push(`<path d="M${cx-26},${cy+hh-4} Q${cx},${cy+hh+8} ${cx+26},${cy+hh-4}" stroke="${skinD}" stroke-width="3" fill="none"/>`);
+  // cheeks
+  s.push(`<ellipse cx="${cx-30}" cy="${cy+22}" rx="11" ry="7" fill="#e8796a" opacity=".22"/><ellipse cx="${cx+30}" cy="${cy+22}" rx="11" ry="7" fill="#e8796a" opacity=".22"/>`);
+  // beard
+  if(o.beard){
+    s.push(`<path d="M${cx-hw+4},${cy+2} Q${cx-hw+2},${cy+60} ${cx},${cy+80} Q${cx+hw-2},${cy+60} ${cx+hw-4},${cy+2} Q${cx+hw-10},${cy+30} ${cx+26},${cy+34} Q${cx},${cy+26} ${cx-26},${cy+34} Q${cx-hw+10},${cy+30} ${cx-hw+4},${cy+2} Z" fill="${o.beard}"/>`);
+    s.push(`<path d="M${cx-22},${cy+30} Q${cx},${cy+20} ${cx+22},${cy+30} Q${cx},${cy+34} ${cx-22},${cy+30} Z" fill="${o.beard}"/>`);
+    for(let i=0;i<8;i++) s.push(`<path d="M${cx-30+i*8},${cy+48} l2,10" stroke="${pshade(o.beard,1.8)}" stroke-width="1" opacity=".5"/>`);
+  }
+  if(o.beard && o.gray){ for(let i=0;i<9;i++) s.push(`<path d="M${cx-34+i*8},${cy+42+(i%3)*9} l3,9" stroke="#c4c4c4" stroke-width="2.4" stroke-linecap="round"/>`); s.push(`<path d="M${cx-14},${cy+30} l6,2 M${cx+10},${cy+30} l6,-2" stroke="#c4c4c4" stroke-width="2"/>`); }
+  // eyes
+  const ey = cy-2;
+  for(const sx of [-1,1]){
+    const ex = cx + sx*22;
+    if(o.sunglasses){ continue; }
+    s.push(`<ellipse cx="${ex}" cy="${ey}" rx="10" ry="${o.stern?6:8}" fill="#ffffff"/>`);
+    s.push(`<circle cx="${ex+1}" cy="${ey+1}" r="5.5" fill="#3b2a1e"/><circle cx="${ex+1}" cy="${ey+1}" r="3" fill="#111"/><circle cx="${ex+3}" cy="${ey-1}" r="1.7" fill="#fff"/>`);
+    if(o.lashes) s.push(`<path d="M${ex-10},${ey-3} q10,-10 20,0" stroke="#1a1a1a" stroke-width="2.5" fill="none"/><path d="M${ex+sx*9},${ey-5} l${sx*5},-4" stroke="#1a1a1a" stroke-width="2"/>`);
+  }
+  // eyebrows
+  const browCol = o.bald ? "#9a9a9a" : o.gray ? pshade(hair,1.6) : hair;
+  if(o.stern){
+    s.push(`<path d="M${cx-34},${ey-20} L${cx-12},${ey-12}" stroke="${browCol}" stroke-width="6" stroke-linecap="round"/><path d="M${cx+34},${ey-20} L${cx+12},${ey-12}" stroke="${browCol}" stroke-width="6" stroke-linecap="round"/>`);
+  } else {
+    s.push(`<path d="M${cx-34},${ey-15} Q${cx-22},${ey-24} ${cx-10},${ey-16}" stroke="${browCol}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M${cx+34},${ey-15} Q${cx+22},${ey-24} ${cx+10},${ey-16}" stroke="${browCol}" stroke-width="5" fill="none" stroke-linecap="round"/>`);
+  }
+  // glasses
+  if(o.glasses){
+    s.push(`<circle cx="${cx-22}" cy="${ey}" r="15" fill="#cfe6ff" fill-opacity=".18" stroke="#2a2a2a" stroke-width="3.5"/><circle cx="${cx+22}" cy="${ey}" r="15" fill="#cfe6ff" fill-opacity=".18" stroke="#2a2a2a" stroke-width="3.5"/><path d="M${cx-7},${ey-2} Q${cx},${ey-6} ${cx+7},${ey-2}" stroke="#2a2a2a" stroke-width="3" fill="none"/><path d="M${cx-37},${ey-2} L${cx-hw+2},${ey-6} M${cx+37},${ey-2} L${cx+hw-2},${ey-6}" stroke="#2a2a2a" stroke-width="3"/>`);
+  }
+  if(o.sunglasses){
+    s.push(`<path d="M${cx-40},${ey-10} L${cx-4},${ey-10} L${cx-8},${ey+10} Q${cx-24},${ey+16} ${cx-38},${ey+8} Z" fill="#111"/><path d="M${cx+40},${ey-10} L${cx+4},${ey-10} L${cx+8},${ey+10} Q${cx+24},${ey+16} ${cx+38},${ey+8} Z" fill="#111"/><rect x="${cx-6}" y="${ey-10}" width="12" height="4" fill="#111"/><path d="M${cx-34},${ey-6} l14,0" stroke="#5a6a8a" stroke-width="3" opacity=".7"/><path d="M${cx+20},${ey-6} l14,0" stroke="#5a6a8a" stroke-width="3" opacity=".7"/>`);
+  }
+  // nose
+  s.push(`<path d="M${cx-2},${cy+4} Q${cx-10},${cy+22} ${cx-4},${cy+24} Q${cx+2},${cy+27} ${cx+8},${cy+22}" stroke="${skinD}" stroke-width="3.5" fill="none" stroke-linecap="round"/>`);
+  // mustache
+  if(o.mustache){
+    s.push(`<path d="M${cx-26},${cy+38} Q${cx-14},${cy+24} ${cx},${cy+30} Q${cx+14},${cy+24} ${cx+26},${cy+38} Q${cx+12},${cy+34} ${cx},${cy+36} Q${cx-12},${cy+34} ${cx-26},${cy+38} Z" fill="${o.mustache}"/>`);
+    s.push(`<path d="M${cx-14},${cy+30} l4,4 M${cx+14},${cy+30} l-4,4" stroke="#9a9a9a" stroke-width="1.5"/>`);
+  }
+  // mouth
+  if(o.stern){
+    s.push(`<path d="M${cx-16},${cy+40} Q${cx},${cy+34} ${cx+16},${cy+40}" stroke="#7a2a2a" stroke-width="4" fill="none" stroke-linecap="round"/>`);
+  } else if(o.bigSmile){
+    s.push(`<path d="M${cx-22},${cy+34} Q${cx},${cy+62} ${cx+22},${cy+34} Z" fill="#7a2a2a" ${o.lips?`stroke="${o.lips}" stroke-width="4" stroke-linejoin="round"`:""}/><path d="M${cx-18},${cy+36} L${cx+18},${cy+36} L${cx+14},${cy+42} L${cx-14},${cy+42} Z" fill="#fff"/>`);
+  } else if(!o.beard || true){
+    s.push(`<path d="M${cx-18},${cy+38} Q${cx},${cy+52} ${cx+18},${cy+38}" stroke="#7a2a2a" stroke-width="4" fill="none" stroke-linecap="round"/>`);
+  }
+  // hair on top
+  if(o.fedora){
+    s.push(`<path d="M${cx-hw+2},${cy-10} Q${cx-hw-4},${cy+10} ${cx-hw+6},${cy+26}" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M${cx+hw-2},${cy-10} Q${cx+hw+4},${cy+10} ${cx+hw-6},${cy+26}" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/>`);
+    s.push(`<ellipse cx="${cx}" cy="${cy-32}" rx="${hw+30}" ry="14" fill="${pshade(o.fedora,.8)}"/>`);
+    s.push(`<path d="M${cx-hw+4},${cy-32} Q${cx-hw+2},${cy-hh-24} ${cx-16},${cy-hh-26} Q${cx},${cy-hh-16} ${cx+16},${cy-hh-26} Q${cx+hw-2},${cy-hh-24} ${cx+hw-4},${cy-32} Z" fill="${o.fedora}"/>`);
+    s.push(`<rect x="${cx-hw+4}" y="${cy-48}" width="${(hw-4)*2}" height="12" fill="#3a2a1e"/>`);
+    s.push(`<path d="M${cx+18},${cy-hh-12} l10,6 M${cx-30},${cy-60} l8,-4" stroke="${pshade(o.fedora,.65)}" stroke-width="2"/><rect x="${cx-34}" y="${cy-hh-8}" width="14" height="10" fill="${pshade(o.fedora,1.15)}" transform="rotate(-10 ${cx-27} ${cy-hh-3})"/>`);
+  } else if(o.copcap){
+    s.push(`<path d="M${cx-hw+2},${cy-24} L${cx-hw+4},${cy-6} M${cx+hw-2},${cy-24} L${cx+hw-4},${cy-6}" stroke="${hair}" stroke-width="7"/><path d="M${cx-hw+2},${cy-18} L${cx-hw+3},${cy-8} M${cx+hw-2},${cy-18} L${cx+hw-3},${cy-8}" stroke="#bdbdbd" stroke-width="3"/>`);
+    s.push(`<path d="M${cx-hw-4},${cy-34} L${cx-hw-12},${cy-74} Q${cx},${cy-96} ${cx+hw+12},${cy-74} L${cx+hw+4},${cy-34} Z" fill="#1d2b4f"/>`);
+    s.push(`<rect x="${cx-hw-4}" y="${cy-44}" width="${(hw+4)*2}" height="12" fill="#111"/><rect x="${cx-hw-4}" y="${cy-46}" width="${(hw+4)*2}" height="3" fill="#f2c230"/>`);
+    s.push(`<path d="M${cx-hw},${cy-32} Q${cx},${cy-16} ${cx+hw},${cy-32} Z" fill="#0d0d0d"/>`);
+    s.push(`<polygon points="${cx},${cy-74} ${cx+8},${cy-66} ${cx+6},${cy-54} ${cx},${cy-50} ${cx-6},${cy-54} ${cx-8},${cy-66}" fill="#f2c230" stroke="#b8900a" stroke-width="1.5"/>`);
+  } else if(o.chef){
+    s.push(`<path d="M${cx-hw+2},${cy-34} Q${cx},${cy-62} ${cx+hw-2},${cy-34} Q${cx+hw},${cy-46} ${cx+hw-8},${cy-52} L${cx-hw+8},${cy-52} Q${cx-hw},${cy-46} ${cx-hw+2},${cy-34} Z" fill="${hair}"/>`);
+    if(o.bob){
+      for(const k of [-1,1]){
+        const X = v => cx + k*v;
+        s.push(`<path d="M${X(hw-8)},${cy-42} Q${X(hw+18)},${cy-14} ${X(hw+8)},${cy+34} Q${X(hw+2)},${cy+46} ${X(hw-6)},${cy+32} Q${X(hw-2)},${cy} ${X(hw-12)},${cy-30} Z" fill="${hair}"/>`);
+        s.push(`<path d="M${X(hw+4)},${cy-20} Q${X(hw+10)},${cy+6} ${X(hw+4)},${cy+28}" stroke="#a8a8a8" stroke-width="2.5" fill="none"/>`);
+      }
+    }
+    const hc = o.chefColor||"#ffffff", hs = o.chefColor ? pshade(o.chefColor,.7) : "#d8d8d0";
+    s.push(`<rect x="${cx-hw+4}" y="${cy-78}" width="${(hw-4)*2}" height="26" rx="4" fill="${hc}" stroke="${hs}" stroke-width="2"/>`);
+    for(const [dx,r] of [[-30,26],[0,32],[30,26]]) s.push(`<circle cx="${cx+dx}" cy="${cy-98}" r="${r}" fill="${hc}" stroke="${hs}" stroke-width="2"/>`);
+    s.push(`<rect x="${cx-hw+6}" y="${cy-76}" width="${(hw-6)*2}" height="20" fill="${hc}"/>`);
+    if(o.chefColor) s.push(`<path d="M${cx-24},${cy-110} q10,-12 22,-4" stroke="${pshade(o.chefColor,1.5)}" stroke-width="4" fill="none" stroke-linecap="round"/>`);
+    if(o.gray) s.push(`<path d="M${cx-hw+6},${cy-38} q6,-6 12,-2 M${cx+hw-6},${cy-38} q-6,-6 -12,-2" stroke="#b8b8b8" stroke-width="3" fill="none"/>`);
+  } else if(o.hardhat){
+    s.push(`<path d="M${cx-hw+2},${cy-24} L${cx-hw+4},${cy-4} M${cx+hw-2},${cy-24} L${cx+hw-4},${cy-4}" stroke="${hair}" stroke-width="8" stroke-linecap="round"/>`);
+    s.push(`<ellipse cx="${cx}" cy="${cy-30}" rx="${hw+18}" ry="10" fill="${pshade(o.hardhat,.75)}"/>`);
+    s.push(`<path d="M${cx-hw-6},${cy-32} Q${cx-hw-4},${cy-hh-26} ${cx},${cy-hh-28} Q${cx+hw+4},${cy-hh-26} ${cx+hw+6},${cy-32} Z" fill="${o.hardhat}"/>`);
+    s.push(`<path d="M${cx-10},${cy-hh-26} L${cx-10},${cy-34} L${cx+10},${cy-34} L${cx+10},${cy-hh-26} Q${cx},${cy-hh-30} ${cx-10},${cy-hh-26} Z" fill="${pshade(o.hardhat,1.25)}"/>`);
+    s.push(`<path d="M${cx-hw+6},${cy-56} Q${cx-30},${cy-82} ${cx-14},${cy-88}" stroke="#fff" stroke-width="5" fill="none" opacity=".35" stroke-linecap="round"/>`);
+    s.push(`<rect x="${cx+18}" y="${cy-62}" width="20" height="12" rx="2" fill="#f2c230"/>`);
+  } else if(o.cap){
+    s.push(`<g transform="translate(0 ${o.capLow ? 12 : 0})">`);
+    s.push(`<path d="M${cx-hw-2},${cy-28} Q${cx-hw},${cy-hh-8} ${cx},${cy-hh-10} Q${cx+hw},${cy-hh-8} ${cx+hw+2},${cy-28} Z" fill="${o.cap}"/>`);
+    s.push(`<path d="M${cx-hw-2},${cy-28} Q${cx},${cy-38} ${cx+hw+30},${cy-26} Q${cx+hw+24},${cy-18} ${cx+hw-10},${cy-22} Q${cx},${cy-26} ${cx-hw-2},${cy-24} Z" fill="${pshade(o.cap,.7)}"/>`);
+    s.push(`<circle cx="${cx}" cy="${cy-hh-8}" r="5" fill="${pshade(o.cap,1.6)}"/>`);
+    if(o.cap==="#1d2b4f") s.push(`<text x="${cx}" y="${cy-46}" font-family="Georgia, serif" font-weight="700" font-size="26" fill="#f2c230" text-anchor="middle">L</text>`);
+    s.push(`<path d="M${cx-hw+2},${cy-24} L${cx-hw+4},${cy-6} M${cx+hw-2},${cy-24} L${cx+hw-4},${cy-6}" stroke="${hair}" stroke-width="7"/>`);
+    s.push(`</g>`);
+  } else if(o.bald){
+    s.push(`<path d="M${cx-hw+2},${cy-10} Q${cx-hw-4},${cy+10} ${cx-hw+6},${cy+26}" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/><path d="M${cx+hw-2},${cy-10} Q${cx+hw+4},${cy+10} ${cx+hw-6},${cy+26}" stroke="${hair}" stroke-width="10" fill="none" stroke-linecap="round"/>`);
+    s.push(`<ellipse cx="${cx-14}" cy="${cy-42}" rx="16" ry="8" fill="#fff" opacity=".35" transform="rotate(-18 ${cx-14} ${cy-42})"/>`);
+  } else if(o.curly){
+    const pts = [[-44,-30,18],[-30,-50,20],[-8,-60,21],[16,-58,20],[36,-46,19],[48,-26,16],[-50,-8,14],[50,-6,14]];
+    for(const [dx,dy,r] of pts) s.push(`<circle cx="${cx+dx}" cy="${cy+dy}" r="${r}" fill="${hair}"/>`);
+    for(const [dx,dy] of [[-28,-52],[-4,-62],[20,-60],[38,-46]]) s.push(`<path d="M${cx+dx-6},${cy+dy} q6,-8 12,0" stroke="${hairL}" stroke-width="2.5" fill="none"/>`);
+  } else if(o.bighair){
+    s.push(`<path d="M${cx-hw-10},${cy+4} Q${cx-hw-22},${cy-hh-18} ${cx-10},${cy-hh-26} Q${cx+hw+24},${cy-hh-24} ${cx+hw+10},${cy+4} Q${cx+hw},${cy-30} ${cx+20},${cy-38} Q${cx-10},${cy-30} ${cx-hw+6},${cy-24} Q${cx-hw},${cy-10} ${cx-hw-10},${cy+4} Z" fill="${hair}"/>`);
+    s.push(`<path d="M${cx-30},${cy-hh-12} Q${cx},${cy-hh-22} ${cx+30},${cy-hh-14}" stroke="${hairL}" stroke-width="4" fill="none"/><path d="M${cx-46},${cy-40} Q${cx-30},${cy-62} ${cx-6},${cy-64}" stroke="${hairL}" stroke-width="3" fill="none"/>`);
+  } else if(o.long){
+    s.push(`<path d="M${cx-hw-8},${cy+10} Q${cx-hw-10},${cy-hh-10} ${cx},${cy-hh-10} Q${cx+hw+10},${cy-hh-10} ${cx+hw+8},${cy+10} Q${cx+hw-4},${cy-28} ${cx+10},${cy-40} Q${cx-24},${cy-30} ${cx-hw+4},${cy-10} Z" fill="${hair}"/>`);
+    s.push(`<path d="M${cx-20},${cy-hh-4} Q${cx+10},${cy-hh-8} ${cx+36},${cy-hh+8}" stroke="${hairL}" stroke-width="3" fill="none"/>`);
+    if(o.streak) s.push(`<path d="M${cx-12},${cy-hh-8} Q${cx-34},${cy-50} ${cx-hw},${cy-6}" stroke="${o.streak}" stroke-width="9" fill="none" stroke-linecap="round"/>`);
+  } else if(o.spiky){
+    s.push(`<path d="M${cx-hw-2},${cy-14} L${cx-hw+2},${cy-48} L${cx-36},${cy-62} L${cx-30},${cy-80} L${cx-12},${cy-68} L${cx-4},${cy-86} L${cx+10},${cy-70} L${cx+24},${cy-84} L${cx+30},${cy-64} L${cx+48},${cy-72} L${cx+hw},${cy-44} L${cx+hw+2},${cy-14} Q${cx+hw-6},${cy-36} ${cx+20},${cy-42} Q${cx-10},${cy-34} ${cx-hw+6},${cy-30} Z" fill="${hair}"/>`);
+    s.push(`<path d="M${cx-24},${cy-66} l10,-10 M${cx+4},${cy-70} l8,-10" stroke="${hairL}" stroke-width="3"/>`);
+  } else if(o.side){
+    s.push(`<path d="M${cx-hw-2},${cy-6} Q${cx-hw-8},${cy-hh-8} ${cx},${cy-hh-8} Q${cx+hw+8},${cy-hh-6} ${cx+hw+2},${cy-6} Q${cx+hw-2},${cy-34} ${cx+30},${cy-40} Q${cx-10},${cy-48} ${cx-24},${cy-36} Q${cx-hw+4},${cy-30} ${cx-hw-2},${cy-6} Z" fill="${hair}"/>`);
+    s.push(`<path d="M${cx-24},${cy-hh-2} L${cx-22},${cy-36}" stroke="${pshade(hair,1.8)}" stroke-width="2.5"/><path d="M${cx-10},${cy-hh-4} Q${cx+20},${cy-hh-4} ${cx+40},${cy-44}" stroke="${hairL}" stroke-width="3" fill="none"/>`);
+  } else {
+    // short (default)
+    s.push(`<path d="M${cx-hw-2},${cy-6} Q${cx-hw-6},${cy-hh-6} ${cx},${cy-hh-6} Q${cx+hw+6},${cy-hh-6} ${cx+hw+2},${cy-6} Q${cx+hw-4},${cy-36} ${cx+16},${cy-44} Q${cx-16},${cy-40} ${cx-hw+6},${cy-30} Z" fill="${hair}"/>`);
+    if(!o.short) s.push(`<path d="M${cx-20},${cy-hh-2} Q${cx+6},${cy-hh-4} ${cx+30},${cy-hh+6}" stroke="${hairL}" stroke-width="3" fill="none"/>`);
+  }
+  if(o.temples){
+    s.push(`<path d="M${cx-hw+2},${cy-24} L${cx-hw+4},${cy-6} M${cx+hw-2},${cy-24} L${cx+hw-4},${cy-6}" stroke="#a9a9a9" stroke-width="5" stroke-linecap="round"/>`);
+    for(const dx of [-24,-8,10,26]) s.push(`<path d="M${cx+dx},${cy+52} l2,8" stroke="#b5b5b5" stroke-width="2"/>`);
+    s.push(`<path d="M${cx-18},${cy-44} q18,-5 36,0" stroke="${skinD}" stroke-width="1.8" fill="none"/>`);
+  }
+  if(o.gray && !o.chef){
+    for(const [x1,y1,x2,y2] of [[-40,-40,-26,-54],[-6,-62,10,-60],[30,-54,44,-40],[-hw,-4,-hw+4,-22],[hw,-4,hw-4,-22]])
+      s.push(`<path d="M${cx+x1},${cy+y1} L${cx+x2},${cy+y2}" stroke="#bdbdbd" stroke-width="3" stroke-linecap="round"/>`);
+  }
+  if(o.earrings) s.push(`<circle cx="${cx-hw+4}" cy="${cy+30}" r="6" fill="none" stroke="#f2c230" stroke-width="3"/><circle cx="${cx+hw-4}" cy="${cy+30}" r="6" fill="none" stroke="#f2c230" stroke-width="3"/>`);
+  if(o.tank){
+    for(const k of [-1,1]){
+      const X = v => cx + k*v;
+      s.push(`<path d="M${X(sw)},330 L${X(sw-6)},${by+18} Q${X(sw-16)},${by-6} ${X(40)},${by-14} L${X(38)},${by-8} Q${X(66)},${by+34} ${X(60)},330 Z" fill="${skin}"/>`);
+      s.push(`<path d="M${X(sw-14)},${by+60} Q${X(sw-30)},${by+30} ${X(sw-46)},${by+52}" stroke="${skinD}" stroke-width="3" fill="none"/>`);
+      s.push(`<path d="M${X(38)},${by-8} Q${X(66)},${by+34} ${X(60)},330" stroke="${pshade(top,.6)}" stroke-width="4" fill="none"/>`);
+    }
+    s.push(`<path d="M${cx-38},${by-10} Q${cx},${by+30} ${cx+38},${by-10} Z" fill="${skin}"/><path d="M${cx-38},${by-10} Q${cx},${by+30} ${cx+38},${by-10}" stroke="${pshade(top,.6)}" stroke-width="4" fill="none"/>`);
+    s.push(`<text x="${cx}" y="${by+56}" font-family="Georgia, serif" font-weight="700" font-size="15" letter-spacing="1" fill="#f2c230" text-anchor="middle">CAMBRIDGE</text>`);
+    s.push(`<text x="${cx}" y="${by+74}" font-family="Georgia, serif" font-weight="700" font-size="11" letter-spacing="2" fill="#ffffff" text-anchor="middle">LANCERS</text>`);
+  }
+  // hands and props in front
+  const hand = (x,y) => `<ellipse cx="${x}" cy="${y}" rx="14" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/>`;
+  if(o.book){
+    s.push(`<g transform="rotate(-8 ${cx+82} ${by+48})"><rect x="${cx+58}" y="${by+20}" width="48" height="62" rx="4" fill="${o.book}"/><rect x="${cx+102}" y="${by+22}" width="6" height="58" fill="#f4f1e8"/><rect x="${cx+66}" y="${by+34}" width="30" height="5" fill="#f2c230"/></g>`);
+    s.push(hand(cx+62, by+64));
+  }
+  if(o.clip){
+    s.push(`<g transform="rotate(-6 ${cx+80} ${by+50})"><rect x="${cx+52}" y="${by+12}" width="56" height="74" rx="5" fill="#8a6a43"/><rect x="${cx+58}" y="${by+22}" width="44" height="58" fill="#ffffff"/><rect x="${cx+70}" y="${by+6}" width="20" height="12" rx="3" fill="#9a9a9a"/>`);
+    for(let i=0;i<5;i++) s.push(`<rect x="${cx+63}" y="${by+30+i*10}" width="${30-(i%2)*8}" height="3" fill="#9ab"/>`);
+    s.push(`<rect x="${cx+86}" y="${by+56}" width="14" height="14" fill="#ffe066"/></g>`);
+    s.push(hand(cx+56, by+66));
+  }
+  if(o.palette){
+    s.push(`<path d="M${cx+50},${by+40} Q${cx+60},${by+6} ${cx+100},${by+12} Q${cx+130},${by+20} ${cx+118},${by+50} Q${cx+108},${by+64} ${cx+92},${by+56} Q${cx+80},${by+52} ${cx+76},${by+68} Q${cx+56},${by+70} ${cx+50},${by+40} Z" fill="#d8b47a" stroke="#a8844a" stroke-width="2"/>`);
+    for(const [dx,dy,c] of [[66,30,"#e53935"],[84,20,"#1e88e5"],[102,26,"#43a047"],[108,42,"#fdd835"],[64,48,"#b05ad6"]]) s.push(`<circle cx="${cx+dx}" cy="${by+dy}" r="6" fill="${c}"/>`);
+    s.push(`<path d="M${cx+30},${by+80} L${cx+92},${by+2}" stroke="#7a5a3a" stroke-width="5" stroke-linecap="round"/><path d="M${cx+92},${by+2} l6,-8" stroke="#e8467c" stroke-width="6" stroke-linecap="round"/>`);
+    s.push(hand(cx+40, by+70));
+  }
+  if(o.trumpet){
+    s.push(`<g transform="rotate(-14 ${cx+70} ${by+30})"><rect x="${cx+20}" y="${by+24}" width="78" height="9" rx="4" fill="#e8b830"/><path d="M${cx+96},${by+28} L${cx+128},${by+10} L${cx+128},${by+48} Z" fill="#f2c230" stroke="#c89a10" stroke-width="2"/><rect x="${cx+40}" y="${by+12}" width="6" height="16" fill="#c89a10"/><rect x="${cx+52}" y="${by+12}" width="6" height="16" fill="#c89a10"/><rect x="${cx+64}" y="${by+12}" width="6" height="16" fill="#c89a10"/><rect x="${cx+30}" y="${by+33}" width="50" height="10" rx="5" fill="none" stroke="#e8b830" stroke-width="5"/></g>`);
+    s.push(hand(cx+52, by+46));
+  }
+  if(o.laptop){
+    s.push(`<path d="M${cx-110},330 L${cx-96},${by+46} L${cx+96},${by+46} L${cx+110},330 Z" fill="#8a96a8"/><path d="M${cx-96},${by+46} L${cx+96},${by+46} L${cx+100},${by+54} L${cx-100},${by+54} Z" fill="#a8b4c4"/>`);
+    s.push(`<circle cx="${cx}" cy="${by+62}" r="6" fill="#d0d8e4"/>`);
+  }
+  if(o.dress){
+    s.push(`<path d="M${cx-30},${by-12} Q${cx},${by+22} ${cx+30},${by-12}" fill="none" stroke="#e0dcd2" stroke-width="5"/>`);
+    s.push(`<path d="M${cx-40},${by+70} Q${cx},${by+60} ${cx+40},${by+70}" stroke="#d8b56a" stroke-width="5" fill="none"/>`);
+    s.push(`<circle cx="${cx}" cy="${by+14}" r="5" fill="#f2c230"/><path d="M${cx-22},${by-8} Q${cx},${by+12} ${cx+22},${by-8}" stroke="#f2c230" stroke-width="1.5" fill="none"/>`);
+  }
+  if(o.robobook){
+    s.push(`<g transform="rotate(-8 ${cx+82} ${by+46})"><rect x="${cx+52}" y="${by+6}" width="60" height="78" rx="5" fill="#1e7f8c"/><rect x="${cx+108}" y="${by+8}" width="6" height="74" fill="#f4f1e8"/>
+      <rect x="${cx+66}" y="${by+24}" width="30" height="24" rx="4" fill="#d8d8d8" stroke="#555" stroke-width="2"/><circle cx="${cx+75}" cy="${by+35}" r="4" fill="#2b9de0"/><circle cx="${cx+88}" cy="${by+35}" r="4" fill="#2b9de0"/>
+      <rect x="${cx+75}" y="${by+42}" width="12" height="2" fill="#555"/><path d="M${cx+81},${by+24} L${cx+81},${by+16}" stroke="#555" stroke-width="2"/><circle cx="${cx+81}" cy="${by+14}" r="3" fill="#e53935"/>
+      <text x="${cx+81}" y="${by+66}" font-family="Arial" font-weight="700" font-size="9" fill="#f2c230" text-anchor="middle">ROBOTICS</text></g>`);
+    s.push(`<ellipse cx="${cx+58}" cy="${by+66}" rx="14" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/>`);
+  }
+  if(o.guitar){
+    s.push(`<g transform="translate(-6 -40) rotate(-28 ${cx+10} ${by+60})"><rect x="${cx+20}" y="${by+54}" width="120" height="12" rx="3" fill="#5a3a1e"/>
+      <rect x="${cx+128}" y="${by+50}" width="26" height="20" rx="4" fill="#3a2414"/>
+      <circle cx="${cx-30}" cy="${by+60}" r="40" fill="#c98a3a" stroke="#7a4a1a" stroke-width="3"/><circle cx="${cx+12}" cy="${by+60}" r="30" fill="#c98a3a" stroke="#7a4a1a" stroke-width="3"/>
+      <rect x="${cx-24}" y="${by+38}" width="40" height="44" fill="#c98a3a"/><circle cx="${cx+2}" cy="${by+60}" r="11" fill="#2a1a0e"/>
+      <rect x="${cx-46}" y="${by+52}" width="8" height="16" fill="#5a3a1e"/>
+      ${[0,1,2,3].map(k=>`<line x1="${cx-42}" y1="${by+55+k*3.5}" x2="${cx+152}" y2="${by+55+k*3.5}" stroke="#e8e0c8" stroke-width="1"/>`).join("")}</g>`);
+    s.push(`<ellipse cx="${cx+62}" cy="${by-22}" rx="14" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/><ellipse cx="${cx-12}" cy="${by+26}" rx="14" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/>`);
+  }
+  if(o.shovel){
+    s.push(`<path d="M${cx+sw-20},${by+24} Q${cx+112},${by-18} ${cx+100},${by-44}" stroke="${top}" stroke-width="26" fill="none" stroke-linecap="round"/>`);
+    s.push(`<rect x="${cx+96}" y="${by-58}" width="9" height="110" rx="3" fill="#a07a4a" stroke="#5a4429" stroke-width="2"/>`);
+    s.push(`<rect x="${cx+86}" y="${by-66}" width="29" height="10" rx="5" fill="#5a4429"/>`);
+    s.push(`<path d="M${cx+84},${by+50} L${cx+117},${by+50} L${cx+114},${by+86} Q${cx+100},${by+96} ${cx+87},${by+86} Z" fill="#9aa0a8" stroke="#5a6068" stroke-width="2"/>`);
+    s.push(`<ellipse cx="${cx+100}" cy="${by-46}" rx="14" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/>`);
+  }
+  if(o.point){
+    s.push(`<path d="M${cx+sw-20},${by+20} L${cx+138},${by-30}" stroke="${top}" stroke-width="30" stroke-linecap="round"/>`);
+    s.push(`<ellipse cx="${cx+140}" cy="${by-34}" rx="13" ry="12" fill="${skin}" stroke="${skinD}" stroke-width="2"/><path d="M${cx+146},${by-42} l14,-14" stroke="${skin}" stroke-width="8" stroke-linecap="round"/>`);
+  }
+  if(o.small){ const fig = s.splice(figStart).join(""); s.push(`<g transform="translate(24 44) scale(0.86)">${fig}</g>`); }
+  return `<svg viewBox="0 0 300 330" role="img" xmlns="http://www.w3.org/2000/svg">${s.join("")}</svg>`;
+}
+
+
+const PORTRAIT_BY_NAME = {};
+[...P_LEADERS, ...P_SPECIALS].forEach(c => { PORTRAIT_BY_NAME[c.name] = c.look; });
+const portraitCache = {};
+function portraitFor(name){
+  const look = PORTRAIT_BY_NAME[name]; if(!look) return "";
+  return portraitCache[name] || (portraitCache[name] = portrait(look));
+}
+function withPortrait(html){
+  const m = html.match(/<span class="who">([^<:,]+)/);
+  if(!m) return html;
+  const svg = portraitFor(m[1].trim());
+  return svg ? `<div class="por">${svg}</div>` + html : html;
+}
+
 </script>
 </body>
 </html>
